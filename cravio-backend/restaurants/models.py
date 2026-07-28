@@ -25,6 +25,7 @@ class Restaurant(models.Model):
     average_rating = models.FloatField(default=0.0)
     total_reviews = models.IntegerField(default=0)
     swiggy_id = models.CharField(max_length=100, blank=True, null=True, unique=True)
+    google_maps_link = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

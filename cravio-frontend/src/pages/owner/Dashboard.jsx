@@ -15,7 +15,7 @@ const INDIAN_STATES = [
 const EMPTY_FORM = {
   name: '', cuisine: '', address: '', city: '', phone: '',
   email: '', opening_time: '09:00', closing_time: '22:00',
-  pincode: '', state: '', description: '',
+  pincode: '', state: '', description: '', google_maps_link: '',
 };
 
 export default function OwnerDashboard() {
@@ -28,6 +28,7 @@ export default function OwnerDashboard() {
   const [imagePreview, setImagePreview] = useState('');
   const [pincodeLoading, setPincodeLoading] = useState(false);
   const [registering, setRegistering] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
   const [regError, setRegError] = useState('');
   const [regSuccess, setRegSuccess] = useState('');
   const fileInputRef = useRef();
@@ -50,6 +51,29 @@ export default function OwnerDashboard() {
     };
     load();
   }, []);
+
+  // Pre-fill form when editing
+  useEffect(() => {
+    if (restaurant) {
+      setFormData({
+        name: restaurant.name || '',
+        cuisine: restaurant.cuisine || '',
+        address: restaurant.address || '',
+        city: restaurant.city || '',
+        phone: restaurant.phone || '',
+        email: restaurant.email || '',
+        opening_time: restaurant.opening_time?.slice(0,5) || '09:00',
+        closing_time: restaurant.closing_time?.slice(0,5) || '22:00',
+        pincode: restaurant.pincode || '',
+        state: restaurant.state || '',
+        description: restaurant.description || '',
+        google_maps_link: restaurant.google_maps_link || '',
+      });
+      if (restaurant.image) {
+        setImagePreview(restaurant.image.startsWith('http') ? restaurant.image : `http://localhost:8000${restaurant.image}`);
+      }
+    }
+  }, [restaurant]);
 
   // Pincode autofill using India Post API
   const handlePincodeChange = async (e) => {
@@ -82,7 +106,7 @@ export default function OwnerDashboard() {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  const handleRegister = async (e) => {
+  const handleRegisterOrUpdate = async (e) => {
     e.preventDefault();
     setRegistering(true);
     setRegError('');
@@ -94,19 +118,32 @@ export default function OwnerDashboard() {
         if ((k === 'opening_time' || k === 'closing_time') && v && v.length === 5) {
           fd.append(k, v + ':00');
         } else {
-          fd.append(k, v);
+          fd.append(k, v || '');
         }
       });
       if (imageFile) fd.append('image_file', imageFile);
-      const res = await api.post('/restaurants/', fd, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      setRestaurant(res.data);
-      setRegSuccess('Restaurant submitted! Waiting for admin approval.');
+
+      let res;
+      if (restaurant) {
+        // Update existing restaurant
+        res = await api.put(`/restaurants/${restaurant.id}/`, fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setRestaurant(res.data);
+        setRegSuccess('Restaurant details updated successfully!');
+        setIsEditing(false);
+      } else {
+        // Register new restaurant
+        res = await api.post('/restaurants/', fd, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        setRestaurant(res.data);
+        setRegSuccess('Restaurant submitted! Waiting for admin approval.');
+      }
     } catch (err) {
       const data = err.response?.data;
       if (typeof data === 'object') setRegError(Object.values(data).flat().join(' '));
-      else setRegError('Failed to register. Please check all fields.');
+      else setRegError('Failed to save. Please check all fields.');
     } finally { setRegistering(false); }
   };
 
@@ -118,146 +155,174 @@ export default function OwnerDashboard() {
     { icon: '🍛', label: 'Menu Items', value: stats.total_foods, color: '#6b4226' },
   ];
 
+  const renderRestaurantForm = (title) => (
+    <div style={{ background: 'white', borderRadius: '16px', border: '1px solid var(--border)', padding: '32px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
+      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', fontWeight: 700, marginBottom: '6px' }}>{title}</h2>
+      <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '24px' }}>
+        Fill in the details below. If registering, your restaurant will go live after admin approval.
+      </p>
+
+      {regError && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', color: '#c0392b', fontSize: '0.88rem' }}>{regError}</div>}
+      {regSuccess && <div style={{ background: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', color: '#155724', fontSize: '0.88rem' }}>{regSuccess}</div>}
+
+      <form onSubmit={handleRegisterOrUpdate} className="form-cravio" style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
+
+        {/* Image upload */}
+        <div>
+          <label>Restaurant Banner Image</label>
+          <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', marginTop: '6px' }}>
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              style={{
+                width: 120, height: 80, borderRadius: 10,
+                border: '2px dashed var(--border)',
+                overflow: 'hidden', cursor: 'pointer', flexShrink: 0,
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                background: 'var(--cream)', transition: 'border-color 0.2s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--olive)'}
+              onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
+            >
+              {imagePreview
+                ? <img src={imagePreview} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                : <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.75rem', padding: '8px' }}>
+                    <div style={{ fontSize: '1.5rem', marginBottom: 4 }}>📷</div>
+                    Click to upload
+                  </div>
+              }
+            </div>
+            <div style={{ flex: 1 }}>
+              <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
+              <button type="button" onClick={() => fileInputRef.current?.click()} className="btn-outline-olive" style={{ padding: '8px 16px', fontSize: '0.85rem', borderRadius: 8 }}>
+                Choose Image
+              </button>
+              {imageFile && <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 6 }}>📎 {imageFile.name}</p>}
+              <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>JPG, PNG, WEBP up to 5MB</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Name + Cuisine */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+          <div><label>Restaurant Name *</label><input placeholder="e.g. Royal Punjab" value={formData.name} onChange={e => setFormData(f => ({ ...f, name: e.target.value }))} required /></div>
+          <div><label>Cuisine *</label><input placeholder="e.g. North Indian, Chinese" value={formData.cuisine} onChange={e => setFormData(f => ({ ...f, cuisine: e.target.value }))} required /></div>
+        </div>
+
+        {/* Phone + Email */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+          <div><label>Phone Number *</label><input placeholder="9876543210" value={formData.phone} onChange={e => setFormData(f => ({ ...f, phone: e.target.value }))} required /></div>
+          <div><label>Email</label><input type="email" placeholder="contact@restaurant.com" value={formData.email} onChange={e => setFormData(f => ({ ...f, email: e.target.value }))} /></div>
+        </div>
+
+        {/* Pincode — autofills city, state, address */}
+        <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 1fr', gap: '14px', alignItems: 'end' }}>
+          <div>
+            <label>Pincode *</label>
+            <div style={{ position: 'relative' }}>
+              <input
+                placeholder="e.g. 560001"
+                value={formData.pincode}
+                onChange={handlePincodeChange}
+                maxLength={6}
+                required
+              />
+              {pincodeLoading && (
+                <span style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', fontSize: '0.75rem', color: 'var(--olive)' }}>
+                  fetching...
+                </span>
+              )}
+            </div>
+          </div>
+          <div><label>City *</label><input placeholder="Auto-filled from pincode" value={formData.city} onChange={e => setFormData(f => ({ ...f, city: e.target.value }))} required /></div>
+          <div>
+            <label>State *</label>
+            <select value={formData.state} onChange={e => setFormData(f => ({ ...f, state: e.target.value }))} required>
+              <option value="">Select state</option>
+              {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+            </select>
+          </div>
+        </div>
+
+        {/* Address */}
+        <div>
+          <label>Full Address *</label>
+          <textarea rows={2} placeholder="Street, Area, Landmark..." value={formData.address} onChange={e => setFormData(f => ({ ...f, address: e.target.value }))} required style={{ resize: 'vertical' }} />
+        </div>
+
+        {/* Description */}
+        <div>
+          <label>Description</label>
+          <textarea rows={2} placeholder="Brief description of your restaurant..." value={formData.description} onChange={e => setFormData(f => ({ ...f, description: e.target.value }))} style={{ resize: 'vertical' }} />
+        </div>
+
+        {/* Google Maps Link */}
+        <div>
+          <label>Google Maps Sharing URL or Embed URL (Optional)</label>
+          <input
+            placeholder="e.g. https://maps.app.goo.gl/... or https://www.google.com/maps/embed?..."
+            value={formData.google_maps_link}
+            onChange={e => setFormData(f => ({ ...f, google_maps_link: e.target.value }))}
+          />
+          <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>
+            Provide a Google Maps link to display your custom map and directions on your restaurant profile.
+          </p>
+        </div>
+
+        {/* Timings */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+          <div><label>Opening Time *</label><input type="time" value={formData.opening_time} onChange={e => setFormData(f => ({ ...f, opening_time: e.target.value }))} required /></div>
+          <div><label>Closing Time *</label><input type="time" value={formData.closing_time} onChange={e => setFormData(f => ({ ...f, closing_time: e.target.value }))} required /></div>
+        </div>
+
+        <button type="submit" className="btn-olive" style={{ padding: '12px 28px', fontSize: '0.95rem', borderRadius: 8, alignSelf: 'flex-start', opacity: registering ? 0.7 : 1 }} disabled={registering}>
+          {registering ? 'Saving...' : restaurant ? 'Save Changes ✓' : 'Submit for Approval →'}
+        </button>
+      </form>
+    </div>
+  );
+
   return (
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--cream)' }}>
       <OwnerSidebar />
       <main style={{ flex: 1, padding: '36px 40px', overflowY: 'auto' }}>
 
-        <div style={{ marginBottom: '28px' }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>Dashboard</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
+          <div>
+            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>Dashboard</h1>
+            {restaurant && (
+              <p style={{ color: 'var(--text-muted)', marginTop: '4px', fontSize: '0.9rem' }}>
+                {restaurant.name} ·{' '}
+                <span style={{
+                  color: restaurant.status === 'approved' ? '#2d6a4f' : restaurant.status === 'pending' ? '#856404' : '#721c24',
+                  fontWeight: 600, textTransform: 'capitalize',
+                }}>{restaurant.status}</span>
+                {restaurant.status === 'pending' && (
+                  <span style={{ marginLeft: 8, fontSize: '0.82rem', color: 'var(--text-muted)' }}>
+                    — Awaiting admin approval
+                  </span>
+                )}
+              </p>
+            )}
+          </div>
           {restaurant && (
-            <p style={{ color: 'var(--text-muted)', marginTop: '4px', fontSize: '0.9rem' }}>
-              {restaurant.name} ·{' '}
-              <span style={{
-                color: restaurant.status === 'approved' ? '#2d6a4f' : restaurant.status === 'pending' ? '#856404' : '#721c24',
-                fontWeight: 600, textTransform: 'capitalize',
-              }}>{restaurant.status}</span>
-              {restaurant.status === 'pending' && (
-                <span style={{ marginLeft: 8, fontSize: '0.82rem', color: 'var(--text-muted)' }}>
-                  — Awaiting admin approval
-                </span>
-              )}
-            </p>
+            <button
+              onClick={() => setIsEditing(!isEditing)}
+              className="btn-outline-olive"
+              style={{ padding: '8px 18px', fontSize: '0.88rem', borderRadius: 8 }}
+            >
+              {isEditing ? 'Cancel Edit' : '⚙️ Restaurant Settings'}
+            </button>
           )}
         </div>
 
+        {/* ── Settings Form View ── */}
+        {restaurant && isEditing && renderRestaurantForm("Edit Restaurant Settings")}
+
         {/* ── Register form ── */}
-        {!restaurant && !loading && (
-          <div style={{ background: 'white', borderRadius: '16px', border: '1px solid var(--border)', padding: '32px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', fontWeight: 700, marginBottom: '6px' }}>Register Your Restaurant</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '24px' }}>
-              Fill in the details below. Your restaurant will go live after admin approval.
-            </p>
-
-            {regError && <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', color: '#c0392b', fontSize: '0.88rem' }}>{regError}</div>}
-            {regSuccess && <div style={{ background: '#d4edda', border: '1px solid #c3e6cb', borderRadius: '8px', padding: '10px 14px', marginBottom: '16px', color: '#155724', fontSize: '0.88rem' }}>{regSuccess}</div>}
-
-            <form onSubmit={handleRegister} className="form-cravio" style={{ display: 'flex', flexDirection: 'column', gap: '18px' }}>
-
-              {/* ── Image upload ── */}
-              <div>
-                <label>Restaurant Banner Image</label>
-                <div style={{ display: 'flex', gap: '16px', alignItems: 'flex-start', marginTop: '6px' }}>
-                  {/* Preview */}
-                  <div
-                    onClick={() => fileInputRef.current?.click()}
-                    style={{
-                      width: 120, height: 80, borderRadius: 10,
-                      border: '2px dashed var(--border)',
-                      overflow: 'hidden', cursor: 'pointer', flexShrink: 0,
-                      display: 'flex', alignItems: 'center', justifyContent: 'center',
-                      background: 'var(--cream)', transition: 'border-color 0.2s',
-                    }}
-                    onMouseEnter={e => e.currentTarget.style.borderColor = 'var(--olive)'}
-                    onMouseLeave={e => e.currentTarget.style.borderColor = 'var(--border)'}
-                  >
-                    {imagePreview
-                      ? <img src={imagePreview} alt="preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                      : <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.75rem', padding: '8px' }}>
-                          <div style={{ fontSize: '1.5rem', marginBottom: 4 }}>📷</div>
-                          Click to upload
-                        </div>
-                    }
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <input ref={fileInputRef} type="file" accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
-                    <button type="button" onClick={() => fileInputRef.current?.click()} className="btn-outline-olive" style={{ padding: '8px 16px', fontSize: '0.85rem', borderRadius: 8 }}>
-                      Choose Image
-                    </button>
-                    {imageFile && <p style={{ fontSize: '0.78rem', color: 'var(--text-muted)', marginTop: 6 }}>📎 {imageFile.name}</p>}
-                    <p style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: 4 }}>JPG, PNG, WEBP up to 5MB</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Name + Cuisine */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                <div><label>Restaurant Name *</label><input placeholder="e.g. Royal Punjab" value={formData.name} onChange={e => setFormData(f => ({ ...f, name: e.target.value }))} required /></div>
-                <div><label>Cuisine *</label><input placeholder="e.g. North Indian, Chinese" value={formData.cuisine} onChange={e => setFormData(f => ({ ...f, cuisine: e.target.value }))} required /></div>
-              </div>
-
-              {/* Phone + Email */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                <div><label>Phone Number *</label><input placeholder="9876543210" value={formData.phone} onChange={e => setFormData(f => ({ ...f, phone: e.target.value }))} required /></div>
-                <div><label>Email</label><input type="email" placeholder="contact@restaurant.com" value={formData.email} onChange={e => setFormData(f => ({ ...f, email: e.target.value }))} /></div>
-              </div>
-
-              {/* Pincode — autofills city, state, address */}
-              <div style={{ display: 'grid', gridTemplateColumns: '160px 1fr 1fr', gap: '14px', alignItems: 'end' }}>
-                <div>
-                  <label>Pincode *</label>
-                  <div style={{ position: 'relative' }}>
-                    <input
-                      placeholder="e.g. 560001"
-                      value={formData.pincode}
-                      onChange={handlePincodeChange}
-                      maxLength={6}
-                      required
-                    />
-                    {pincodeLoading && (
-                      <span style={{ position: 'absolute', right: 10, top: '50%', transform: 'translateY(-50%)', fontSize: '0.75rem', color: 'var(--olive)' }}>
-                        fetching...
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div><label>City *</label><input placeholder="Auto-filled from pincode" value={formData.city} onChange={e => setFormData(f => ({ ...f, city: e.target.value }))} required /></div>
-                <div>
-                  <label>State *</label>
-                  <select value={formData.state} onChange={e => setFormData(f => ({ ...f, state: e.target.value }))} required>
-                    <option value="">Select state</option>
-                    {INDIAN_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-                  </select>
-                </div>
-              </div>
-
-              {/* Address */}
-              <div>
-                <label>Full Address *</label>
-                <textarea rows={2} placeholder="Street, Area, Landmark..." value={formData.address} onChange={e => setFormData(f => ({ ...f, address: e.target.value }))} required style={{ resize: 'vertical' }} />
-              </div>
-
-              {/* Description */}
-              <div>
-                <label>Description</label>
-                <textarea rows={2} placeholder="Brief description of your restaurant..." value={formData.description} onChange={e => setFormData(f => ({ ...f, description: e.target.value }))} style={{ resize: 'vertical' }} />
-              </div>
-
-              {/* Timings */}
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
-                <div><label>Opening Time *</label><input type="time" value={formData.opening_time} onChange={e => setFormData(f => ({ ...f, opening_time: e.target.value }))} required /></div>
-                <div><label>Closing Time *</label><input type="time" value={formData.closing_time} onChange={e => setFormData(f => ({ ...f, closing_time: e.target.value }))} required /></div>
-              </div>
-
-              <button type="submit" className="btn-olive" style={{ padding: '12px 28px', fontSize: '0.95rem', borderRadius: 8, alignSelf: 'flex-start', opacity: registering ? 0.7 : 1 }} disabled={registering}>
-                {registering ? 'Submitting...' : 'Submit for Approval →'}
-              </button>
-            </form>
-          </div>
-        )}
+        {!restaurant && !loading && renderRestaurantForm("Register Your Restaurant")}
 
         {/* ── Pending approval notice ── */}
-        {restaurant?.status === 'pending' && (
+        {restaurant && !isEditing && restaurant.status === 'pending' && (
           <div style={{ background: '#fff9e6', border: '1px solid #f0c040', borderRadius: '12px', padding: '20px 24px', marginBottom: '24px', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
             <span style={{ fontSize: '1.5rem' }}>⏳</span>
             <div>
@@ -270,7 +335,7 @@ export default function OwnerDashboard() {
         )}
 
         {/* ── Rejected notice ── */}
-        {restaurant?.status === 'rejected' && (
+        {restaurant && !isEditing && restaurant.status === 'rejected' && (
           <div style={{ background: '#fef2f2', border: '1px solid #fca5a5', borderRadius: '12px', padding: '20px 24px', marginBottom: '24px', display: 'flex', gap: 14, alignItems: 'flex-start' }}>
             <span style={{ fontSize: '1.5rem' }}>❌</span>
             <div>
@@ -283,7 +348,7 @@ export default function OwnerDashboard() {
         )}
 
         {/* ── Dashboard content (only for approved) ── */}
-        {restaurant?.status === 'approved' && (
+        {restaurant && !isEditing && restaurant.status === 'approved' && (
           <>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px', marginBottom: '32px' }}>
               {STAT_CARDS.map(card => (

@@ -94,10 +94,18 @@ async function geocode(query) {
 }
 
 /* Map using Google Maps embed — no API key needed for basic view */
-function MapEmbed({ lat, lon, name, address }) {
-  const query = encodeURIComponent(`${name}, ${address}`);
-  // Use Google Maps embed in search mode — works without an API key
-  const src = `https://maps.google.com/maps?q=${query}&t=m&z=15&output=embed&iwloc=near`;
+function MapEmbed({ lat, lon, name, address, google_maps_link }) {
+  let src = `https://maps.google.com/maps?q=${encodeURIComponent(`${name}, ${address}`)}&t=m&z=15&output=embed&iwloc=near`;
+
+  if (google_maps_link) {
+    if (google_maps_link.includes('google.com/maps/embed') || google_maps_link.includes('google.com/maps/embed/v1')) {
+      src = google_maps_link;
+    } else {
+      src = `https://maps.google.com/maps?q=${encodeURIComponent(google_maps_link)}&t=m&z=15&output=embed`;
+    }
+  }
+
+  const mapsRedirectUrl = google_maps_link || `https://www.google.com/maps/search/${encodeURIComponent(`${name}, ${address}`)}`;
 
   return (
     <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border)', height: 340, position: 'relative' }}>
@@ -112,7 +120,7 @@ function MapEmbed({ lat, lon, name, address }) {
       />
       {/* Fallback overlay with static map image */}
       <a
-        href={`https://www.google.com/maps/search/${query}`}
+        href={mapsRedirectUrl}
         target="_blank"
         rel="noreferrer"
         style={{
@@ -493,7 +501,13 @@ export default function RestaurantDetail() {
                   style={{ padding: '9px 22px', borderRadius: 8, fontSize: '0.88rem', border: '1.5px solid var(--olive)', color: 'var(--olive)', textDecoration: 'none', fontWeight: 600 }}>
                   Reserve Table
                 </Link>
-                <button onClick={() => setActiveTab('info')}
+                <button onClick={() => {
+                  if (restaurant.google_maps_link) {
+                    window.open(restaurant.google_maps_link, '_blank');
+                  } else {
+                    setActiveTab('info');
+                  }
+                }}
                   style={{ padding: '9px 16px', borderRadius: 8, fontSize: '0.88rem', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', color: 'var(--dark-soft)' }}>
                   Directions
                 </button>
@@ -599,6 +613,7 @@ export default function RestaurantDetail() {
               <MapEmbed
                 name={restaurant.name}
                 address={[restaurant.address, restaurant.city, restaurant.state, 'India'].filter(Boolean).join(', ')}
+                google_maps_link={restaurant.google_maps_link}
               />
             </div>
           </div>
