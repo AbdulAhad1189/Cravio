@@ -23,6 +23,7 @@ import Cart from './pages/Cart';
 import Checkout from './pages/Checkout';
 import OrderHistory from './pages/OrderHistory';
 import Reservations from './pages/Reservations';
+import OrderNow from './pages/OrderNow';
 import Profile from './pages/Profile';
 
 // Owner pages — have their own sidebar layout
@@ -82,6 +83,7 @@ function App() {
         <Route path="/checkout" element={<ProtectedRoute roles={['customer']}><Checkout /></ProtectedRoute>} />
         <Route path="/orders" element={<ProtectedRoute roles={['customer']}><OrderHistory /></ProtectedRoute>} />
         <Route path="/reservations" element={<ProtectedRoute roles={['customer']}><Reservations /></ProtectedRoute>} />
+        <Route path="/order-now" element={<ProtectedRoute roles={['customer']}><OrderNow /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
 
         {/* Owner — full-page layout with sidebar */}

@@ -484,11 +484,11 @@ export default function RestaurantDetail() {
 
               {/* Action buttons */}
               <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
-                <button onClick={() => setActiveTab('menu')}
+                <Link to={`/order-now?restaurant=${id}`}
                   className="btn-olive"
-                  style={{ padding: '9px 22px', borderRadius: 8, fontSize: '0.88rem' }}>
+                  style={{ padding: '9px 22px', borderRadius: 8, fontSize: '0.88rem', textDecoration: 'none' }}>
                   Order Now
-                </button>
+                </Link>
                 <Link to={`/reservations?restaurant=${id}`}
                   style={{ padding: '9px 22px', borderRadius: 8, fontSize: '0.88rem', border: '1.5px solid var(--olive)', color: 'var(--olive)', textDecoration: 'none', fontWeight: 600 }}>
                   Reserve Table
