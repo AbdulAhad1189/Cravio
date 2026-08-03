@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/reviews/', include('reviews.urls')),
     path('api/categories/', include('foods.category_urls')),
     path('api/admin/', include('users.admin_urls')),
+    path('api/meal-planner/', include('mealplanner.urls')),
 ]
 
 if settings.DEBUG:

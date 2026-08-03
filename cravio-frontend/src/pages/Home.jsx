@@ -4,6 +4,8 @@ import RestaurantCard from '../components/RestaurantCard';
 import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { useLocationStore, detectCurrentLocation, lookupPincode, setLocation as saveLocation } from '../lib/locationStore';
+import SpinWheel from '../components/SpinWheel';
+
 /* ── SVG Icon Components ── */
 const I = ({ children, size = 20, ...p }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>{children}</svg>;
 
@@ -85,6 +87,15 @@ export default function Home() {
       setLocationInput(savedLoc.display || '');
     }
   }, [savedLoc]);
+
+  // Redirect admin/owner to their respective dashboards
+  useEffect(() => {
+    if (user?.role === 'admin') {
+      navigate('/admin/restaurants');
+    } else if (user?.role === 'owner') {
+      navigate('/owner/dashboard');
+    }
+  }, [user, navigate]);
 
   // Seed store from profile if nothing saved yet
   useEffect(() => {
@@ -306,6 +317,13 @@ export default function Home() {
               letterSpacing: '0.5px'
             }}>WELCOME20</span>
           </div>
+        </div>
+      </section>
+
+      {/* ── Spin to Discover Section ── */}
+      <section id="roulette" style={{ backgroundColor: 'var(--cream)', padding: '0 0 8px' }}>
+        <div className="container-cravio">
+          <SpinWheel />
         </div>
       </section>
 
@@ -617,7 +635,7 @@ export default function Home() {
               <span style={{ fontSize: '0.82rem', letterSpacing: '2.5px', fontWeight: 700, color: 'var(--terracotta)', textTransform: 'uppercase' }}>Instant Booking</span>
             </div>
             
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.4rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '18px', lineHeight: 1.2 }}>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.4rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '18px', lineHeight: 1.2 }}>
               Reserve your table for free
             </h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '1.05rem', lineHeight: 1.6, marginBottom: '32px' }}>
@@ -663,7 +681,7 @@ export default function Home() {
             padding: '36px',
             boxShadow: '0 10px 30px rgba(59, 79, 57, 0.05)'
           }}>
-            <h3 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.45rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '4px' }}>Reserve a Table</h3>
+            <h3 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.45rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '4px' }}>Reserve a Table</h3>
             <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginBottom: '24px' }}>Choose your details to find matching tables.</p>
 
             <form onSubmit={handleFindTable} className="form-cravio" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
@@ -793,7 +811,7 @@ export default function Home() {
       <section id="features" style={{ backgroundColor: 'white', padding: '72px 0 64px', borderTop: '1px solid var(--border)' }}>
         <div className="container-cravio">
           <div style={{ marginBottom: '48px' }}>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '6px' }}>What you can do on Cravio</h2>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '6px' }}>What you can do on Cravio</h2>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: 520 }}>Whether you're looking for dinner tonight or managing a restaurant, here's how the platform works.</p>
           </div>
 
@@ -817,6 +835,16 @@ export default function Home() {
               <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--olive)', marginBottom: '14px', textTransform: 'uppercase' }}>For diners</div>
               <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>Order food and track it</h4>
               <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>Add dishes to your cart, place the order, and check your order history anytime from your account.</p>
+            </div>
+
+            <div style={{ gridColumn: 'span 1', padding: '28px 24px', background: 'linear-gradient(135deg, #F8EDE7 0%, #EAF0E9 100%)', borderRadius: '14px', border: '1px solid #E0D8CE', cursor: 'pointer', transition: 'transform 0.2s ease' }}
+              onClick={() => navigate('/flavor-duel')}
+              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
+            >
+              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--terracotta)', marginBottom: '14px', textTransform: 'uppercase' }}>New Feature</div>
+              <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>⚔️ Flavor Duel</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>Two dishes go head-to-head in a this-or-that battle. Pick your favorites across 5 rounds and discover your champion meal.</p>
             </div>
 
             {/* --- For owners --- */}

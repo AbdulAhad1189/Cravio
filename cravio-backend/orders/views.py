@@ -108,3 +108,58 @@ class OwnerStatsView(APIView):
             'total_revenue': revenue,
             'total_foods': total_foods,
         })
+
+
+class OrderTrackView(APIView):
+    """
+    GET /api/orders/<pk>/track/
+    Server-Sent Events endpoint for real-time order status tracking.
+    Streams status updates every 3 seconds.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get(self, request, pk):
+        import json
+        import time
+        from django.http import StreamingHttpResponse
+
+        def event_stream():
+            STATUS_STEPS = ['pending', 'accepted', 'preparing', 'ready', 'delivered']
+            last_status = None
+            max_iterations = 200  # ~10 minutes at 3s intervals
+
+            for _ in range(max_iterations):
+                try:
+                    order = Order.objects.get(pk=pk, user=request.user)
+                except Order.DoesNotExist:
+                    yield f"data: {json.dumps({'error': 'Order not found'})}\n\n"
+                    break
+
+                current_status = order.status
+                step_index = STATUS_STEPS.index(current_status) if current_status in STATUS_STEPS else 0
+
+                if current_status != last_status:
+                    payload = {
+                        'order_id': order.id,
+                        'status': current_status,
+                        'step_index': step_index,
+                        'total_steps': len(STATUS_STEPS),
+                        'restaurant': order.restaurant.name,
+                        'updated_at': order.updated_at.isoformat(),
+                    }
+                    yield f"data: {json.dumps(payload)}\n\n"
+                    last_status = current_status
+
+                if current_status in ('delivered', 'cancelled'):
+                    yield f"data: {json.dumps({'done': True, 'status': current_status})}\n\n"
+                    break
+
+                time.sleep(3)
+
+        response = StreamingHttpResponse(
+            event_stream(),
+            content_type='text/event-stream',
+        )
+        response['Cache-Control'] = 'no-cache'
+        response['X-Accel-Buffering'] = 'no'
+        return response

@@ -26,7 +26,7 @@ export default function ManageReservations() {
     <div style={{ display: 'flex', minHeight: '100vh', background: 'var(--cream)' }}>
       <OwnerSidebar />
       <main style={{ flex: 1, padding: '36px 40px', overflowY: 'auto' }}>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, marginBottom: '24px' }}>Reservations</h1>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem', fontWeight: 700, marginBottom: '24px' }}>Reservations</h1>
 
         {loading ? (
           <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>Loading...</div>

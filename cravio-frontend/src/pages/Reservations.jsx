@@ -143,7 +143,7 @@ export default function Reservations() {
       setReservations(prev => [res.data.reservation, ...prev]);
       setPendingReservation(null);
       setOtp('');
-      showMsg('Reservation confirmed! Check your email for details.');
+      showMsg('Email verified! Your reservation request has been submitted to the restaurant for approval.');
       setForm({ restaurant: '', date: '', time: '', guests: '', special_requests: '' });
     } catch (err) {
       setOtpError(err.response?.data?.detail || 'Invalid OTP. Please try again.');

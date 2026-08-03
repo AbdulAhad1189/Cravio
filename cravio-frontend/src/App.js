@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, useLocation } from 'react-router-dom';
+import { Routes, Route, useLocation, Navigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -25,6 +25,10 @@ import OrderHistory from './pages/OrderHistory';
 import Reservations from './pages/Reservations';
 import OrderNow from './pages/OrderNow';
 import Profile from './pages/Profile';
+import CraveMatch from './pages/CraveMatch';
+import FlavorDuel from './pages/FlavorDuel';
+
+
 
 // Owner pages — have their own sidebar layout
 import OwnerDashboard from './pages/owner/Dashboard';
@@ -85,6 +89,9 @@ function App() {
         <Route path="/reservations" element={<ProtectedRoute roles={['customer']}><Reservations /></ProtectedRoute>} />
         <Route path="/order-now" element={<ProtectedRoute roles={['customer']}><OrderNow /></ProtectedRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+        <Route path="/cravematch" element={<CraveMatch />} />
+        <Route path="/flavor-duel" element={<FlavorDuel />} />
+
 
         {/* Owner — full-page layout with sidebar */}
         <Route path="/owner/dashboard" element={<ProtectedRoute roles={['owner']}><OwnerDashboard /></ProtectedRoute>} />
@@ -93,6 +100,7 @@ function App() {
         <Route path="/owner/reservations" element={<ProtectedRoute roles={['owner']}><ManageReservations /></ProtectedRoute>} />
 
         {/* Admin — full-page layout with sidebar */}
+        <Route path="/admin" element={<ProtectedRoute roles={['admin']}><Navigate to="/admin/restaurants" replace /></ProtectedRoute>} />
         <Route path="/admin/dashboard" element={<ProtectedRoute roles={['admin']}><AdminDashboard /></ProtectedRoute>} />
         <Route path="/admin/restaurants" element={<ProtectedRoute roles={['admin']}><ManageRestaurants /></ProtectedRoute>} />
         <Route path="/admin/users" element={<ProtectedRoute roles={['admin']}><ManageUsers /></ProtectedRoute>} />

@@ -210,3 +210,264 @@ class TrendingByStateView(APIView):
                 result[state].append(row)
 
         return Response(result)
+
+
+class RandomRestaurantView(APIView):
+    """
+    GET /api/restaurants/random/
+    Returns one random approved restaurant.
+    Optional query params: cuisine, city, state
+    Falls back from city -> state -> all if no matches.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        import random as rnd
+        cuisine = request.query_params.get('cuisine', '').strip()
+        city    = request.query_params.get('city', '').strip()
+        state   = request.query_params.get('state', '').strip()
+
+        # Trigger Swiggy sync if querying a specific city
+        if city:
+            if not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
+                try:
+                    from .swiggy_helper import sync_swiggy_restaurants
+                    sync_swiggy_restaurants(city_name=city)
+                except Exception as e:
+                    print(f"Error syncing Swiggy restaurants for city {city}: {e}")
+
+        base_qs = Restaurant.objects.filter(status='approved', is_active=True)
+        if cuisine:
+            base_qs = base_qs.filter(cuisine__icontains=cuisine)
+
+        # Try city-level first
+        if city:
+            qs = base_qs.filter(Q(city__icontains=city) | Q(address__icontains=city))
+            ids = list(qs.values_list('id', flat=True))
+            if ids:
+                picked = Restaurant.objects.get(pk=rnd.choice(ids))
+                serializer = RestaurantSerializer(picked, context={'request': request})
+                return Response(serializer.data)
+
+        # Fallback to state-level
+        if state:
+            qs = base_qs.filter(Q(state__icontains=state))
+            ids = list(qs.values_list('id', flat=True))
+            if ids:
+                picked = Restaurant.objects.get(pk=rnd.choice(ids))
+                serializer = RestaurantSerializer(picked, context={'request': request})
+                return Response(serializer.data)
+
+        # Final fallback — any approved restaurant
+        ids = list(base_qs.values_list('id', flat=True))
+        if not ids:
+            return Response({'detail': 'No restaurants found matching your criteria.'}, status=404)
+
+        picked = Restaurant.objects.get(pk=rnd.choice(ids))
+        serializer = RestaurantSerializer(picked, context={'request': request})
+        return Response(serializer.data)
+
+
+
+class LiveStatusView(APIView):
+    """
+    GET /api/restaurants/<pk>/live-status/
+    Returns real-time crowd level and estimated wait based on recent orders.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, pk):
+        try:
+            restaurant = Restaurant.objects.get(pk=pk, status='approved')
+        except Restaurant.DoesNotExist:
+            return Response({'detail': 'Restaurant not found.'}, status=404)
+
+        from orders.models import Order
+        recent_orders = Order.objects.filter(
+            restaurant=restaurant,
+            created_at__gte=timezone.now() - timedelta(hours=1),
+        ).exclude(status='cancelled').count()
+
+        # Compute crowd level and wait time
+        if recent_orders == 0:
+            crowd_level, wait_min, color = 'Low', 5, '#22c55e'
+        elif recent_orders <= 5:
+            crowd_level, wait_min, color = 'Moderate', 15, '#eab308'
+        elif recent_orders <= 12:
+            crowd_level, wait_min, color = 'Busy', 30, '#f97316'
+        else:
+            crowd_level, wait_min, color = 'Very Busy', 50, '#ef4444'
+
+        return Response({
+            'restaurant_id':   pk,
+            'crowd_level':     crowd_level,
+            'estimated_wait':  wait_min,
+            'color':           color,
+            'recent_orders':   recent_orders,
+            'updated_at':      timezone.now().isoformat(),
+        })
+
+
+class CraveMatchView(APIView):
+    """
+    POST /api/restaurants/cravematch/
+    Calculates gourmet personality based on quiz answers and returns matched restaurants.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def post(self, request):
+        answers = request.data.get('answers', [])
+        city = request.data.get('city', '').strip()
+
+        if not answers or len(answers) < 5:
+            return Response({'detail': 'Please provide answers to all quiz questions.'}, status=400)
+
+        # Trigger Swiggy sync if querying a specific city
+        if city:
+            if not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
+                try:
+                    from .swiggy_helper import sync_swiggy_restaurants
+                    sync_swiggy_restaurants(city_name=city)
+                except Exception as e:
+                    print(f"Error syncing Swiggy restaurants for city {city}: {e}")
+
+
+        # Mapping score/choices to personality types
+        # Let's say choice sums:
+        # Question 1: Spice (0: Mild, 1: Medium, 2: Spicy, 3: Fiery)
+        # Question 2: Texture (0: Crispy, 1: Creamy, 2: Saucy, 3: Chewy)
+        # Question 3: Vibe (0: Elegant, 1: Casual, 2: Fast-paced, 3: Cozy)
+        # Question 4: Sweet vs Savory (0: Sweet, 1: Savory, 2: Bitter, 3: Sour)
+        # Question 5: Beverage (0: Coffee, 1: Tea, 2: Wine/Cocktail, 3: Soda/Juice)
+        
+        # Calculate scores to classify into 4 unique foodie personalities
+        spicy_count = answers[0]
+        creamy_count = answers[1]
+        cozy_count = answers[2]
+        sweet_count = answers[3]
+
+        if sweet_count == 0 or sweet_count == 3:
+            personality = {
+                'title': 'The Sweettooth Sophisticate',
+                'description': 'You live for the sweeter things in life. Dessert is never an after-thought for you; it is the main event! You appreciate delicate pastries, decadent chocolates, artisan bakes, and curated coffees in cozy settings.',
+                'cuisines': ['Desserts', 'Cafe', 'Bakery'],
+                'color': '#C27047'
+            }
+        elif spicy_count >= 2:
+            personality = {
+                'title': 'The Bold Adventurer',
+                'description': 'You crave intense heat, rich aromatics, and robust textures. Fiery spices, layered slow-cooked dishes like biryani, and zesty street food define your ultimate dining style.',
+                'cuisines': ['Biryani', 'North Indian', 'Street Food', 'Chinese'],
+                'color': '#D5865C'
+            }
+        elif cozy_count >= 2 or creamy_count >= 2:
+            personality = {
+                'title': 'The Cozy Comfort Seeker',
+                'description': 'For you, food is a warm hug. You lean towards rich gravies, melted cheese, satisfying carbs, and comforting spaces where you can share pizzas, pastas, or buttery curries with friends.',
+                'cuisines': ['Pizza', 'Italian', 'North Indian', 'Cafe'],
+                'color': '#E6C687'
+            }
+        else:
+            personality = {
+                'title': 'The Herbaceous Connoisseur',
+                'description': 'You appreciate fresh, clean, and artisanal food. Fresh herbs, light dressings, sourdough flatbreads, and aromatic teas. You prefer high-quality, authentic flavors that are both nourishing and sophisticated.',
+                'cuisines': ['Italian', 'South Indian', 'Cafe'],
+                'color': '#A6B98F'
+            }
+
+        # Query matching restaurants
+        qs = Restaurant.objects.filter(status='approved', is_active=True)
+        if city:
+            qs = qs.filter(Q(city__icontains=city) | Q(address__icontains=city))
+
+        # Filter by cuisines
+        q_filter = Q()
+        for cuisine in personality['cuisines']:
+            q_filter |= Q(cuisine__icontains=cuisine)
+        
+        matched_rests = qs.filter(q_filter)[:3]
+
+        # If no restaurants matched, fall back to general approved restaurants
+        if not matched_rests.exists():
+            matched_rests = qs[:3]
+
+        serializer = RestaurantSerializer(matched_rests, many=True, context={'request': request})
+
+        return Response({
+            'personality': personality,
+            'restaurants': serializer.data
+        })
+
+
+class RestaurantDuelView(APIView):
+    """
+    GET /api/restaurants/duel/
+    Returns 1 or 2 random approved restaurants.
+    Optional query params:
+      - city: filter to nearby restaurants (triggers Swiggy sync if needed)
+      - count: number of restaurants to return (1 or 2)
+      - exclude: comma-separated list of restaurant IDs to exclude
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        import random as rnd
+        city = request.query_params.get('city', '').strip()
+        count = int(request.query_params.get('count', 1))
+        exclude_str = request.query_params.get('exclude', '').strip()
+
+        exclude_ids = []
+        if exclude_str:
+            try:
+                exclude_ids = [int(x) for x in exclude_str.split(',') if x.strip()]
+            except ValueError:
+                pass
+
+        # Trigger Swiggy sync if querying a specific city
+        if city:
+            if not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
+                try:
+                    from .swiggy_helper import sync_swiggy_restaurants
+                    sync_swiggy_restaurants(city_name=city)
+                except Exception as e:
+                    print(f"Error syncing Swiggy restaurants for city {city}: {e}")
+
+        base_qs = Restaurant.objects.filter(status='approved', is_active=True)
+        
+        # Primary filter by city
+        if city:
+            qs = base_qs.filter(Q(city__icontains=city) | Q(address__icontains=city))
+        else:
+            qs = base_qs
+
+        # Exclude IDs
+        if exclude_ids:
+            qs = qs.exclude(id__in=exclude_ids)
+
+        ids = list(qs.values_list('id', flat=True))
+        
+        # Fallback to base_qs (dropping city filter) if not enough restaurants
+        if len(ids) < count:
+            qs = base_qs
+            if exclude_ids:
+                qs = qs.exclude(id__in=exclude_ids)
+            ids = list(qs.values_list('id', flat=True))
+
+        # Fallback: if STILL not enough, allow choosing from excluded ones too to avoid empty results
+        if len(ids) < count:
+            qs = base_qs
+            ids = list(qs.values_list('id', flat=True))
+
+        if len(ids) < count:
+            return Response({'detail': 'Not enough restaurants for a duel.'}, status=404)
+
+        picked_ids = rnd.sample(ids, min(len(ids), count))
+        restaurants = Restaurant.objects.filter(id__in=picked_ids)
+        # Preserve random ordering
+        restaurants = sorted(restaurants, key=lambda r: picked_ids.index(r.id))
+        
+        serializer = RestaurantSerializer(restaurants, many=True, context={'request': request})
+        return Response(serializer.data)
+
+
+

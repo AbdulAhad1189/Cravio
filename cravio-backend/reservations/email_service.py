@@ -170,3 +170,94 @@ See you there!
     except Exception as e:
         print(f"[EMAIL ERROR] Reminder send failed for {user.email}: {e}")
         return False
+
+
+def send_status_update_email(reservation):
+    """Send an email notification to the user when the reservation status is updated."""
+    user = reservation.user
+    restaurant = reservation.restaurant
+    recipient = user.email
+
+    if reservation.status == 'confirmed':
+        status_text = "CONFIRMED"
+        subject = f"Your Cravio Reservation is CONFIRMED — {restaurant.name}"
+        color = "#155724"
+        bg_color = "#d4edda"
+        alert_emoji = "✅"
+        body_msg = "Great news! Your table reservation request has been approved by the restaurant. Here are your booking details:"
+    elif reservation.status == 'cancelled':
+        status_text = "CANCELLED"
+        subject = f"Your Cravio Reservation is CANCELLED — {restaurant.name}"
+        color = "#721c24"
+        bg_color = "#f8d7da"
+        alert_emoji = "❌"
+        body_msg = "We regret to inform you that your table reservation request has been cancelled by the restaurant (possibly due to no seats being available). Here are the details of the request:"
+    else:
+        return False
+
+    message = f"""
+Hi {user.first_name or 'there'},
+
+Your reservation at {restaurant.name} is {status_text}.
+
+Reservation Details:
+  Date     : {reservation.date.strftime('%A, %d %B %Y')}
+  Time     : {reservation.time.strftime('%I:%M %p')}
+  Guests   : {reservation.guests}
+  Restaurant: {restaurant.name}
+  Address  : {restaurant.address}, {restaurant.city}
+
+— Team Cravio
+"""
+
+    html_message = f"""
+<!DOCTYPE html>
+<html>
+<body style="font-family:Arial,sans-serif;background:#f5f0e8;margin:0;padding:30px">
+  <div style="max-width:480px;margin:0 auto;background:white;border-radius:16px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,0.08)">
+    <div style="background:#4a5c3f;padding:28px 32px;text-align:center">
+      <h1 style="color:white;margin:0;font-size:1.6rem;letter-spacing:1px">Cravio</h1>
+      <p style="color:rgba(255,255,255,0.75);margin:6px 0 0;font-size:0.85rem">Good Food. Great Times.</p>
+    </div>
+    <div style="padding:32px">
+      <div style="background:{bg_color};border:1px solid {color};border-radius:10px;padding:14px 18px;margin-bottom:22px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:1.8rem">{alert_emoji}</span>
+        <div>
+          <div style="font-weight:700;color:{color};font-size:0.95rem">Reservation {status_text}</div>
+          <div style="color:{color};font-size:0.82rem;margin-top:2px">{body_msg}</div>
+        </div>
+      </div>
+
+      <p style="color:#333;font-size:1rem;margin-top:0">Hi <strong>{user.first_name or 'there'}</strong>,</p>
+
+      <table style="width:100%;border-collapse:collapse;font-size:0.88rem;color:#555;margin:16px 0">
+        <tr style="background:#f5f0e8"><td style="padding:10px 12px;color:#888;border-radius:6px">Status</td><td style="padding:10px 12px;font-weight:700;color:{color};font-size:1rem">{status_text}</td></tr>
+        <tr><td style="padding:10px 12px;color:#888">Date</td><td style="padding:10px 12px;font-weight:600;color:#333">{reservation.date.strftime('%A, %d %B %Y')}</td></tr>
+        <tr style="background:#f5f0e8"><td style="padding:10px 12px;color:#888">Time</td><td style="padding:10px 12px;font-weight:600;color:#333">{reservation.time.strftime('%I:%M %p')}</td></tr>
+        <tr><td style="padding:10px 12px;color:#888">Guests</td><td style="padding:10px 12px;font-weight:600;color:#333">{reservation.guests}</td></tr>
+        <tr style="background:#f5f0e8"><td style="padding:10px 12px;color:#888">Restaurant</td><td style="padding:10px 12px;font-weight:600;color:#333">{restaurant.name}</td></tr>
+        <tr><td style="padding:10px 12px;color:#888">Address</td><td style="padding:10px 12px;color:#555">{restaurant.address}, {restaurant.city}</td></tr>
+      </table>
+
+      <p style="color:#aaa;font-size:0.78rem;margin-top:24px;border-top:1px solid #eee;padding-top:16px">
+        Thank you for choosing Cravio! — Team Cravio
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+"""
+
+    try:
+        send_mail(
+            subject=subject,
+            message=message,
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[recipient],
+            html_message=html_message,
+            fail_silently=False,
+        )
+        return True
+    except Exception as e:
+        print(f"[EMAIL ERROR] Status email send failed for {recipient}: {e}")
+        return False

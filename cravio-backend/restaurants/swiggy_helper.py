@@ -282,6 +282,13 @@ def sync_swiggy_restaurants(lat='12.9715987', lng='77.5945627', city_name=None):
             )
             synced_restaurants.append(restaurant)
             
+    for r in synced_restaurants:
+        try:
+            sync_swiggy_menu(r)
+            sync_swiggy_reviews(r)
+        except Exception as e:
+            print(f"Error syncing menu/reviews for {r.name}: {e}")
+            
     return synced_restaurants
 
 def sync_swiggy_menu(restaurant):

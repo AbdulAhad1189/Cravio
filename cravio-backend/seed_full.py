@@ -115,6 +115,29 @@ RESTAURANT_DATA = [
     dict(name='Khorika',             cuisine='North Indian, Seafood', city='Guwahati',    state='Assam',           pincode='781001', address='GS Road, Guwahati',             owner=owner5, average_rating=4.4, total_reviews=150),
 ]
 
+RESTAURANT_DESCRIPTIONS = {
+    'The Spice Room': 'A sophisticated dining room offering a rich tapestry of North Indian spices, slow-cooked curries, and hand-stretched tandoori breads.',
+    'Café Willow': 'A cozy, sun-drenched cafe with artisanal coffee brews, freshly baked treats, and classic continental comfort food.',
+    'Mumbai Darbar': 'A celebration of Mumbai\'s heritage with legendary slow-cooked Mughlai curries, fragrant biryanis, and royal kebabs.',
+    'Pav Bhaji Palace': 'A bustling local favorite serving street-style pav bhaji dripping with butter, spicy chaats, and local Maharashtrian delicacies.',
+    'Dilli Haat Kitchen': 'Bringing the vibrant colors and legendary street flavors of old Delhi to your table, with recipes passed down through generations.',
+    'Old Delhi Biryani': 'Authentic charcoal-cooked Degh biryanis, slow-steamed with premium basmati rice, pure ghee, and secret spices.',
+    'Murugan Idli Shop': 'Famous for cloud-soft steamed idlis, crispy golden dosas, and a colorful array of traditional house chutneys.',
+    'The Marina Seafood': 'Experience the catch of the day cooked with authentic coastal spices, overlooking the bay.',
+    'Paradise Biryani': 'The undisputed king of Hyderabadi biryani, layered with saffron-scented rice and slow-dum tender meat.',
+    'Chutneys Hyderabad': 'A legendary vegetarian dining experience featuring six iconic house-made chutneys served with giant paper-thin dosas.',
+    'Arsalan Kolkata': 'Kolkata\'s iconic Mughal destination, famous for its melt-in-mouth Kolkata-style potato and meat biryani.',
+    'Oh! Calcutta': 'A nostalgic journey into Bengal\'s rich culinary heritage, featuring authentic fish curries, mustard gravies, and traditional sweets.',
+    'Lal Mahal Dawat': 'A royal Rajasthani dining experience serving heritage recipes like Laal Maas, Dal Baati, and sweet Churma in a palace setting.',
+    'Agashiye': 'A beautiful terrace dining destination serving unlimited traditional Gujarati thalis showcasing seasonal regional specialties.',
+    'Dhaba on the Street': 'A rustic, highway-style dhaba experience serving hot tandoori rotis, buttery paneer, and authentic Amritsari kulchas.',
+    'Paragon Restaurant': 'A Malabar culinary institution, celebrated for its legendary fish curries, seafood fries, and historic recipes.',
+    'Fisherman\'s Wharf': 'A vibrant, riverside Goan shack experience serving authentic Portuguese-Goan fish curries, feni cocktails, and live music vibes.',
+    'Tunday Kababi': 'The legendary Lucknowi culinary treasure, serving melt-in-your-mouth minced buffalo galouti kebabs infused with 160 secret spices.',
+    'Indian Cafe Bhopal': 'A relaxed student and family favorite offering a perfect mix of street food platters, thick milkshakes, and North Indian comfort meals.',
+    'Khorika': 'An authentic Assamese dining experience showcasing traditional smoke-grilled meats, tangy fish curries, and local bamboo shoot delicacies.',
+}
+
 restaurants = []
 for rd in RESTAURANT_DATA:
     r, created = Restaurant.objects.get_or_create(
@@ -125,12 +148,13 @@ for rd in RESTAURANT_DATA:
             'is_active': True,
             'opening_time': time(10, 0),
             'closing_time': time(23, 0),
-            'description': f"A popular {rd['cuisine']} restaurant in {rd['city']}, known for authentic flavors and warm hospitality.",
+            'description': RESTAURANT_DESCRIPTIONS.get(rd['name'], f"A popular {rd['cuisine']} restaurant in {rd['city']}, known for authentic flavors and warm hospitality."),
         }
     )
     if created:
         print(f"  + Restaurant: {r.name} ({r.city}, {r.state})")
     restaurants.append(r)
+
 
 print(f"  ✓ {len(restaurants)} restaurants ready")
 
@@ -239,6 +263,70 @@ DEFAULT_FOODS = [
     ('Lassi',             'Cafe',        80,  True),
 ]
 
+DELICIOUS_DESCRIPTIONS = {
+    'Butter Chicken': 'Tender roasted chicken pieces cooked in a rich, creamy, and mildly spiced tomato and butter gravy.',
+    'Dal Makhani': 'Slow-cooked black lentils and kidney beans simmered overnight with cream, butter, and select spices.',
+    'Paneer Tikka': 'Cubes of cottage cheese marinated in spiced yogurt and grilled to perfection in a tandoor.',
+    'Seekh Kebab': 'Minced mutton blended with aromatic spices, skewered and grilled over charcoal.',
+    'Garlic Naan': 'Soft and fluffy leavened flatbread topped with minced garlic and brushed with fresh butter.',
+    'Masala Dosa': 'Thin, crispy rice and lentil crepe stuffed with a spiced potato mash, served with sambar and coconut chutney.',
+    'Idli Sambhar': 'Steamed fluffy rice-and-lentil cakes served with hot, aromatic lentil soup (sambar) and fresh chutneys.',
+    'Vada': 'Crispy, deep-fried savory lentil doughnuts served with sambar and coconut chutney.',
+    'Uttapam': 'Thick, savory pancake made from fermented rice and lentil batter, topped with chopped onions, tomatoes, and green chilies.',
+    'Filter Coffee': 'Traditional South Indian chicory-infused coffee brewed with hot frothed milk in a brass filter.',
+    'Chicken Dum Biryani': 'Fragrant basmati rice layered with succulent chicken, saffron, and whole spices, slow-cooked on dum.',
+    'Mutton Biryani': 'Aromatic basmati rice cooked with tender mutton chunks, layered with caramelized onions, saffron, and fresh mint.',
+    'Veg Biryani': 'Fragrant basmati rice cooked with a variety of fresh vegetables, paneer, aromatic herbs, and whole spices.',
+    'Raita': 'Cool, refreshing spiced yogurt dip mixed with chopped cucumber, tomatoes, and toasted cumin.',
+    'Shorba': 'A rich, flavorful, and warm Mughlai-style spiced vegetable or chicken broth.',
+    'Cappuccino': 'Rich espresso shot topped with a thick layer of steamed and frothed milk, dusted with cocoa powder.',
+    'Avocado Toast': 'Toasted sourdough bread topped with mashed avocado, cherry tomatoes, feta cheese, and a drizzle of olive oil.',
+    'Eggs Benedict': 'Poached eggs served on toasted English muffins, topped with smoked ham or spinach and rich, buttery hollandaise sauce.',
+    'Blueberry Muffin': 'Warm, moist, and fluffy bakery-style muffin loaded with sweet blueberries.',
+    'Chicken Sandwich': 'Grilled chicken breast with fresh lettuce, tomatoes, cheese, and herb mayonnaise in toasted artisanal bread.',
+    'Pav Bhaji': 'A thick, spicy vegetable mash cooked in butter and served with warm, toasted buttered bread rolls (pav).',
+    'Vada Pav': 'Classic Mumbai street food featuring a spicy fried potato dumpling in a soft bread roll with spicy garlic chutney.',
+    'Pani Puri': 'Crispy hollow puris filled with spiced potatoes, chickpeas, and a tangy, spicy tamarind and mint water.',
+    'Bhel Puri': 'A savory street food snack made of puffed rice, vegetables, peanuts, and tangy tamarind chutney.',
+    'Misal Pav': 'A spicy sprouted lentil curry topped with farsan (crispy mix), onions, and lemon, served with soft pav.',
+    'Grilled Pomfret': 'Whole pomfret fish marinated in coastal spices and grilled to a juicy perfection.',
+    'Prawn Masala': 'Fresh prawns cooked in a thick, spicy, and tangy onion-tomato gravy with coconut milk.',
+    'Fish Curry Rice': 'Traditional coastal-style spicy fish curry served with steamed basmati rice.',
+    'Calamari Rings': 'Crispy, golden-fried squid rings served with a side of garlic aioli.',
+    'Crab Butter Garlic': 'Fresh crab tossed in a rich, velvety sauce of butter, garlic, and fresh herbs.',
+    'Margherita Pizza': 'Classic Neapolitan pizza topped with fresh tomato sauce, mozzarella cheese, and fresh basil leaves.',
+    'Pasta Arrabiata': 'Penne pasta tossed in a fiery tomato sauce with garlic, red chili flakes, and olive oil.',
+    'Tiramisu': 'Classic Italian dessert made of coffee-soaked ladyfingers layered with a whipped mixture of mascarpone and cocoa.',
+    'Bruschetta': 'Toasted bread rubbed with garlic and topped with diced tomatoes, fresh basil, and extra virgin olive oil.',
+    'Risotto Fungi': 'Creamy Italian arborio rice slow-cooked with fresh wild mushrooms, parmesan cheese, and white wine.',
+    'Dal Baati Churma': 'Traditional Rajasthani platter containing baked wheat balls, spiced lentil curry, and sweet crumbled wheat mixture.',
+    'Laal Maas': 'A fiery Rajasthani mutton curry cooked in a rich paste of red Mathania chilies and garlic.',
+    'Gatte ki Sabzi': 'Gram flour dumplings cooked in a rich, tangy yogurt-based gravy with traditional spices.',
+    'Kachori': 'Flaky, deep-fried pastry stuffed with a spiced mixture of lentils, onions, and potatoes.',
+    'Mawa Kachori': 'A sweet Rajasthani specialty: a deep-fried pastry filled with sweetened mawa (milk solids) and nuts, dipped in sugar syrup.',
+    'Dhokla': 'Steamed, spongy, and savory cakes made from fermented chickpea batter, tempered with mustard seeds and curry leaves.',
+    'Thepla': 'Flatbread made from whole wheat flour, fenugreek leaves, and spices, served with fresh pickles.',
+    'Undhiyu': 'A classic Gujarati mixed vegetable dish slow-cooked with fenugreek dumplings and spices.',
+    'Fafda Jalebi': 'A popular Gujarati Sunday breakfast combination of crispy chickpea flour sticks and sweet, syrupy jalebis.',
+    'Handvo': 'A savory, baked lentil cake made from a batter of rice, lentils, and mixed vegetables, tempered with mustard seeds.',
+    'Karimeen Pollichathu': 'Pearl spot fish marinated in spicy masala, wrapped in a banana leaf, and pan-fried to a smoky finish.',
+    'Kerala Prawn Curry': 'Juicy prawns simmered in a mildly spiced coconut milk gravy with raw mangoes and curry leaves.',
+    'Fish Molee': 'A delicate, creamy Kerala-style fish stew prepared with coconut milk, green chilies, and ginger.',
+    'Appam Stew': 'Soft, lacy rice pancakes served with a rich coconut milk vegetable stew.',
+    'Kozhikodan Halwa': 'Traditional sweet, gelatinous Kerala halwa made with double-refined flour, ghee, and coconut oil, flavored with cardamom.',
+    'Shahi Paneer': 'Cottage cheese cubes simmered in a royal, creamy, and nutty gravy made with cashews, tomatoes, and spices.',
+    'Chicken Korma': 'Tender chicken slow-cooked in a rich, aromatic gravy of yogurt, cream, paste of nuts, and mild spices.',
+    'Cold Coffee': 'Chilled frothed milk blended with rich espresso and vanilla ice cream.',
+    'Chocolate Cake': 'Rich, moist double-chocolate layer cake topped with dark chocolate ganache.',
+    'Masor Tenga': 'A light, tangy Assamese fish curry cooked with tomatoes, outenga (elephant apple), and lemon juice.',
+    'Aloo Pitika': 'Comforting Assamese side dish of mashed potatoes seasoned with mustard oil, chopped onions, and green chilies.',
+    'Pitha': 'Traditional Assamese sweet rice cakes stuffed with grated coconut and jaggery, roasted inside hollow bamboo.',
+    'Duck Curry': 'Duck meat cooked with ash gourd (komora) in a rich, traditional Assamese spice blend.',
+    'Special Thali': 'A grand platter featuring a curated selection of starters, mains, curries, bread, rice, and desserts.',
+    'Rasgulla': 'Soft, spongy chenna balls soaked in a sweet, light cardamom-flavored sugar syrup.',
+    'Lassi': 'Thick, creamy yogurt drink blended with sugar and cardamom, served chilled in a clay pot.',
+}
+
 food_items_all = []
 for r in restaurants:
     template = FOOD_TEMPLATES.get(r.cuisine, DEFAULT_FOODS)
@@ -248,7 +336,7 @@ for r in restaurants:
             defaults=dict(
                 category=cats.get(cat_name),
                 price=price, is_veg=is_veg, is_available=True,
-                description=f'Freshly prepared {fname.lower()}',
+                description=DELICIOUS_DESCRIPTIONS.get(fname, f'Freshly prepared {fname.lower()}'),
             )
         )
         food_items_all.append(food)
@@ -269,6 +357,26 @@ REVIEW_TEXTS = [
     "Generous portions and great taste. Value for money.",
     "The seafood was super fresh. Best catch in town!",
     "Authentic regional flavours. Felt like home-cooked food.",
+    "The staff was incredibly polite and helped us choose the best dishes.",
+    "We ordered the special thali and it was a feast! Every item was delicious.",
+    "A clean, hygienic place with quick table service. 10/10.",
+    "The tandoori starters are exceptionally juicy. Highly recommend the paneer tikka.",
+    "Lovely place to dine with family. The music was pleasant and not too loud.",
+    "The spices are perfectly balanced - not too hot, but very flavorful.",
+    "Their filter coffee is outstanding! Reminds me of traditional home-brewed coffee.",
+    "Great location and very easy to book a table through Cravio.",
+    "We had a wonderful Sunday lunch here. The food arrived piping hot.",
+    "Crispy dosas and authentic chutneys. A must-visit breakfast spot.",
+    "The mocktails were a bit sweet, but the main course was stellar.",
+    "Superb presentation and authentic taste. Worth every rupee.",
+    "The garlic naan was thin, soft, and loaded with butter. Perfect with the dal.",
+    "Excellent place for corporate dinners. High-quality service and taste.",
+    "Best street food flavours in a clean restaurant setting. Pav bhaji was excellent.",
+    "A legendary spot for a reason. Still maintains its high standards.",
+    "Every bite was full of flavor. The slow-cooked mutton was incredibly tender.",
+    "Lovely rustic vibes. The bamboo shoot dishes are highly unique and delicious.",
+    "Quick delivery and excellent packaging. Food was still warm.",
+    "Authentic woodfired style. The crust was thin and perfectly charred."
 ]
 
 review_count = 0
@@ -276,13 +384,16 @@ for r in restaurants:
     used_customers = random.sample(customers, min(random.randint(3, 8), len(customers)))
     for rating_offset, customer in enumerate(used_customers):
         rating = min(5, max(3, r.average_rating + random.uniform(-1, 0.5)))
-        Review.objects.get_or_create(
+        rev, created = Review.objects.get_or_create(
             user=customer, restaurant=r,
             defaults=dict(
                 rating=int(round(rating)),
                 comment=random.choice(REVIEW_TEXTS),
             )
         )
+        days_ago = random.randint(1, 60)
+        review_date = timezone.now() - timedelta(days=days_ago, hours=random.randint(0, 23))
+        Review.objects.filter(id=rev.id).update(created_at=review_date)
         review_count += 1
 
 print(f"  ✓ {review_count} reviews added")

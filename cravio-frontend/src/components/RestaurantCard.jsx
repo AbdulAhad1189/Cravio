@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LiveStatusBadge from './LiveStatusBadge';
 
 const MOCK_DATA = {
   'Olive Bistro':   { discount: '20% OFF', rating: 4.8, reviews: 212, time: '30-40 min', price: '₹400 for two', image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80' },
@@ -16,6 +17,39 @@ const getWishlist = () => {
 };
 const saveWishlist = (list) => localStorage.setItem('cravio_wishlist', JSON.stringify(list));
 
+// Dynamic price for two per restaurant
+function getCostForTwo(restaurant) {
+  if (restaurant?.cost_for_two) return `₹${restaurant.cost_for_two} for two`;
+  if (restaurant?.price_for_two) return `₹${restaurant.price_for_two} for two`;
+  
+  const cuisine = (restaurant?.cuisine || '').toLowerCase();
+  const id = restaurant?.id || 1;
+  const hash = (id * 149 + (restaurant?.name || '').length * 23) % 9;
+  
+  let base = 350;
+  if (cuisine.includes('italian') || cuisine.includes('continental') || cuisine.includes('fine')) {
+    base = 750 + hash * 80;
+  } else if (cuisine.includes('north indian') || cuisine.includes('biryani') || cuisine.includes('barbeque')) {
+    base = 450 + hash * 60;
+  } else if (cuisine.includes('chinese') || cuisine.includes('asian') || cuisine.includes('thai')) {
+    base = 400 + hash * 50;
+  } else if (cuisine.includes('cafe') || cuisine.includes('pizza') || cuisine.includes('burger')) {
+    base = 320 + hash * 40;
+  } else if (cuisine.includes('dessert') || cuisine.includes('ice cream') || cuisine.includes('bakery')) {
+    base = 220 + hash * 30;
+  } else {
+    base = 350 + hash * 50;
+  }
+  return `₹${base} for two`;
+}
+
+function getDeliveryTime(restaurant) {
+  if (restaurant?.delivery_time) return restaurant.delivery_time;
+  const id = restaurant?.id || 1;
+  const minTime = 20 + ((id * 11) % 25);
+  return `${minTime}-${minTime + 10} min`;
+}
+
 export default function RestaurantCard({ restaurant }) {
   const { id, name, cuisine, image, average_rating, total_reviews, city, state, address } = restaurant;
   const { user } = useAuth();
@@ -30,28 +64,25 @@ export default function RestaurantCard({ restaurant }) {
   const displayRating = mock.rating  || average_rating || 4.0;
   const displayReviews= mock.reviews || total_reviews  || 0;
   const displayDiscount = mock.discount || (average_rating >= 4.5 ? '20% OFF' : null);
-  const displayTime   = mock.time  || '20-30 min';
-  const displayPrice  = mock.price || '₹300 for two';
+  const displayTime   = mock.time  || getDeliveryTime(restaurant);
+  const displayPrice  = mock.price || getCostForTwo(restaurant);
 
   const handleWishlist = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Not logged in → redirect to login with ?next= current page
     if (!user) {
       const returnTo = location.pathname + location.search;
       navigate(`/login?next=${encodeURIComponent(returnTo)}`);
       return;
     }
 
-    // Toggle wishlist
     const current = getWishlist();
     let updated;
     if (current.includes(id)) {
       updated = current.filter(x => x !== id);
     } else {
       updated = [...current, id];
-      // Pulse animation
       setPulse(true);
       setTimeout(() => setPulse(false), 400);
     }
@@ -116,6 +147,11 @@ export default function RestaurantCard({ restaurant }) {
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
             </svg>
           </button>
+
+          {/* Live Busyness Badge */}
+          <div style={{ position: 'absolute', bottom: 8, left: 8 }}>
+            <LiveStatusBadge restaurantId={id} />
+          </div>
         </div>
 
         {/* Content */}
@@ -123,7 +159,6 @@ export default function RestaurantCard({ restaurant }) {
           <div>
             <h3 style={{ fontSize: '0.98rem', fontWeight: 600, color: 'var(--dark)', marginBottom: 3, fontFamily: 'Inter, sans-serif' }}>{name}</h3>
             <p style={{ fontSize: '0.8rem', color: 'var(--text-muted)', marginBottom: 5, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{cuisine}</p>
-            {/* Location — city, state (falls back to address area) */}
             {(city || state || address) && (() => {
               const locationText = (city && city.length > 3)
                 ? [city, state].filter(Boolean).join(', ')

@@ -22,7 +22,7 @@ export default function About() {
             <path d="M21 15V2v0a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7" />
           </svg>
         </div>
-        <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.8rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '16px' }}>About Cravio</h1>
+        <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.8rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '16px' }}>About Cravio</h1>
         <p style={{ color: 'var(--text-muted)', fontSize: '1.1rem', maxWidth: '560px', margin: '0 auto', lineHeight: 1.7 }}>
           Good Food. Great Times. We connect food lovers with the best restaurants, making every dining experience unforgettable.
         </p>
@@ -32,7 +32,7 @@ export default function About() {
         {/* Mission */}
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '40px', alignItems: 'center', marginBottom: '60px' }}>
           <div>
-            <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontWeight: 700, marginBottom: '16px' }}>Our Mission</h2>
+            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', fontWeight: 700, marginBottom: '16px' }}>Our Mission</h2>
             <p style={{ color: 'var(--text-muted)', lineHeight: 1.8, marginBottom: '16px' }}>
               Cravio was built to make dining out effortless. We believe that great food is better when paired with a great experience — from browsing menus to booking tables.
             </p>
@@ -44,7 +44,7 @@ export default function About() {
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px' }}>
               {[['500+', 'Restaurants'], ['50K+', 'Orders Served'], ['10K+', 'Happy Customers'], ['4.8★', 'Avg Rating']].map(([num, label]) => (
                 <div key={label}>
-                  <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontWeight: 700, color: 'var(--olive)' }}>{num}</div>
+                  <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', fontWeight: 700, color: 'var(--olive)' }}>{num}</div>
                   <div style={{ fontSize: '0.88rem', color: 'var(--text-muted)' }}>{label}</div>
                 </div>
               ))}
@@ -53,7 +53,7 @@ export default function About() {
         </div>
 
         {/* Values */}
-        <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, textAlign: 'center', marginBottom: '32px' }}>What We Stand For</h2>
+        <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem', fontWeight: 700, textAlign: 'center', marginBottom: '32px' }}>What We Stand For</h2>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '20px', marginBottom: '60px' }}>
           {values.map(val => (
             <div key={val.title} style={{ background: 'white', borderRadius: '14px', padding: '24px', border: '1px solid var(--border)', textAlign: 'center' }}>
@@ -66,7 +66,7 @@ export default function About() {
 
         {/* CTA */}
         <div style={{ textAlign: 'center', background: 'var(--olive)', borderRadius: '20px', padding: '48px 40px', color: 'white' }}>
-          <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', marginBottom: '12px' }}>Ready to explore?</h2>
+          <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', marginBottom: '12px' }}>Ready to explore?</h2>
           <p style={{ opacity: 0.85, marginBottom: '24px' }}>Join thousands of food lovers discovering great dining experiences every day.</p>
           <Link to="/restaurants" style={{ background: 'white', color: 'var(--olive)', padding: '12px 32px', borderRadius: '9px', fontWeight: 600, textDecoration: 'none', display: 'inline-block' }}>
             Browse Restaurants

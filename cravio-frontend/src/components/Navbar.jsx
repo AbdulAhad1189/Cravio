@@ -7,56 +7,56 @@ import { useLocationStore, detectCurrentLocation, lookupPincode, setLocation as 
 /* ── Icons ── */
 const PlateIcon = () => (
   <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/>
-    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7"/>
+    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2" /><path d="M7 2v20" />
+    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3v7" />
   </svg>
 );
 const MapPin = ({ size = 13 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+    <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" />
   </svg>
 );
 const HeartIcon = () => (
   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--dark-soft)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
   </svg>
 );
 const CartIcon = () => (
   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--dark-soft)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
-    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+    <circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" />
+    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
   </svg>
 );
 const OrdersIcon = () => (
   <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="var(--dark-soft)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
-    <rect x="9" y="3" width="6" height="4" rx="1"/>
-    <line x1="9" y1="12" x2="15" y2="12"/><line x1="9" y1="16" x2="13" y2="16"/>
+    <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2" />
+    <rect x="9" y="3" width="6" height="4" rx="1" />
+    <line x1="9" y1="12" x2="15" y2="12" /><line x1="9" y1="16" x2="13" y2="16" />
   </svg>
 );
 const MenuIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--dark)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/>
+    <line x1="3" y1="6" x2="21" y2="6" /><line x1="3" y1="12" x2="21" y2="12" /><line x1="3" y1="18" x2="21" y2="18" />
   </svg>
 );
 const CloseIcon = () => (
   <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
   </svg>
 );
 const LocateIcon = () => (
   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-    <circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>
+    <circle cx="12" cy="12" r="3" /><path d="M12 2v3M12 19v3M2 12h3M19 12h3" />
   </svg>
 );
 
 const INDIAN_STATES = [
-  'Andhra Pradesh','Arunachal Pradesh','Assam','Bihar','Chhattisgarh','Goa',
-  'Gujarat','Haryana','Himachal Pradesh','Jharkhand','Karnataka','Kerala',
-  'Madhya Pradesh','Maharashtra','Manipur','Meghalaya','Mizoram','Nagaland',
-  'Odisha','Punjab','Rajasthan','Sikkim','Tamil Nadu','Telangana','Tripura',
-  'Uttar Pradesh','Uttarakhand','West Bengal',
-  'Delhi','Chandigarh','Puducherry','Jammu & Kashmir','Ladakh',
+  'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chhattisgarh', 'Goa',
+  'Gujarat', 'Haryana', 'Himachal Pradesh', 'Jharkhand', 'Karnataka', 'Kerala',
+  'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland',
+  'Odisha', 'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura',
+  'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+  'Delhi', 'Chandigarh', 'Puducherry', 'Jammu & Kashmir', 'Ladakh',
 ];
 
 const getNavLinks = (user) => {
@@ -99,15 +99,17 @@ export default function Navbar() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const [userMenuOpen, setUserMenuOpen]   = useState(false);
-  const [sidebarOpen, setSidebarOpen]     = useState(false);
-  const [locDropOpen, setLocDropOpen]     = useState(false);
-  const [locLoading, setLocLoading]       = useState(false);
-  const [locError, setLocError]           = useState('');
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [locDropOpen, setLocDropOpen] = useState(false);
+  const [locLoading, setLocLoading] = useState(false);
+  const [locError, setLocError] = useState('');
   const [activeOrderCount, setActiveOrderCount] = useState(0);
   // Pincode input inside location dropdown
-  const [locPincode, setLocPincode]       = useState('');
+  const [locPincode, setLocPincode] = useState('');
   const [locPincodeLoading, setLocPincodeLoading] = useState(false);
+
+  const [playOpen, setPlayOpen] = useState(false);
 
   // Central location store
   const { location: savedLoc, setLocation: saveLocStore, clearLocation: clearLocStore, hasLocation } = useLocationStore();
@@ -115,7 +117,8 @@ export default function Navbar() {
   const locationLabel = savedLoc?.display || 'Set Location';
 
   const userMenuRef = useRef(null);
-  const locRef      = useRef(null);
+  const locRef = useRef(null);
+  const playRef = useRef(null);
 
   // Fetch active order count for badge
   useEffect(() => {
@@ -126,7 +129,7 @@ export default function Navbar() {
         const active = orders.filter(o => !['delivered', 'cancelled'].includes(o.status));
         setActiveOrderCount(active.length);
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [user]);
 
   // Close dropdowns on outside click
@@ -134,13 +137,14 @@ export default function Navbar() {
     const h = (e) => {
       if (userMenuRef.current && !userMenuRef.current.contains(e.target)) setUserMenuOpen(false);
       if (locRef.current && !locRef.current.contains(e.target)) setLocDropOpen(false);
+      if (playRef.current && !playRef.current.contains(e.target)) setPlayOpen(false);
     };
     document.addEventListener('mousedown', h);
     return () => document.removeEventListener('mousedown', h);
   }, []);
 
   // Close sidebar / menus on route change
-  useEffect(() => { setSidebarOpen(false); setUserMenuOpen(false); setLocDropOpen(false); }, [location]);
+  useEffect(() => { setSidebarOpen(false); setUserMenuOpen(false); setLocDropOpen(false); setPlayOpen(false); }, [location]);
 
   // Lock body scroll when sidebar open
   useEffect(() => {
@@ -215,20 +219,130 @@ export default function Navbar() {
           <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9, flexShrink: 0 }}>
             <div style={{ width: 36, height: 36, borderRadius: '50%', background: 'var(--olive)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><PlateIcon /></div>
             <div style={{ lineHeight: 1 }}>
-              <div style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.25rem', fontWeight: 700, color: 'var(--dark)' }}>Cravio</div>
+              <div style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.25rem', fontWeight: 700, color: 'var(--dark)' }}>Cravio</div>
               <div style={{ fontSize: '0.6rem', color: 'var(--text-muted)', letterSpacing: '0.4px', marginTop: 1 }}>Good Food. Great Times.</div>
             </div>
           </Link>
 
           {/* Desktop nav links */}
           <div className="desktop-nav" style={{ display: 'flex', gap: 26, alignItems: 'center', flex: 1, justifyContent: 'center' }}>
-            {navLinks.map(link => {
+            {navLinks.map((link, idx) => {
               const active = isActive(link.to);
+              const isCustomerOrGuest = !user || user.role === 'customer';
+              const showDropdown = isCustomerOrGuest && idx === 3; // Put it right before Bookings (index 3 is Reservations/Bookings)
+              
               return (
-                <Link key={link.to} to={link.to} style={{ textDecoration: 'none', fontSize: '0.9rem', fontWeight: active ? 600 : 400, color: active ? 'var(--dark)' : 'var(--dark-soft)', paddingBottom: 2, borderBottom: active ? '2px solid var(--dark)' : '2px solid transparent', transition: 'color 0.15s', whiteSpace: 'nowrap' }}
-                  onMouseEnter={e => { if (!active) e.currentTarget.style.color = 'var(--olive)'; }}
-                  onMouseLeave={e => { if (!active) e.currentTarget.style.color = 'var(--dark-soft)'; }}
-                >{link.label}</Link>
+                <React.Fragment key={link.to}>
+                  {showDropdown && (
+                    <div ref={playRef} style={{ position: 'relative', display: 'inline-block' }}>
+                      <button
+                        onClick={() => setPlayOpen(v => !v)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          fontSize: '0.9rem',
+                          fontWeight: playOpen ? 600 : 400,
+                          color: playOpen ? 'var(--dark)' : 'var(--dark-soft)',
+                          paddingBottom: 2,
+                          borderBottom: playOpen ? '2px solid var(--dark)' : '2px solid transparent',
+                          transition: 'all 0.15s',
+                          whiteSpace: 'nowrap',
+                          fontFamily: 'inherit',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '4px'
+                        }}
+                        onMouseEnter={e => { e.currentTarget.style.color = 'var(--olive)'; }}
+                        onMouseLeave={e => { if (!playOpen) e.currentTarget.style.color = 'var(--dark-soft)'; }}
+                      >
+                        🎮 Crave Zone <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>▼</span>
+                      </button>
+                      {playOpen && (
+                        <div style={{
+                          position: 'absolute',
+                          left: '50%',
+                          transform: 'translateX(-50%)',
+                          top: 30,
+                          width: 190,
+                          background: 'white',
+                          border: '1px solid var(--border)',
+                          borderRadius: 12,
+                          boxShadow: '0 8px 24px rgba(0,0,0,0.10)',
+                          zIndex: 1000,
+                          overflow: 'hidden',
+                          padding: '6px 0',
+                          textAlign: 'left'
+                        }}>
+                          <Link
+                            to="/cravematch"
+                            onClick={() => setPlayOpen(false)}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 10,
+                              padding: '10px 16px',
+                              textDecoration: 'none',
+                              color: 'var(--dark)',
+                              fontSize: '0.85rem',
+                              transition: 'background 0.15s'
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'var(--cream)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'white'}
+                          >
+                            <span>🎯</span> CraveMatch Quiz
+                          </Link>
+                          <Link
+                            to="/flavor-duel"
+                            onClick={() => setPlayOpen(false)}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 10,
+                              padding: '10px 16px',
+                              textDecoration: 'none',
+                              color: 'var(--dark)',
+                              fontSize: '0.85rem',
+                              transition: 'background 0.15s'
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'var(--cream)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'white'}
+                          >
+                            <span>⚔️</span> Flavor Duel
+                          </Link>
+                          <a
+                            href="/#roulette"
+                            onClick={() => {
+                              setPlayOpen(false);
+                              setTimeout(() => {
+                                const el = document.getElementById('roulette');
+                                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                              }, 100);
+                            }}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 10,
+                              padding: '10px 16px',
+                              textDecoration: 'none',
+                              color: 'var(--dark)',
+                              fontSize: '0.85rem',
+                              transition: 'background 0.15s'
+                            }}
+                            onMouseEnter={e => e.currentTarget.style.background = 'var(--cream)'}
+                            onMouseLeave={e => e.currentTarget.style.background = 'white'}
+                          >
+                            <span>🎲</span> Cravio Roulette
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  )}
+                  <Link to={link.to} style={{ textDecoration: 'none', fontSize: '0.9rem', fontWeight: active ? 600 : 400, color: active ? 'var(--dark)' : 'var(--dark-soft)', paddingBottom: 2, borderBottom: active ? '2px solid var(--dark)' : '2px solid transparent', transition: 'color 0.15s', whiteSpace: 'nowrap' }}
+                    onMouseEnter={e => { if (!active) e.currentTarget.style.color = 'var(--olive)'; }}
+                    onMouseLeave={e => { if (!active) e.currentTarget.style.color = 'var(--dark-soft)'; }}
+                  >{link.label}</Link>
+                </React.Fragment>
               );
             })}
           </div>
@@ -379,7 +493,7 @@ export default function Navbar() {
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '18px 20px', borderBottom: '1px solid var(--border)' }}>
           <Link to="/" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: 9 }}>
             <div style={{ width: 32, height: 32, borderRadius: '50%', background: 'var(--olive)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}><PlateIcon /></div>
-            <span style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.1rem', fontWeight: 700, color: 'var(--dark)' }}>Cravio</span>
+            <span style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.1rem', fontWeight: 700, color: 'var(--dark)' }}>Cravio</span>
           </Link>
           <button onClick={() => setSidebarOpen(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', padding: 4 }}>
             <CloseIcon />
@@ -401,13 +515,34 @@ export default function Navbar() {
 
         {/* Nav links */}
         <nav style={{ flex: 1, padding: '8px 0' }}>
-          {navLinks.map(link => {
+          {navLinks.map((link, idx) => {
             const active = isActive(link.to);
+            const isCustomerOrGuest = !user || user.role === 'customer';
+            const showPlaySection = isCustomerOrGuest && idx === 3;
+            
             return (
-              <Link key={link.to} to={link.to} style={{ display: 'block', padding: '12px 20px', textDecoration: 'none', fontSize: '0.92rem', fontWeight: active ? 600 : 400, color: active ? 'var(--olive)' : 'var(--dark-soft)', background: active ? 'var(--olive-pale)' : 'transparent', borderLeft: active ? '3px solid var(--olive)' : '3px solid transparent', transition: 'all 0.15s' }}
-                onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'var(--cream)'; e.currentTarget.style.color = 'var(--olive)'; }}}
-                onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--dark-soft)'; }}}
-              >{link.label}</Link>
+              <React.Fragment key={link.to}>
+                {showPlaySection && (
+                  <div style={{ margin: '8px 0', borderTop: '1px solid #EAE6DF', borderBottom: '1px solid #EAE6DF', padding: '6px 0', backgroundColor: '#FDFBF7' }}>
+                    <div style={{ padding: '8px 20px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--terracotta)', letterSpacing: '1px', textTransform: 'uppercase' }}>
+                      🎮 Crave Zone
+                    </div>
+                    <Link to="/cravematch" onClick={() => setSidebarOpen(false)} style={{ display: 'block', padding: '10px 30px', textDecoration: 'none', fontSize: '0.88rem', color: 'var(--dark-soft)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--olive)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--dark-soft)'}>
+                      🎯 CraveMatch Quiz
+                    </Link>
+                    <Link to="/flavor-duel" onClick={() => setSidebarOpen(false)} style={{ display: 'block', padding: '10px 30px', textDecoration: 'none', fontSize: '0.88rem', color: 'var(--dark-soft)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--olive)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--dark-soft)'}>
+                      ⚔️ Flavor Duel
+                    </Link>
+                    <a href="/#roulette" onClick={() => { setSidebarOpen(false); setTimeout(() => { const el = document.getElementById('roulette'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 100); }} style={{ display: 'block', padding: '10px 30px', textDecoration: 'none', fontSize: '0.88rem', color: 'var(--dark-soft)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--olive)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--dark-soft)'}>
+                      🎲 Cravio Roulette
+                    </a>
+                  </div>
+                )}
+                <Link to={link.to} style={{ display: 'block', padding: '12px 20px', textDecoration: 'none', fontSize: '0.92rem', fontWeight: active ? 600 : 400, color: active ? 'var(--olive)' : 'var(--dark-soft)', background: active ? 'var(--olive-pale)' : 'transparent', borderLeft: active ? '3px solid var(--olive)' : '3px solid transparent', transition: 'all 0.15s' }}
+                  onMouseEnter={e => { if (!active) { e.currentTarget.style.background = 'var(--cream)'; e.currentTarget.style.color = 'var(--olive)'; } }}
+                  onMouseLeave={e => { if (!active) { e.currentTarget.style.background = 'transparent'; e.currentTarget.style.color = 'var(--dark-soft)'; } }}
+                >{link.label}</Link>
+              </React.Fragment>
             );
           })}
 

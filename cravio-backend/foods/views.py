@@ -1,6 +1,9 @@
 import re
 from rest_framework import generics, permissions
 from rest_framework.exceptions import PermissionDenied
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from django.db.models import Q
 from .models import Food, Category
 from .serializers import FoodSerializer, CategorySerializer
 
@@ -423,3 +426,66 @@ class BulkFoodCreateView(generics.GenericAPIView):
             'message': f'Successfully added {len(saved_items)} items to your menu.'
         })
 
+
+class FlavorDuelView(APIView):
+    """
+    GET /api/foods/duel/
+    Returns 2 random food items from approved restaurants.
+    Optional query param: city — filter to nearby restaurants.
+    """
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request):
+        import random as rnd
+        city = request.query_params.get('city', '').strip()
+
+        # Trigger Swiggy sync if querying a specific city
+        if city:
+            from restaurants.models import Restaurant
+            if not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
+                try:
+                    from restaurants.swiggy_helper import sync_swiggy_restaurants
+                    sync_swiggy_restaurants(city_name=city)
+                except Exception as e:
+                    print(f"Error syncing Swiggy restaurants for city {city}: {e}")
+
+        qs = Food.objects.filter(
+            restaurant__status='approved',
+            restaurant__is_active=True,
+            is_available=True,
+        )
+
+        if city:
+            qs = qs.filter(
+                Q(restaurant__city__icontains=city) |
+                Q(restaurant__address__icontains=city)
+            )
+
+        # Need at least 2 foods
+        ids = list(qs.values_list('id', flat=True))
+        if len(ids) < 2:
+            # Fallback — drop city filter
+            ids = list(Food.objects.filter(
+                restaurant__status='approved',
+                restaurant__is_active=True,
+                is_available=True,
+            ).values_list('id', flat=True))
+
+        if len(ids) < 2:
+            return Response({'detail': 'Not enough food items for a duel.'}, status=404)
+
+        picked_ids = rnd.sample(ids, 2)
+        foods = Food.objects.filter(id__in=picked_ids).select_related('restaurant', 'category')
+        serializer = FoodSerializer(foods, many=True)
+
+        # Enrich with restaurant info
+        result = []
+        for food_data, food_obj in zip(serializer.data, foods):
+            food_data['restaurant_name'] = food_obj.restaurant.name
+            food_data['restaurant_id'] = food_obj.restaurant.id
+            food_data['restaurant_city'] = food_obj.restaurant.city
+            food_data['restaurant_cuisine'] = food_obj.restaurant.cuisine
+            food_data['restaurant_image'] = food_obj.restaurant.image or ''
+            result.append(food_data)
+
+        return Response(result)

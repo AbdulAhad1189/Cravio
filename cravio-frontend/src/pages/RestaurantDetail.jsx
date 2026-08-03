@@ -93,22 +93,41 @@ async function geocode(query) {
   return null;
 }
 
-/* Map using Google Maps embed — no API key needed for basic view */
+/* Map using Google Maps Embed API v1 with API key for interactive maps */
+const GMAP_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
+
 function MapEmbed({ lat, lon, name, address, google_maps_link }) {
-  let src = `https://maps.google.com/maps?q=${encodeURIComponent(`${name}, ${address}`)}&t=m&z=15&output=embed&iwloc=near`;
+  // Build the best available embed src
+  let src;
 
   if (google_maps_link) {
-    if (google_maps_link.includes('google.com/maps/embed') || google_maps_link.includes('google.com/maps/embed/v1')) {
-      src = google_maps_link;
+    if (
+      google_maps_link.includes('google.com/maps/embed') ||
+      google_maps_link.includes('google.com/maps/embed/v1')
+    ) {
+      // Already a proper embed URL — use as-is (append key if missing)
+      src = google_maps_link.includes('key=')
+        ? google_maps_link
+        : `${google_maps_link}&key=${GMAP_KEY}`;
     } else {
-      src = `https://maps.google.com/maps?q=${encodeURIComponent(google_maps_link)}&t=m&z=15&output=embed`;
+      // It's a share URL — use Maps Embed API place mode with the full link as query
+      const q = encodeURIComponent(`${name}, ${address}`);
+      src = `https://www.google.com/maps/embed/v1/place?key=${GMAP_KEY}&q=${q}&zoom=16`;
     }
+  } else if (lat && lon) {
+    // Have coordinates — use precise place mode
+    const q = encodeURIComponent(`${name}, ${address}`);
+    src = `https://www.google.com/maps/embed/v1/place?key=${GMAP_KEY}&q=${q}&center=${lat},${lon}&zoom=16`;
+  } else {
+    // Fallback — search by name + address
+    const q = encodeURIComponent(`${name}, ${address}`);
+    src = `https://www.google.com/maps/embed/v1/place?key=${GMAP_KEY}&q=${q}&zoom=15`;
   }
 
   const mapsRedirectUrl = google_maps_link || `https://www.google.com/maps/search/${encodeURIComponent(`${name}, ${address}`)}`;
 
   return (
-    <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border)', height: 340, position: 'relative' }}>
+    <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border)', height: 340, position: 'relative', background: '#e8e8e8' }}>
       <iframe
         title={`Map for ${name}`}
         src={src}
@@ -116,9 +135,9 @@ function MapEmbed({ lat, lon, name, address, google_maps_link }) {
         height="100%"
         style={{ border: 'none', display: 'block' }}
         loading="lazy"
+        allowFullScreen
         referrerPolicy="no-referrer-when-downgrade"
       />
-      {/* Fallback overlay with static map image */}
       <a
         href={mapsRedirectUrl}
         target="_blank"
@@ -128,9 +147,13 @@ function MapEmbed({ lat, lon, name, address, google_maps_link }) {
           background: 'white', border: '1px solid var(--border)',
           borderRadius: 8, padding: '5px 12px',
           fontSize: '0.75rem', fontWeight: 600, color: 'var(--olive)',
-          textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.12)',
+          textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
+          display: 'flex', alignItems: 'center', gap: 4,
         }}
       >
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/>
+        </svg>
         Open in Google Maps →
       </a>
     </div>
@@ -456,7 +479,7 @@ export default function RestaurantDetail() {
                 </span>
               </div>
 
-              <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2rem', fontWeight: 700, color: 'var(--dark)', margin: '0 0 4px' }}>
+              <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', fontWeight: 700, color: 'var(--dark)', margin: '0 0 4px' }}>
                 {restaurant.name}
               </h1>
               <p style={{ fontSize: '0.9rem', color: 'var(--text-muted)', marginBottom: 10 }}>

@@ -157,7 +157,7 @@ export default function OwnerDashboard() {
 
   const renderRestaurantForm = (title) => (
     <div style={{ background: 'white', borderRadius: '16px', border: '1px solid var(--border)', padding: '32px', boxShadow: '0 4px 20px rgba(0,0,0,0.04)' }}>
-      <h2 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.4rem', fontWeight: 700, marginBottom: '6px' }}>{title}</h2>
+      <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.4rem', fontWeight: 700, marginBottom: '6px' }}>{title}</h2>
       <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginBottom: '24px' }}>
         Fill in the details below. If registering, your restaurant will go live after admin approval.
       </p>
@@ -288,7 +288,7 @@ export default function OwnerDashboard() {
 
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '28px' }}>
           <div>
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>Dashboard</h1>
+            <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>Dashboard</h1>
             {restaurant && (
               <p style={{ color: 'var(--text-muted)', marginTop: '4px', fontSize: '0.9rem' }}>
                 {restaurant.name} ·{' '}

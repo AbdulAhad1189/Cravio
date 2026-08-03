@@ -59,8 +59,15 @@ class ReservationDetailView(generics.RetrieveUpdateDestroyAPIView):
             return Reservation.objects.all()
         return Reservation.objects.filter(user=user)
 
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if 'status' in serializer.validated_data:
+            from .email_service import send_status_update_email
+            send_status_update_email(instance)
+
     def patch(self, request, *args, **kwargs):
         return self.partial_update(request, *args, **kwargs)
+
 
 
 @api_view(['POST'])
@@ -86,7 +93,7 @@ def resend_otp(request, pk):
 @permission_classes([permissions.IsAuthenticated])
 def verify_otp(request, pk):
     """
-    Verify OTP and confirm the reservation.
+    Verify OTP and confirm the reservation request.
     Body: { "otp": "123456" }
     """
     try:
@@ -95,7 +102,7 @@ def verify_otp(request, pk):
         return Response({'detail': 'Reservation not found.'}, status=404)
 
     if reservation.otp_verified:
-        return Response({'detail': 'Already confirmed.', 'reservation': ReservationSerializer(reservation).data})
+        return Response({'detail': 'Email already verified.', 'reservation': ReservationSerializer(reservation).data})
 
     entered_otp = request.data.get('otp', '').strip()
     if not entered_otp:
@@ -103,11 +110,12 @@ def verify_otp(request, pk):
 
     if reservation.is_otp_valid(entered_otp):
         reservation.otp_verified = True
-        reservation.status = 'confirmed'
+        reservation.status = 'pending'  # remains pending until owner confirms
         reservation.save(update_fields=['otp_verified', 'status'])
         return Response({
-            'detail': 'Reservation confirmed!',
+            'detail': 'Email verified! Your reservation request has been submitted to the restaurant for approval.',
             'reservation': ReservationSerializer(reservation).data,
         })
 
     return Response({'detail': 'Invalid or expired OTP. Please try again.'}, status=400)
+

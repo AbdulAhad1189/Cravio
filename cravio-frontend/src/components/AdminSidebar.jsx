@@ -23,10 +23,10 @@ const IconChevronL = () => <Svg size={16}><polyline points="15 18 9 12 15 6"/></
 const IconChevronR = () => <Svg size={16}><polyline points="9 18 15 12 9 6"/></Svg>;
 
 const ADMIN_LINKS = [
-  { to: '/admin/dashboard',    label: 'Dashboard',    Icon: IconHome    },
-  { to: '/admin/restaurants',  label: 'Restaurants',  Icon: IconStore   },
-  { to: '/admin/users',        label: 'Users',        Icon: IconUsers   },
-  { to: '/profile',            label: 'Profile',      Icon: IconProfile },
+  { to: '/admin/restaurants',  label: 'Manage Restaurants',  Icon: IconHome    },
+  { to: '/admin/users',        label: 'Manage Users',        Icon: IconUsers   },
+  { to: '/admin/dashboard',    label: 'Platform Analytics',  Icon: IconStore   },
+  { to: '/profile',            label: 'Profile',             Icon: IconProfile },
 ];
 
 /* ─────────────────────────────────────────────

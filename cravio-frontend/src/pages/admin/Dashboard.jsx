@@ -7,7 +7,7 @@ const STAR = '★';
 
 function TrendingBadge({ score }) {
   const color = score >= 70 ? '#155724' : score >= 40 ? '#856404' : '#555';
-  const bg    = score >= 70 ? '#d4edda' : score >= 40 ? '#fff3cd' : '#f0f0f0';
+  const bg = score >= 70 ? '#d4edda' : score >= 40 ? '#fff3cd' : '#f0f0f0';
   return (
     <span style={{ fontSize: '0.72rem', padding: '2px 8px', borderRadius: 20, background: bg, color, fontWeight: 600 }}>
       {score.toFixed(0)} pts
@@ -16,12 +16,12 @@ function TrendingBadge({ score }) {
 }
 
 export default function AdminDashboard() {
-  const [stats, setStats]               = useState({ total_restaurants: 0, pending_restaurants: 0, approved_restaurants: 0, total_users: 0, total_orders: 0, orders_last_7_days: 0, total_revenue: 0, revenue_last_30_days: 0, top_states: [] });
+  const [stats, setStats] = useState({ total_restaurants: 0, pending_restaurants: 0, approved_restaurants: 0, total_users: 0, total_orders: 0, orders_last_7_days: 0, total_revenue: 0, revenue_last_30_days: 0, top_states: [] });
   const [recentRestaurants, setRecentRestaurants] = useState([]);
-  const [trending, setTrending]         = useState([]);
-  const [stateMap, setStateMap]         = useState({});
+  const [trending, setTrending] = useState([]);
+  const [stateMap, setStateMap] = useState({});
   const [selectedState, setSelectedState] = useState('');
-  const [loading, setLoading]           = useState(true);
+  const [loading, setLoading] = useState(true);
   const [trendLoading, setTrendLoading] = useState(true);
 
   useEffect(() => {
@@ -49,11 +49,11 @@ export default function AdminDashboard() {
   }, []);
 
   const STAT_CARDS = [
-    { icon: '🏪', label: 'Total Restaurants', value: stats.total_restaurants,        color: 'var(--olive)' },
-    { icon: '⏳', label: 'Pending Approval',  value: stats.pending_restaurants,       color: 'var(--terracotta)' },
-    { icon: '👥', label: 'Users',             value: stats.total_users,               color: '#2d6a4f' },
-    { icon: '📦', label: 'Total Orders',      value: stats.total_orders,              color: '#6b4226' },
-    { icon: '📈', label: 'Orders (7 days)',   value: stats.orders_last_7_days,        color: '#1a535c' },
+    { icon: '🏪', label: 'Total Restaurants', value: stats.total_restaurants, color: 'var(--olive)' },
+    { icon: '⏳', label: 'Pending Approval', value: stats.pending_restaurants, color: 'var(--terracotta)' },
+    { icon: '👥', label: 'Users', value: stats.total_users, color: '#2d6a4f' },
+    { icon: '📦', label: 'Total Orders', value: stats.total_orders, color: '#6b4226' },
+    { icon: '📈', label: 'Orders (7 days)', value: stats.orders_last_7_days, color: '#1a535c' },
     { icon: '💰', label: 'Revenue (30 days)', value: `₹${parseFloat(stats.revenue_last_30_days || 0).toFixed(0)}`, color: '#155724' },
   ];
 
@@ -67,7 +67,7 @@ export default function AdminDashboard() {
 
         {/* Header */}
         <div style={{ marginBottom: '28px' }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>Platform Overview</h1>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>Platform Overview</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '0.88rem', marginTop: '4px' }}>Super Admin Dashboard</p>
         </div>
 
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '12px', marginBottom: '32px' }}>
           {[
             { to: '/admin/restaurants', icon: '🏪', label: 'Restaurants', badge: stats.pending_restaurants },
-            { to: '/admin/users',       icon: '👥', label: 'Users' },
+            { to: '/admin/users', icon: '👥', label: 'Users' },
           ].map(action => (
             <Link key={action.to} to={action.to} style={{ textDecoration: 'none' }}>
               <div className="card-cravio" style={{ padding: '22px', textAlign: 'center', position: 'relative', background: 'white' }}>

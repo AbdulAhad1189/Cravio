@@ -132,7 +132,7 @@ export default function ManageMenu() {
       <OwnerSidebar />
       <main style={{ flex: 1, padding: '36px 40px', overflowY: 'auto' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>Manage Menu</h1>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '1.8rem', fontWeight: 700, margin: 0 }}>Manage Menu</h1>
           <div style={{ display: 'flex', gap: '10px' }}>
             <button onClick={() => setShowUploadModal(true)} className="btn-outline-olive" style={{ padding: '9px 20px', borderRadius: '8px', cursor: 'pointer', fontWeight: 600, fontSize: '0.88rem' }}>📤 Upload Menu</button>
             <button onClick={openAdd} className="btn-olive" style={{ padding: '9px 20px', borderRadius: '8px' }}>+ Add Item</button>

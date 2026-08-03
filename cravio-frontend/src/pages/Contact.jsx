@@ -20,7 +20,7 @@ export default function Contact() {
     <div style={{ backgroundColor: 'var(--cream)', minHeight: '80vh', padding: '60px 0' }}>
       <div className="container-cravio">
         <div style={{ textAlign: 'center', marginBottom: '48px' }}>
-          <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 700, marginBottom: '12px' }}>Get in Touch</h1>
+          <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.5rem', fontWeight: 700, marginBottom: '12px' }}>Get in Touch</h1>
           <p style={{ color: 'var(--text-muted)', fontSize: '1rem' }}>Have questions or feedback? We'd love to hear from you.</p>
         </div>
 

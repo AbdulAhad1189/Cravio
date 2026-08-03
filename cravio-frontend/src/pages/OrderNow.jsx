@@ -285,7 +285,7 @@ export default function OrderNow() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 30, flexWrap: 'wrap', gap: 16 }}>
           <div>
             <span style={{ fontSize: '0.8rem', color: 'var(--olive)', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '1px' }}>🛵 Direct Delivery</span>
-            <h1 style={{ fontFamily: "'Playfair Display', serif", fontSize: '2.5rem', fontWeight: 700, margin: '8px 0 4px', color: 'var(--dark)' }}>
+            <h1 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2.5rem', fontWeight: 700, margin: '8px 0 4px', color: 'var(--dark)' }}>
               Order from {restaurant.name}
             </h1>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', margin: 0 }}>
