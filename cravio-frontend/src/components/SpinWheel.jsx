@@ -60,16 +60,26 @@ export default function SpinWheel() {
 
   const doSpin = () => {
     const extraSpins = 6 + Math.floor(Math.random() * 4);
-    const segmentIndex = Math.floor(Math.random() * NUM_SEGMENTS);
-    const targetAngle = currentRotRef.current + extraSpins * 360 + segmentIndex * SLICE_ANGLE;
+    const winningIndex = Math.floor(Math.random() * NUM_SEGMENTS);
+    const landed = CUISINES[winningIndex];
+
+    // Angle of winning segment center before rotation: (winningIndex * 45° + 22.5°)
+    // Rotation required to align segment center under top pointer (12 o'clock / -90°):
+    const segmentCenterAngle = winningIndex * SLICE_ANGLE + SLICE_ANGLE / 2;
+    const targetModuloAngle = (360 - segmentCenterAngle) % 360;
+
+    const currentModulo = ((currentRotRef.current % 360) + 360) % 360;
+    let distance = targetModuloAngle - currentModulo;
+    if (distance <= 0) distance += 360;
+
+    const finalRotation = currentRotRef.current + extraSpins * 360 + distance;
 
     setSpinning(true);
-    setRotation(targetAngle);
-    currentRotRef.current = targetAngle;
+    setRotation(finalRotation);
+    currentRotRef.current = finalRotation;
 
     setTimeout(async () => {
       setSpinning(false);
-      const landed = CUISINES[segmentIndex];
       const cuisine = landed.label === 'Surprise Me!' ? '' : landed.label;
 
       setLoading(true);

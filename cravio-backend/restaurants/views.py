@@ -215,11 +215,23 @@ class TrendingByStateView(APIView):
         return Response(result)
 
 
+SIMILAR_CUISINES = {
+    'pizza': ['pizza', 'italian', 'fast food', 'continental', 'american', 'burger'],
+    'desserts': ['dessert', 'bakery', 'ice cream', 'sweet', 'cake'],
+    'cafe': ['cafe', 'coffee', 'bakery', 'continental', 'beverages'],
+    'italian': ['italian', 'pizza', 'pasta', 'continental'],
+    'north indian': ['north indian', 'mughlai', 'punjabi', 'tandoori', 'dhaba'],
+    'south indian': ['south indian', 'dosa', 'idli', 'kerala', 'chettinad'],
+    'biryani': ['biryani', 'mughlai', 'hyderabadi'],
+    'chinese': ['chinese', 'asian', 'thai'],
+}
+
+
 class RandomRestaurantView(APIView):
     """
     GET /api/restaurants/random/
-    Returns one random approved restaurant in the user's city.
-    Query params: cuisine, city, state
+    Returns one random approved restaurant in the user's city matching the selected cuisine or similar cuisines.
+    Query params: cuisine, city, state, exclude
     """
     permission_classes = [permissions.AllowAny]
 
@@ -228,6 +240,14 @@ class RandomRestaurantView(APIView):
         cuisine = request.query_params.get('cuisine', '').strip()
         city    = request.query_params.get('city', '').strip()
         state   = request.query_params.get('state', '').strip()
+        exclude_str = request.query_params.get('exclude', '').strip()
+
+        exclude_ids = []
+        if exclude_str:
+            try:
+                exclude_ids = [int(x) for x in exclude_str.split(',') if x.strip()]
+            except ValueError:
+                pass
 
         # Trigger Swiggy sync if querying a specific city
         if city:
@@ -244,54 +264,79 @@ class RandomRestaurantView(APIView):
         if city:
             city_qs = base_qs.filter(Q(city__iexact=city) | Q(address__icontains=city))
             
-            # 1. Try city + cuisine
+            # Filter cuisine using similar keywords if available
             if cuisine:
-                match_qs = city_qs.filter(cuisine__icontains=cuisine)
-                ids = list(match_qs.values_list('id', flat=True))
-                if ids:
-                    picked = Restaurant.objects.get(pk=rnd.choice(ids))
-                    return Response(RestaurantSerializer(picked, context={'request': request}).data)
+                cuisines_list = SIMILAR_CUISINES.get(cuisine.lower(), [cuisine.lower()])
+                q_filter = Q()
+                for c_kw in cuisines_list:
+                    q_filter |= Q(cuisine__icontains=c_kw)
+                target_qs = city_qs.filter(q_filter)
+            else:
+                target_qs = city_qs
 
-            # 2. Try city (any cuisine)
-            ids = list(city_qs.values_list('id', flat=True))
+            # Exclude seen IDs if possible
+            avail_qs = target_qs.exclude(id__in=exclude_ids) if exclude_ids else target_qs
+            ids = list(avail_qs.values_list('id', flat=True))
+
+            # If all were excluded, fall back to target_qs (excluding only the latest seen)
+            if not ids and exclude_ids:
+                avail_qs = target_qs.exclude(id=exclude_ids[-1])
+                ids = list(avail_qs.values_list('id', flat=True))
+
+            # If still empty, use target_qs or city_qs
+            if not ids:
+                ids = list(target_qs.values_list('id', flat=True))
+            if not ids:
+                ids = list(city_qs.values_list('id', flat=True))
+
             if ids:
                 picked = Restaurant.objects.get(pk=rnd.choice(ids))
                 return Response(RestaurantSerializer(picked, context={'request': request}).data)
 
-            # Strictly in user's city — do not fall back to other cities!
             return Response({'detail': f'No restaurants found in {city}.'}, status=404)
 
         if state:
             state_qs = base_qs.filter(Q(state__iexact=state))
             if cuisine:
-                match_qs = state_qs.filter(cuisine__icontains=cuisine)
-                ids = list(match_qs.values_list('id', flat=True))
-                if ids:
-                    picked = Restaurant.objects.get(pk=rnd.choice(ids))
-                    return Response(RestaurantSerializer(picked, context={'request': request}).data)
+                cuisines_list = SIMILAR_CUISINES.get(cuisine.lower(), [cuisine.lower()])
+                q_filter = Q()
+                for c_kw in cuisines_list:
+                    q_filter |= Q(cuisine__icontains=c_kw)
+                target_qs = state_qs.filter(q_filter)
+            else:
+                target_qs = state_qs
 
-            ids = list(state_qs.values_list('id', flat=True))
+            avail_qs = target_qs.exclude(id__in=exclude_ids) if exclude_ids else target_qs
+            ids = list(avail_qs.values_list('id', flat=True))
+
+            if not ids and exclude_ids:
+                ids = list(target_qs.values_list('id', flat=True))
+
             if ids:
                 picked = Restaurant.objects.get(pk=rnd.choice(ids))
                 return Response(RestaurantSerializer(picked, context={'request': request}).data)
 
             return Response({'detail': f'No restaurants found in {state}.'}, status=404)
 
-        # Fallback only when no city or state is specified
         if cuisine:
-            qs = base_qs.filter(cuisine__icontains=cuisine)
-            ids = list(qs.values_list('id', flat=True))
-            if ids:
-                picked = Restaurant.objects.get(pk=rnd.choice(ids))
-                return Response(RestaurantSerializer(picked, context={'request': request}).data)
+            cuisines_list = SIMILAR_CUISINES.get(cuisine.lower(), [cuisine.lower()])
+            q_filter = Q()
+            for c_kw in cuisines_list:
+                q_filter |= Q(cuisine__icontains=c_kw)
+            target_qs = base_qs.filter(q_filter)
+        else:
+            target_qs = base_qs
 
-        ids = list(base_qs.values_list('id', flat=True))
+        avail_qs = target_qs.exclude(id__in=exclude_ids) if exclude_ids else target_qs
+        ids = list(avail_qs.values_list('id', flat=True))
+        if not ids:
+            ids = list(base_qs.values_list('id', flat=True))
+
         if not ids:
             return Response({'detail': 'No restaurants found.'}, status=404)
 
         picked = Restaurant.objects.get(pk=rnd.choice(ids))
         return Response(RestaurantSerializer(picked, context={'request': request}).data)
-
 
 
 class LiveStatusView(APIView):
