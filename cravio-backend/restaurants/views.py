@@ -218,9 +218,8 @@ class TrendingByStateView(APIView):
 class RandomRestaurantView(APIView):
     """
     GET /api/restaurants/random/
-    Returns one random approved restaurant.
-    Optional query params: cuisine, city, state
-    Falls back from city -> state -> all if no matches.
+    Returns one random approved restaurant in the user's city.
+    Query params: cuisine, city, state
     """
     permission_classes = [permissions.AllowAny]
 
@@ -232,43 +231,66 @@ class RandomRestaurantView(APIView):
 
         # Trigger Swiggy sync if querying a specific city
         if city:
-            if not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
+            from .swiggy_helper import CITY_COORDINATES, sync_swiggy_restaurants
+            city_key = city.lower()
+            if city_key in CITY_COORDINATES and not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
                 try:
-                    from .swiggy_helper import sync_swiggy_restaurants
                     sync_swiggy_restaurants(city_name=city)
                 except Exception as e:
                     print(f"Error syncing Swiggy restaurants for city {city}: {e}")
 
         base_qs = Restaurant.objects.filter(status='approved', is_active=True)
-        if cuisine:
-            base_qs = base_qs.filter(cuisine__icontains=cuisine)
 
-        # Try city-level first
         if city:
-            qs = base_qs.filter(Q(city__icontains=city) | Q(address__icontains=city))
-            ids = list(qs.values_list('id', flat=True))
+            city_qs = base_qs.filter(Q(city__iexact=city) | Q(address__icontains=city))
+            
+            # 1. Try city + cuisine
+            if cuisine:
+                match_qs = city_qs.filter(cuisine__icontains=cuisine)
+                ids = list(match_qs.values_list('id', flat=True))
+                if ids:
+                    picked = Restaurant.objects.get(pk=rnd.choice(ids))
+                    return Response(RestaurantSerializer(picked, context={'request': request}).data)
+
+            # 2. Try city (any cuisine)
+            ids = list(city_qs.values_list('id', flat=True))
             if ids:
                 picked = Restaurant.objects.get(pk=rnd.choice(ids))
-                serializer = RestaurantSerializer(picked, context={'request': request})
-                return Response(serializer.data)
+                return Response(RestaurantSerializer(picked, context={'request': request}).data)
 
-        # Fallback to state-level
+            # Strictly in user's city — do not fall back to other cities!
+            return Response({'detail': f'No restaurants found in {city}.'}, status=404)
+
         if state:
-            qs = base_qs.filter(Q(state__icontains=state))
+            state_qs = base_qs.filter(Q(state__iexact=state))
+            if cuisine:
+                match_qs = state_qs.filter(cuisine__icontains=cuisine)
+                ids = list(match_qs.values_list('id', flat=True))
+                if ids:
+                    picked = Restaurant.objects.get(pk=rnd.choice(ids))
+                    return Response(RestaurantSerializer(picked, context={'request': request}).data)
+
+            ids = list(state_qs.values_list('id', flat=True))
+            if ids:
+                picked = Restaurant.objects.get(pk=rnd.choice(ids))
+                return Response(RestaurantSerializer(picked, context={'request': request}).data)
+
+            return Response({'detail': f'No restaurants found in {state}.'}, status=404)
+
+        # Fallback only when no city or state is specified
+        if cuisine:
+            qs = base_qs.filter(cuisine__icontains=cuisine)
             ids = list(qs.values_list('id', flat=True))
             if ids:
                 picked = Restaurant.objects.get(pk=rnd.choice(ids))
-                serializer = RestaurantSerializer(picked, context={'request': request})
-                return Response(serializer.data)
+                return Response(RestaurantSerializer(picked, context={'request': request}).data)
 
-        # Final fallback — any approved restaurant
         ids = list(base_qs.values_list('id', flat=True))
         if not ids:
-            return Response({'detail': 'No restaurants found matching your criteria.'}, status=404)
+            return Response({'detail': 'No restaurants found.'}, status=404)
 
         picked = Restaurant.objects.get(pk=rnd.choice(ids))
-        serializer = RestaurantSerializer(picked, context={'request': request})
-        return Response(serializer.data)
+        return Response(RestaurantSerializer(picked, context={'request': request}).data)
 
 
 

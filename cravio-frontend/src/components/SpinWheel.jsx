@@ -77,8 +77,9 @@ export default function SpinWheel() {
         const data = await fetchRestaurant(cuisine);
         setResult({ restaurant: data, cuisine: landed });
         setShowResult(true);
-      } catch {
-        setError('No restaurants found nearby. Try setting your location!');
+      } catch (err) {
+        const msg = err.response?.data?.detail || `No restaurants found in ${savedLoc?.city || 'your area'}. Try setting or changing your location!`;
+        setError(msg);
       } finally {
         setLoading(false);
       }
