@@ -97,20 +97,18 @@ async function geocode(query) {
 const GMAP_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 function MapEmbed({ lat, lon, name, address, google_maps_link }) {
+  const fullSearchQuery = encodeURIComponent(`${name}, ${address}`);
   let src;
 
-  if (lat && lon) {
-    src = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
-  } else if (google_maps_link && (google_maps_link.includes('google.com/maps/embed') || google_maps_link.includes('google.com/maps/embed/v1'))) {
+  if (google_maps_link && (google_maps_link.includes('google.com/maps/embed') || google_maps_link.includes('google.com/maps/embed/v1'))) {
     src = google_maps_link;
+  } else if (lat && lon) {
+    src = `https://maps.google.com/maps?q=${fullSearchQuery}&ll=${lat},${lon}&z=16&output=embed`;
   } else {
-    const q = encodeURIComponent(`${name}, ${address}`);
-    src = `https://maps.google.com/maps?q=${q}&z=15&output=embed`;
+    src = `https://maps.google.com/maps?q=${fullSearchQuery}&z=16&output=embed`;
   }
 
-  const mapsRedirectUrl = (lat && lon)
-    ? `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
-    : google_maps_link || `https://www.google.com/maps/search/${encodeURIComponent(`${name}, ${address}`)}`;
+  const mapsRedirectUrl = google_maps_link || `https://www.google.com/maps/search/?api=1&query=${fullSearchQuery}`;
 
   return (
     <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border)', height: 340, position: 'relative', background: '#e8e8e8' }}>
@@ -514,7 +512,8 @@ export default function RestaurantDetail() {
                   if (restaurant.google_maps_link) {
                     window.open(restaurant.google_maps_link, '_blank');
                   } else {
-                    setActiveTab('info');
+                    const query = encodeURIComponent(`${restaurant.name}, ${restaurant.address}, ${restaurant.city}`);
+                    window.open(`https://www.google.com/maps/search/?api=1&query=${query}`, '_blank');
                   }
                 }}
                   style={{ padding: '9px 16px', borderRadius: 8, fontSize: '0.88rem', border: '1px solid var(--border)', background: 'white', cursor: 'pointer', color: 'var(--dark-soft)' }}>
