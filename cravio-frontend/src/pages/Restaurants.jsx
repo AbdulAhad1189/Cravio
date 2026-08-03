@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import RestaurantCard from '../components/RestaurantCard';
 import api from '../api/axios';
+import { POPULAR_CITIES } from '../components/Navbar';
 
 const CUISINES = ['All', 'North Indian', 'Italian', 'Chinese', 'Cafe', 'Biryani', 'Pizza', 'Desserts', 'South Indian', 'Continental', 'Mughlai'];
 
@@ -9,16 +10,39 @@ export default function Restaurants() {
   const [restaurants, setRestaurants] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
-  const [search, setSearch] = useState(searchParams.get('search') || '');
+
+  // Local input states (what the user types in the form)
+  const [searchQuery, setSearchQuery] = useState(searchParams.get('search') || '');
+  const [cityQuery, setCityQuery] = useState(searchParams.get('city') || '');
+  const [showSuggestions, setShowSuggestions] = useState(false);
+
+  // Applied filter states (what actually queries the backend)
+  const [appliedSearch, setAppliedSearch] = useState(searchParams.get('search') || '');
+  const [appliedCity, setAppliedCity] = useState(searchParams.get('city') || '');
   const [cuisine, setCuisine] = useState(searchParams.get('cuisine') || '');
-  const [city, setCity] = useState('');
+
+  // Sync inputs and applied states when URL query parameters change (e.g. Navbar click)
+  useEffect(() => {
+    const urlCity = searchParams.get('city') || '';
+    const urlSearch = searchParams.get('search') || '';
+    const urlCuisine = searchParams.get('cuisine') || '';
+
+    setCityQuery(urlCity);
+    setAppliedCity(urlCity);
+
+    setSearchQuery(urlSearch);
+    setAppliedSearch(urlSearch);
+
+    setCuisine(urlCuisine);
+  }, [searchParams]);
+
   const fetchRestaurants = () => {
     setLoading(true);
     const params = new URLSearchParams();
     params.set('status', 'approved');
-    if (search) params.set('search', search);
+    if (appliedSearch) params.set('search', appliedSearch);
     if (cuisine) params.set('cuisine', cuisine);
-    if (city) params.set('city', city);
+    if (appliedCity) params.set('city', appliedCity);
 
     api.get(`/restaurants/?${params.toString()}`)
       .then(res => {
@@ -31,11 +55,12 @@ export default function Restaurants() {
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { fetchRestaurants(); }, [cuisine, city]);
+  useEffect(() => { fetchRestaurants(); }, [cuisine, appliedCity, appliedSearch]);
 
   const handleSearch = (e) => {
     e.preventDefault();
-    fetchRestaurants();
+    setAppliedSearch(searchQuery);
+    setAppliedCity(cityQuery);
   };
 
   return (
@@ -49,11 +74,79 @@ export default function Restaurants() {
           <form onSubmit={handleSearch} style={{ display: 'flex', gap: '12px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
             <div style={{ flex: '2', minWidth: '200px' }} className="form-cravio">
               <label>Search</label>
-              <input value={search} onChange={e => setSearch(e.target.value)} placeholder="Restaurant name or cuisine..." />
+              <input value={searchQuery} onChange={e => setSearchQuery(e.target.value)} placeholder="Restaurant name or cuisine..." />
             </div>
-            <div style={{ flex: '1', minWidth: '140px' }} className="form-cravio">
+            <div style={{ flex: '1', minWidth: '140px', position: 'relative' }} className="form-cravio">
               <label>City</label>
-              <input value={city} onChange={e => setCity(e.target.value)} placeholder="Enter city..." />
+              <input
+                value={cityQuery}
+                onChange={e => { setCityQuery(e.target.value); setShowSuggestions(true); }}
+                onFocus={() => setShowSuggestions(true)}
+                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                placeholder="Enter city..."
+                style={{ width: '100%' }}
+              />
+              {showSuggestions && cityQuery.trim() && (() => {
+                const query = cityQuery.toLowerCase().trim();
+                const filtered = POPULAR_CITIES.filter(c =>
+                  c.name.toLowerCase().includes(query)
+                ).sort((a, b) => {
+                  const aStarts = a.name.toLowerCase().startsWith(query);
+                  const bStarts = b.name.toLowerCase().startsWith(query);
+                  if (aStarts && !bStarts) return -1;
+                  if (!aStarts && bStarts) return 1;
+                  return a.name.localeCompare(b.name);
+                }).slice(0, 8);
+
+                if (filtered.length === 0) return null;
+
+                return (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    background: 'white',
+                    border: '1px solid var(--border)',
+                    borderRadius: '8px',
+                    boxShadow: '0 8px 16px rgba(0,0,0,0.1)',
+                    zIndex: 10,
+                    maxHeight: '180px',
+                    overflowY: 'auto',
+                    marginTop: '4px'
+                  }}>
+                    {filtered.map(c => (
+                      <button
+                        key={`${c.name}-${c.state}`}
+                        type="button"
+                        onClick={() => {
+                          setCityQuery(c.name);
+                          setShowSuggestions(false);
+                        }}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          width: '100%',
+                          padding: '8px 12px',
+                          border: 'none',
+                          background: 'transparent',
+                          textAlign: 'left',
+                          cursor: 'pointer',
+                          fontSize: '0.82rem',
+                          color: 'var(--dark)',
+                          transition: 'background 0.15s'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'var(--cream)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <span style={{ fontWeight: 500 }}>{c.name}</span>
+                        <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{c.state}</span>
+                      </button>
+                    ))}
+                  </div>
+                );
+              })()}
             </div>
             <button type="submit" className="btn-olive" style={{ padding: '10px 24px', height: '42px' }}>Search</button>
           </form>
@@ -88,13 +181,13 @@ export default function Restaurants() {
           <div style={{ textAlign: 'center', padding: '60px 20px', background: 'white', borderRadius: '16px', border: '1px solid var(--border)' }}>
             <div style={{ fontSize: '3rem', marginBottom: '12px' }}>📍</div>
             <h3 style={{ marginBottom: '8px', color: 'var(--dark)' }}>
-              {(search || city) ? `No restaurants found for "${search || city}"` : 'No restaurants found'}
+              {(appliedSearch || appliedCity) ? `No restaurants found for "${[appliedSearch, appliedCity].filter(Boolean).join(', ')}"` : 'No restaurants found'}
             </h3>
             <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '400px', margin: '0 auto 16px' }}>
               We couldn't find any matching restaurants in this location or category. Please check the spelling or try searching for major cities like Bengaluru, Mumbai, Delhi, Hyderabad, or Jaipur.
             </p>
             <button
-              onClick={() => { setSearch(''); setCity(''); setCuisine(''); fetchRestaurants(); }}
+              onClick={() => { setSearchQuery(''); setCityQuery(''); setAppliedSearch(''); setAppliedCity(''); setCuisine(''); }}
               className="btn-olive"
               style={{ padding: '8px 20px', fontSize: '0.85rem', borderRadius: '8px' }}
             >

@@ -59,6 +59,119 @@ const INDIAN_STATES = [
   'Delhi', 'Chandigarh', 'Puducherry', 'Jammu & Kashmir', 'Ladakh',
 ];
 
+export const POPULAR_CITIES = [
+  { name: 'Bengaluru', state: 'Karnataka' },
+  { name: 'Mumbai', state: 'Maharashtra' },
+  { name: 'Delhi', state: 'Delhi' },
+  { name: 'Pune', state: 'Maharashtra' },
+  { name: 'Hyderabad', state: 'Telangana' },
+  { name: 'Ahmedabad', state: 'Gujarat' },
+  { name: 'Chennai', state: 'Tamil Nadu' },
+  { name: 'Kolkata', state: 'West Bengal' },
+  { name: 'Jaipur', state: 'Rajasthan' },
+  { name: 'Gurugram', state: 'Haryana' },
+  { name: 'Noida', state: 'Uttar Pradesh' },
+  { name: 'Kochi', state: 'Kerala' },
+  { name: 'Agra', state: 'Uttar Pradesh' },
+  { name: 'Ajmer', state: 'Rajasthan' },
+  { name: 'Aligarh', state: 'Uttar Pradesh' },
+  { name: 'Allahabad', state: 'Uttar Pradesh' },
+  { name: 'Amravati', state: 'Maharashtra' },
+  { name: 'Amritsar', state: 'Punjab' },
+  { name: 'Anand', state: 'Gujarat' },
+  { name: 'Asansol', state: 'West Bengal' },
+  { name: 'Aurangabad', state: 'Maharashtra' },
+  { name: 'Bareilly', state: 'Uttar Pradesh' },
+  { name: 'Belagavi', state: 'Karnataka' },
+  { name: 'Bhavnagar', state: 'Gujarat' },
+  { name: 'Bhilai', state: 'Chhattisgarh' },
+  { name: 'Bhiwandi', state: 'Maharashtra' },
+  { name: 'Bhopal', state: 'Madhya Pradesh' },
+  { name: 'Bhubaneswar', state: 'Odisha' },
+  { name: 'Bikaner', state: 'Rajasthan' },
+  { name: 'Bilaspur', state: 'Chhattisgarh' },
+  { name: 'Bokaro', state: 'Jharkhand' },
+  { name: 'Chandigarh', state: 'Chandigarh' },
+  { name: 'Coimbatore', state: 'Tamil Nadu' },
+  { name: 'Cuttack', state: 'Odisha' },
+  { name: 'Dehradun', state: 'Uttarakhand' },
+  { name: 'Dhanbad', state: 'Jharkhand' },
+  { name: 'Durgapur', state: 'West Bengal' },
+  { name: 'Erode', state: 'Tamil Nadu' },
+  { name: 'Faridabad', state: 'Haryana' },
+  { name: 'Firozabad', state: 'Uttar Pradesh' },
+  { name: 'Ghaziabad', state: 'Uttar Pradesh' },
+  { name: 'Gorakhpur', state: 'Uttar Pradesh' },
+  { name: 'Gulbarga', state: 'Karnataka' },
+  { name: 'Guntur', state: 'Andhra Pradesh' },
+  { name: 'Guwahati', state: 'Assam' },
+  { name: 'Gwalior', state: 'Madhya Pradesh' },
+  { name: 'Hubli-Dharwad', state: 'Karnataka' },
+  { name: 'Indore', state: 'Madhya Pradesh' },
+  { name: 'Jabalpur', state: 'Madhya Pradesh' },
+  { name: 'Jalandhar', state: 'Punjab' },
+  { name: 'Jammu', state: 'Jammu & Kashmir' },
+  { name: 'Jamnagar', state: 'Gujarat' },
+  { name: 'Jamshedpur', state: 'Jharkhand' },
+  { name: 'Jhansi', state: 'Uttar Pradesh' },
+  { name: 'Jodhpur', state: 'Rajasthan' },
+  { name: 'Kakinada', state: 'Andhra Pradesh' },
+  { name: 'Kannur', state: 'Kerala' },
+  { name: 'Kanpur', state: 'Uttar Pradesh' },
+  { name: 'Karnal', state: 'Haryana' },
+  { name: 'Kollam', state: 'Kerala' },
+  { name: 'Kota', state: 'Rajasthan' },
+  { name: 'Kottayam', state: 'Kerala' },
+  { name: 'Kozhikode', state: 'Kerala' },
+  { name: 'Kurnool', state: 'Andhra Pradesh' },
+  { name: 'Latur', state: 'Maharashtra' },
+  { name: 'Lucknow', state: 'Uttar Pradesh' },
+  { name: 'Ludhiana', state: 'Punjab' },
+  { name: 'Madurai', state: 'Tamil Nadu' },
+  { name: 'Malappuram', state: 'Kerala' },
+  { name: 'Mangaluru', state: 'Karnataka' },
+  { name: 'Mathura', state: 'Uttar Pradesh' },
+  { name: 'Meerut', state: 'Uttar Pradesh' },
+  { name: 'Moradabad', state: 'Uttar Pradesh' },
+  { name: 'Muzaffarnagar', state: 'Uttar Pradesh' },
+  { name: 'Muzaffarpur', state: 'Bihar' },
+  { name: 'Mysuru', state: 'Karnataka' },
+  { name: 'Nanded', state: 'Maharashtra' },
+  { name: 'Nashik', state: 'Maharashtra' },
+  { name: 'Nellore', state: 'Andhra Pradesh' },
+  { name: 'Patiala', state: 'Punjab' },
+  { name: 'Patna', state: 'Bihar' },
+  { name: 'Puducherry', state: 'Puducherry' },
+  { name: 'Raipur', state: 'Chhattisgarh' },
+  { name: 'Rajahmundry', state: 'Andhra Pradesh' },
+  { name: 'Rajkot', state: 'Gujarat' },
+  { name: 'Ranchi', state: 'Jharkhand' },
+  { name: 'Rourkela', state: 'Odisha' },
+  { name: 'Salem', state: 'Tamil Nadu' },
+  { name: 'Sangli', state: 'Maharashtra' },
+  { name: 'Saharanpur', state: 'Uttar Pradesh' },
+  { name: 'Shimla', state: 'Himachal Pradesh' },
+  { name: 'Siliguri', state: 'West Bengal' },
+  { name: 'Solapur', state: 'Maharashtra' },
+  { name: 'Srinagar', state: 'Jammu & Kashmir' },
+  { name: 'Surat', state: 'Gujarat' },
+  { name: 'Thiruvananthapuram', state: 'Kerala' },
+  { name: 'Thrissur', state: 'Kerala' },
+  { name: 'Tiruchirappalli', state: 'Tamil Nadu' },
+  { name: 'Tirunelveli', state: 'Tamil Nadu' },
+  { name: 'Tirupati', state: 'Andhra Pradesh' },
+  { name: 'Tiruppur', state: 'Tamil Nadu' },
+  { name: 'Tumakuru', state: 'Karnataka' },
+  { name: 'Udaipur', state: 'Rajasthan' },
+  { name: 'Ujjain', state: 'Madhya Pradesh' },
+  { name: 'Vadodara', state: 'Gujarat' },
+  { name: 'Varanasi', state: 'Uttar Pradesh' },
+  { name: 'Vellore', state: 'Tamil Nadu' },
+  { name: 'Vijayawada', state: 'Andhra Pradesh' },
+  { name: 'Visakhapatnam', state: 'Andhra Pradesh' },
+  { name: 'Warangal', state: 'Telangana' }
+];
+
 const getNavLinks = (user) => {
   if (user?.role === 'admin') {
     return [
@@ -105,6 +218,9 @@ export default function Navbar() {
   const [locLoading, setLocLoading] = useState(false);
   const [locError, setLocError] = useState('');
   const [activeOrderCount, setActiveOrderCount] = useState(0);
+  // Location selector input mode ('city' or 'pincode') and city search query
+  const [locInputMode, setLocInputMode] = useState('city');
+  const [cityQuery, setCityQuery] = useState('');
   // Pincode input inside location dropdown
   const [locPincode, setLocPincode] = useState('');
   const [locPincodeLoading, setLocPincodeLoading] = useState(false);
@@ -191,8 +307,15 @@ export default function Navbar() {
     }
   };
 
+  const handleCitySelect = (cityName, stateName) => {
+    saveLocStore({ city: cityName, state: stateName || '', pincode: '' });
+    setLocDropOpen(false);
+    setCityQuery('');
+    navigate(`/restaurants?city=${encodeURIComponent(cityName)}`);
+  };
+
   const handleStateSelect = (state) => {
-    saveLocStore({ state, city: '' });
+    saveLocStore({ state, city: '', pincode: '' });
     setLocDropOpen(false);
     navigate(`/restaurants?city=${encodeURIComponent(state)}`);
   };
@@ -378,33 +501,206 @@ export default function Navbar() {
                     {locError && <p style={{ color: '#c0392b', fontSize: '0.75rem', margin: '6px 0 0' }}>{locError}</p>}
                   </div>
 
-                  {/* Pincode lookup */}
-                  <div style={{ padding: '10px 14px', borderBottom: '1px solid var(--border)', position: 'relative' }}>
-                    <input
-                      placeholder="Enter pincode (e.g. 560001)"
-                      value={locPincode}
-                      onChange={handlePincodeLookup}
-                      maxLength={6}
-                      style={{ width: '100%', padding: '7px 10px', borderRadius: 8, border: '1px solid var(--border)', fontSize: '0.83rem', outline: 'none', boxSizing: 'border-box' }}
-                    />
-                    {locPincodeLoading && <span style={{ position: 'absolute', right: 22, top: '50%', transform: 'translateY(-50%)', fontSize: '0.7rem', color: 'var(--olive)' }}>fetching…</span>}
+                  {/* Tabs: City Name vs Pincode */}
+                  <div style={{ display: 'flex', borderBottom: '1px solid var(--border)', background: '#fafafa' }}>
+                    <button
+                      type="button"
+                      onClick={() => setLocInputMode('city')}
+                      style={{
+                        flex: 1,
+                        padding: '10px',
+                        fontSize: '0.8rem',
+                        fontWeight: locInputMode === 'city' ? 600 : 500,
+                        color: locInputMode === 'city' ? 'var(--olive)' : 'var(--text-muted)',
+                        border: 'none',
+                        background: locInputMode === 'city' ? 'white' : 'transparent',
+                        borderBottom: locInputMode === 'city' ? '2.5px solid var(--olive)' : 'none',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        outline: 'none'
+                      }}
+                    >
+                      City
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setLocInputMode('pincode')}
+                      style={{
+                        flex: 1,
+                        padding: '10px',
+                        fontSize: '0.8rem',
+                        fontWeight: locInputMode === 'pincode' ? 600 : 500,
+                        color: locInputMode === 'pincode' ? 'var(--olive)' : 'var(--text-muted)',
+                        border: 'none',
+                        background: locInputMode === 'pincode' ? 'white' : 'transparent',
+                        borderBottom: locInputMode === 'pincode' ? '2.5px solid var(--olive)' : 'none',
+                        cursor: 'pointer',
+                        transition: 'all 0.15s',
+                        outline: 'none'
+                      }}
+                    >
+                      Pincode
+                    </button>
                   </div>
 
-                  {/* State list */}
-                  <div style={{ maxHeight: 220, overflowY: 'auto' }}>
-                    {INDIAN_STATES.map(s => {
-                      const active = savedLoc?.state === s || savedLoc?.city === s;
-                      return (
-                        <button key={s} onClick={() => handleStateSelect(s)}
-                          style={{ width: '100%', textAlign: 'left', padding: '9px 14px', background: active ? 'var(--olive-pale)' : 'transparent', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: active ? 'var(--olive)' : 'var(--dark)', fontWeight: active ? 600 : 400 }}
-                          onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--cream)'; }}
-                          onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
-                        >
-                          <MapPin size={11} /> {s}
-                        </button>
-                      );
-                    })}
-                  </div>
+                  {locInputMode === 'city' ? (
+                    <>
+                      {/* City search input */}
+                      <div style={{ padding: '12px 14px', borderBottom: '1px solid var(--border)' }}>
+                        <input
+                          placeholder="Search city (e.g. Ahmedabad)"
+                          value={cityQuery}
+                          onChange={(e) => setCityQuery(e.target.value)}
+                          style={{
+                            width: '100%',
+                            padding: '8px 12px',
+                            borderRadius: 8,
+                            border: '1px solid var(--border)',
+                            fontSize: '0.83rem',
+                            outline: 'none',
+                            boxSizing: 'border-box',
+                            transition: 'border-color 0.15s'
+                          }}
+                          onFocus={e => e.target.style.borderColor = 'var(--olive)'}
+                          onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                        />
+                      </div>
+
+                      {/* Autocomplete suggestions or default listings */}
+                      {cityQuery.trim() ? (
+                        <div style={{ maxHeight: 220, overflowY: 'auto' }}>
+                          {(() => {
+                            const query = cityQuery.toLowerCase().trim();
+                            const suggestions = POPULAR_CITIES.filter(c =>
+                              c.name.toLowerCase().includes(query)
+                            ).sort((a, b) => {
+                              const aStarts = a.name.toLowerCase().startsWith(query);
+                              const bStarts = b.name.toLowerCase().startsWith(query);
+                              if (aStarts && !bStarts) return -1;
+                              if (!aStarts && bStarts) return 1;
+                              return a.name.localeCompare(b.name);
+                            }).slice(0, 10);
+
+                            if (suggestions.length === 0) {
+                              return (
+                                <div style={{ padding: '16px 14px', fontSize: '0.8rem', color: 'var(--text-muted)', textAlign: 'center' }}>
+                                  No matching cities found
+                                </div>
+                              );
+                            }
+
+                            return suggestions.map(c => {
+                              const active = savedLoc?.city === c.name;
+                              return (
+                                <button
+                                  key={`${c.name}-${c.state}`}
+                                  onClick={() => handleCitySelect(c.name, c.state)}
+                                  style={{
+                                    width: '100%',
+                                    textAlign: 'left',
+                                    padding: '10px 14px',
+                                    background: active ? 'var(--olive-pale)' : 'transparent',
+                                    border: 'none',
+                                    cursor: 'pointer',
+                                    fontSize: '0.83rem',
+                                    color: active ? 'var(--olive)' : 'var(--dark)',
+                                    fontWeight: active ? 600 : 400,
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center',
+                                    transition: 'background 0.15s'
+                                  }}
+                                  onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--cream)'; }}
+                                  onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
+                                >
+                                  <span>🏙️ {c.name}</span>
+                                  <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>{c.state}</span>
+                                </button>
+                              );
+                            });
+                          })()}
+                        </div>
+                      ) : (
+                        <div style={{ maxHeight: 220, overflowY: 'auto' }}>
+                          {/* Popular Cities Section */}
+                          <div style={{ padding: '8px 14px 4px', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.5px', textTransform: 'uppercase', background: '#fafafa' }}>
+                            Popular Cities
+                          </div>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '6px', padding: '10px 14px' }}>
+                            {POPULAR_CITIES.slice(0, 8).map(c => {
+                              const active = savedLoc?.city === c.name;
+                              return (
+                                <button
+                                  key={c.name}
+                                  type="button"
+                                  onClick={() => handleCitySelect(c.name, c.state)}
+                                  style={{
+                                    textAlign: 'left',
+                                    padding: '8px 10px',
+                                    background: active ? 'var(--olive-pale)' : 'white',
+                                    border: `1.5px solid ${active ? 'var(--olive)' : 'var(--border)'}`,
+                                    borderRadius: '6px',
+                                    cursor: 'pointer',
+                                    fontSize: '0.78rem',
+                                    color: active ? 'var(--olive)' : 'var(--dark-soft)',
+                                    fontWeight: active ? 600 : 500,
+                                    transition: 'all 0.15s',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                  }}
+                                  onMouseEnter={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--olive)'; e.currentTarget.style.background = 'var(--cream)'; } }}
+                                  onMouseLeave={e => { if (!active) { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.background = 'white'; } }}
+                                >
+                                  🏙️ {c.name}
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {/* States list header */}
+                          <div style={{ padding: '8px 14px 4px', fontSize: '0.72rem', fontWeight: 600, color: 'var(--text-muted)', letterSpacing: '0.5px', textTransform: 'uppercase', background: '#fafafa', borderTop: '1px solid var(--border)' }}>
+                            States
+                          </div>
+                          {INDIAN_STATES.map(s => {
+                            const active = savedLoc?.state === s || savedLoc?.city === s;
+                            return (
+                              <button key={s} onClick={() => handleStateSelect(s)}
+                                style={{ width: '100%', textAlign: 'left', padding: '9px 14px', background: active ? 'var(--olive-pale)' : 'transparent', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: active ? 'var(--olive)' : 'var(--dark)', fontWeight: active ? 600 : 400 }}
+                                onMouseEnter={e => { if (!active) e.currentTarget.style.background = 'var(--cream)'; }}
+                                onMouseLeave={e => { if (!active) e.currentTarget.style.background = 'transparent'; }}
+                              >
+                                <MapPin size={11} /> {s}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    /* Pincode Tab */
+                    <div style={{ padding: '12px 14px', position: 'relative' }}>
+                      <input
+                        placeholder="Enter pincode (e.g. 560001)"
+                        value={locPincode}
+                        onChange={handlePincodeLookup}
+                        maxLength={6}
+                        style={{
+                          width: '100%',
+                          padding: '8px 12px',
+                          borderRadius: 8,
+                          border: '1px solid var(--border)',
+                          fontSize: '0.83rem',
+                          outline: 'none',
+                          boxSizing: 'border-box',
+                          transition: 'border-color 0.15s'
+                        }}
+                        onFocus={e => e.target.style.borderColor = 'var(--olive)'}
+                        onBlur={e => e.target.style.borderColor = 'var(--border)'}
+                      />
+                      {locPincodeLoading && <span style={{ position: 'absolute', right: 22, top: '50%', transform: 'translateY(-50%)', fontSize: '0.7rem', color: 'var(--olive)' }}>fetching…</span>}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
