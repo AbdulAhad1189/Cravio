@@ -1,305 +1,171 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 
 const DINER_FEATURES = [
   {
     id: 'd1',
-    icon: '🔍',
-    category: 'DISCOVERY & SEARCH',
-    title: 'Search by Cuisine & Location',
-    description: 'Filter verified restaurants strictly by your selected city, pincode, or cuisine type with complete dish pricing and menus.',
-    pros: [
-      'Strict city & area location filtering',
-      'Full menu transparency & dish pricing',
-      'Real-time location & Google Maps integration'
-    ],
-    accentColor: '#C27047',
+    category: 'Restaurant Discovery',
+    title: 'Search & Find Places',
+    description: 'Find restaurants by name, cuisine, city, or pincode. View complete menus with current dish pricing, operating hours, and location.',
+    listItems: [
+      'Search by dish name or cuisine type',
+      'Filter results by city and pincode',
+      'View accurate menus, pricing, and operating status'
+    ]
   },
   {
     id: 'd2',
-    icon: '📅',
-    category: 'TABLE RESERVATIONS',
-    title: 'Instant Table Booking',
-    description: 'Reserve a table in under 30 seconds for any party size with instant restaurant notification.',
-    pros: [
-      '100% free table bookings with zero fee',
-      'Instant SMS & email booking confirmation',
-      'Flexible party sizes & guest notes'
-    ],
-    accentColor: '#3B4F39',
+    category: 'Reservations',
+    title: 'Table Bookings',
+    description: 'Reserve a table for your chosen date, time slot, and guest count with direct restaurant confirmation.',
+    listItems: [
+      'Simple online booking form',
+      'Select party size and custom time slots',
+      'Add guest notes or dietary preferences'
+    ]
   },
   {
     id: 'd3',
-    icon: '🛵',
-    category: 'DELIVERY & TRACKING',
-    title: 'Food Ordering & Live Status',
-    description: 'Place food delivery or takeaway orders with live status tracking and real-time kitchen load indicators.',
-    pros: [
-      'Live kitchen crowd & wait status indicator',
-      'Complete order history log & re-ordering',
-      'Seamless digital cart & instant checkout'
-    ],
-    accentColor: '#D5865C',
+    category: 'Food Ordering',
+    title: 'Delivery & Takeaway',
+    description: 'Place food orders directly through the platform and follow your order progress from prep to delivery.',
+    listItems: [
+      'Digital menu selection & easy checkout',
+      'Live order status updates',
+      'Order history log to easily re-order your favorite meals'
+    ]
   },
   {
     id: 'd4',
-    icon: '⚔️',
-    category: 'FOOD GAMES',
-    title: 'Flavor Duel & Crave Roulette',
-    description: 'Can\'t decide what to eat? Spin the Roulette wheel or battle dishes in 5-round Flavor Duel.',
-    pros: [
-      'City-restricted spin wheel recommendations',
-      'Interactive 5-round Flavor Duel battle',
-      'Personalized CraveMatch taste profile'
-    ],
-    accentColor: '#60705E',
-  },
+    category: 'Decision Helpers',
+    title: 'Food Games & Pickers',
+    description: 'Fun, interactive tools to help you decide what to eat when you cannot make up your mind.',
+    listItems: [
+      'Crave Roulette: Spin the wheel for a random local restaurant pick',
+      'Flavor Duel: Compare dishes head-to-head to find today\'s craving'
+    ]
+  }
 ];
 
 const OWNER_FEATURES = [
   {
     id: 'o1',
-    icon: '🚀',
-    category: 'RESTAURANT ONBOARDING',
-    title: 'Fast Online Registration',
-    description: 'Register your restaurant, set operating hours, upload brand logos, and go live after quick verification.',
-    pros: [
-      'Zero-commission restaurant listing',
-      'Instant open / closed status toggle',
-      'Custom business hours & profile info'
-    ],
-    accentColor: '#3B4F39',
+    category: 'Profile & Setup',
+    title: 'Restaurant Listing',
+    description: 'Register and manage your restaurant profile, contact details, operating hours, and business location.',
+    listItems: [
+      'Set business details, photos, and address',
+      'Toggle open/closed status anytime',
+      'Configure regular opening and closing hours'
+    ]
   },
   {
     id: 'o2',
-    icon: '📋',
-    category: 'CATALOG MANAGEMENT',
-    title: 'Bulk Menu Import & Swiggy Sync',
-    description: 'Add items manually or upload a plain .txt file to import 100+ dishes in bulk with categories and prices.',
-    pros: [
-      'Single-click .txt menu bulk import',
-      'Automated Swiggy catalog sync',
-      'Instant price & category editing'
-    ],
-    accentColor: '#C27047',
+    category: 'Menu Control',
+    title: 'Catalog & Items',
+    description: 'Organize your food menu with custom categories, pricing, descriptions, and dish availability.',
+    listItems: [
+      'Add or edit menu categories and dishes',
+      'Upload menu items in bulk',
+      'Update item pricing and availability status'
+    ]
   },
   {
     id: 'o3',
-    icon: '📊',
-    category: 'BUSINESS ANALYTICS',
-    title: 'Revenue & Order Dashboard',
-    description: 'Track incoming delivery orders, accept or reject reservation requests, and view monthly revenue stats.',
-    pros: [
-      'Real-time revenue & sales analytics',
-      'Instant order status management',
-      'Zero spreadsheet hassle'
-    ],
-    accentColor: '#D5865C',
+    category: 'Operations',
+    title: 'Orders & Table Requests',
+    description: 'Handle incoming delivery orders and table reservation requests from a centralized dashboard.',
+    listItems: [
+      'Receive real-time order and booking alerts',
+      'Accept, process, or update order statuses',
+      'View upcoming table reservations'
+    ]
   },
   {
     id: 'o4',
-    icon: '🗺️',
-    category: 'GPS & NAVIGATION',
-    title: 'Exact GPS & Google Maps',
-    description: 'Store precise latitude & longitude coordinates so customers navigate directly to your front doors.',
-    pros: [
-      'Exact GPS coordinate pin',
-      'Embedded Google Maps location preview',
-      'Direct route navigation for foot traffic'
-    ],
-    accentColor: '#60705E',
-  },
+    category: 'Insights',
+    title: 'Sales Overview',
+    description: 'Keep track of daily and monthly restaurant performance with essential sales summaries.',
+    listItems: [
+      'View total order volume and revenue stats',
+      'Monitor popular menu items',
+      'Track peak ordering hours'
+    ]
+  }
 ];
 
 export default function FeaturesCarousel() {
-  const [roleTab, setRoleTab] = useState('diners');
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
-  const sliderRef = useRef(null);
+  const [activeTab, setActiveTab] = useState('diners');
 
-  const featureList = roleTab === 'diners' ? DINER_FEATURES : OWNER_FEATURES;
-
-  useEffect(() => {
-    if (isHovered) return;
-    const timer = setInterval(() => {
-      slideNext();
-    }, 4000);
-    return () => clearInterval(timer);
-  }, [isHovered, roleTab, activeIndex]);
-
-  const slideNext = () => {
-    if (sliderRef.current) {
-      const itemWidth = 360;
-      const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
-      let targetScroll = sliderRef.current.scrollLeft + itemWidth;
-      
-      if (targetScroll > maxScroll + 40) {
-        targetScroll = 0;
-      }
-
-      sliderRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
-      setActiveIndex(Math.round(targetScroll / itemWidth) % featureList.length);
-    }
-  };
-
-  const slidePrev = () => {
-    if (sliderRef.current) {
-      const itemWidth = 360;
-      const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
-      let targetScroll = sliderRef.current.scrollLeft - itemWidth;
-      
-      if (targetScroll < 0) {
-        targetScroll = maxScroll;
-      }
-
-      sliderRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
-      setActiveIndex(Math.round(targetScroll / itemWidth) % featureList.length);
-    }
-  };
-
-  const jumpToSlide = (idx) => {
-    if (sliderRef.current) {
-      const itemWidth = 360;
-      sliderRef.current.scrollTo({ left: idx * itemWidth, behavior: 'smooth' });
-      setActiveIndex(idx);
-    }
-  };
+  const activeFeatures = activeTab === 'diners' ? DINER_FEATURES : OWNER_FEATURES;
 
   return (
     <section id="features" style={styles.section}>
       <div className="container-cravio">
         
-        {/* Header & Role Switcher */}
-        <div style={styles.topHeader}>
+        {/* Section Header */}
+        <div style={styles.headerBlock}>
           <div>
-            <span style={styles.badgeLabel}>WHAT YOU CAN DO ON CRAVIO</span>
-            <h2 style={styles.mainTitle}>Platform Feature List</h2>
-            <p style={styles.subTitle}>
-              A comprehensive list of features and key advantages for diners and restaurant owners.
+            <span style={styles.badge}>Platform Features</span>
+            <h2 style={styles.title}>What you can do on Cravio</h2>
+            <p style={styles.subtitle}>
+              A straightforward overview of features available for diners and restaurant partners.
             </p>
           </div>
 
-          {/* Diners / Owners Switcher */}
+          {/* Role Toggle Switcher */}
           <div style={styles.tabContainer}>
             <button
-              onClick={() => { setRoleTab('diners'); setActiveIndex(0); if (sliderRef.current) sliderRef.current.scrollLeft = 0; }}
+              onClick={() => setActiveTab('diners')}
               style={{
                 ...styles.tabButton,
-                backgroundColor: roleTab === 'diners' ? '#3B4F39' : 'transparent',
-                color: roleTab === 'diners' ? '#FFFFFF' : '#686D6A',
-                boxShadow: roleTab === 'diners' ? '0 2px 8px rgba(59,79,57,0.2)' : 'none',
+                backgroundColor: activeTab === 'diners' ? '#3B4F39' : 'transparent',
+                color: activeTab === 'diners' ? '#FFFFFF' : '#686D6A',
+                fontWeight: activeTab === 'diners' ? 600 : 500,
               }}
             >
-              🍽️ For Diners / Users
+              For Diners
             </button>
             <button
-              onClick={() => { setRoleTab('owners'); setActiveIndex(0); if (sliderRef.current) sliderRef.current.scrollLeft = 0; }}
+              onClick={() => setActiveTab('owners')}
               style={{
                 ...styles.tabButton,
-                backgroundColor: roleTab === 'owners' ? '#3B4F39' : 'transparent',
-                color: roleTab === 'owners' ? '#FFFFFF' : '#686D6A',
-                boxShadow: roleTab === 'owners' ? '0 2px 8px rgba(59,79,57,0.2)' : 'none',
+                backgroundColor: activeTab === 'owners' ? '#3B4F39' : 'transparent',
+                color: activeTab === 'owners' ? '#FFFFFF' : '#686D6A',
+                fontWeight: activeTab === 'owners' ? 600 : 500,
               }}
             >
-              🏢 For Restaurant Owners
+              For Restaurant Owners
             </button>
           </div>
         </div>
 
-        {/* Carousel Control Bar */}
-        <div style={styles.controlRow}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={styles.featureCounter}>
-              Showing {featureList.length} Features ({roleTab === 'diners' ? 'User Features' : 'Owner Features'})
-            </span>
-            <span style={styles.autoStatusPill}>
-              {isHovered ? '⏸️ Paused' : '▶ Auto-Sliding List'}
-            </span>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Dots */}
-            <div style={{ display: 'flex', gap: '6px', marginRight: '6px' }}>
-              {featureList.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => jumpToSlide(idx)}
-                  style={{
-                    width: activeIndex === idx ? '18px' : '8px',
-                    height: '8px',
-                    borderRadius: '4px',
-                    backgroundColor: activeIndex === idx ? '#3B4F39' : '#D2CBBF',
-                    border: 'none',
-                    cursor: 'pointer',
-                    transition: 'all 0.25s ease',
-                  }}
-                  title={`Feature ${idx + 1}`}
-                />
-              ))}
-            </div>
-
-            {/* Arrows */}
-            <button onClick={slidePrev} style={styles.navArrow} title="Previous Feature">
-              ‹
-            </button>
-            <button onClick={slideNext} style={styles.navArrow} title="Next Feature">
-              ›
-            </button>
-          </div>
-        </div>
-
-        {/* Sliding List View (Clean List items, No Card Boxes, No Redirection Links) */}
-        <div
-          ref={sliderRef}
-          style={styles.sliderTrack}
-          className="cravio-features-slider"
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-        >
-          {featureList.map((item) => (
-            <div key={item.id} style={styles.listItem}>
-              
-              {/* Feature Header */}
-              <div style={styles.itemHeaderRow}>
-                <span style={{ fontSize: '1.6rem', marginRight: '10px' }}>{item.icon}</span>
+        {/* Clean Static Feature List Grid */}
+        <div style={styles.listGrid}>
+          {activeFeatures.map((item, index) => (
+            <div key={item.id} style={styles.listItemCard}>
+              <div style={styles.cardHeader}>
+                <span style={styles.indexBadge}>0{index + 1}</span>
                 <div>
-                  <span style={{ ...styles.categoryText, color: item.accentColor }}>{item.category}</span>
+                  <span style={styles.categoryLabel}>{item.category}</span>
                   <h3 style={styles.itemTitle}>{item.title}</h3>
                 </div>
               </div>
 
-              {/* Description */}
               <p style={styles.itemDesc}>{item.description}</p>
 
-              <div style={styles.divider} />
-
-              {/* Pros List */}
-              <div style={styles.prosSection}>
-                <span style={styles.prosHeader}>KEY ADVANTAGES:</span>
-                <ul style={styles.prosList}>
-                  {item.pros.map((proText, pIdx) => (
-                    <li key={pIdx} style={styles.proListItem}>
-                      <span style={styles.checkIcon}>✓</span>
-                      <span>{proText}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
+              <ul style={styles.bulletList}>
+                {item.listItems.map((point, pIdx) => (
+                  <li key={pIdx} style={styles.bulletItem}>
+                    <span style={styles.bulletDot}>•</span>
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           ))}
         </div>
 
       </div>
-
-      <style>{`
-        .cravio-features-slider::-webkit-scrollbar {
-          display: none;
-        }
-        .cravio-features-slider {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </section>
   );
 }
@@ -307,37 +173,38 @@ export default function FeaturesCarousel() {
 const styles = {
   section: {
     backgroundColor: '#FAF7F2',
-    padding: '64px 0 56px',
+    padding: '56px 0 64px',
     borderTop: '1px solid #EAE6DF',
     borderBottom: '1px solid #EAE6DF',
   },
-  topHeader: {
+  headerBlock: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     flexWrap: 'wrap',
     gap: '20px',
-    marginBottom: '26px',
+    marginBottom: '36px',
   },
-  badgeLabel: {
-    fontSize: '0.74rem',
+  badge: {
+    fontSize: '0.75rem',
     fontWeight: 700,
-    letterSpacing: '1.2px',
+    letterSpacing: '1px',
     color: '#C27047',
+    textTransform: 'uppercase',
     display: 'inline-block',
     marginBottom: '6px',
   },
-  mainTitle: {
+  title: {
     fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
-    fontSize: '2.1rem',
+    fontSize: '2rem',
     fontWeight: 700,
     color: '#1C1E1D',
-    margin: '0 0 6px',
+    margin: '0 0 8px',
   },
-  subTitle: {
+  subtitle: {
     color: '#707572',
     fontSize: '0.92rem',
-    maxWidth: '520px',
+    maxWidth: '540px',
     lineHeight: 1.5,
     margin: 0,
   },
@@ -345,131 +212,91 @@ const styles = {
     display: 'inline-flex',
     padding: '4px',
     backgroundColor: '#EAE5DB',
-    borderRadius: '28px',
+    borderRadius: '24px',
     gap: '4px',
   },
   tabButton: {
     border: 'none',
-    borderRadius: '22px',
-    padding: '9px 18px',
-    fontSize: '0.84rem',
-    fontWeight: 600,
+    borderRadius: '20px',
+    padding: '8px 20px',
+    fontSize: '0.85rem',
     cursor: 'pointer',
     transition: 'all 0.2s ease',
     fontFamily: "'Inter', sans-serif",
   },
-  controlRow: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '18px',
-  },
-  featureCounter: {
-    fontSize: '0.82rem',
-    color: '#707572',
-    fontWeight: 600,
-  },
-  autoStatusPill: {
-    fontSize: '0.68rem',
-    fontWeight: 600,
-    color: '#3B4F39',
-    backgroundColor: '#EAF0E9',
-    padding: '2px 8px',
-    borderRadius: '12px',
-  },
-  navArrow: {
-    width: '34px',
-    height: '34px',
-    borderRadius: '50%',
-    border: '1px solid #EAE6DF',
-    backgroundColor: '#FFFFFF',
-    color: '#1C1E1D',
-    fontSize: '1.1rem',
-    fontWeight: 'bold',
-    cursor: 'pointer',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    boxShadow: '0 2px 5px rgba(0,0,0,0.04)',
-    transition: 'all 0.15s ease',
-  },
-  sliderTrack: {
-    display: 'flex',
+  listGrid: {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
     gap: '24px',
-    overflowX: 'auto',
-    scrollSnapType: 'x mandatory',
-    paddingBottom: '12px',
   },
-  listItem: {
-    flex: '0 0 340px',
-    scrollSnapAlign: 'start',
-    backgroundColor: '#FAF7F2',
-    borderLeft: '3px solid #3B4F39',
-    padding: '16px 20px',
+  listItemCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: '12px',
+    border: '1px solid #EAE6DF',
+    padding: '24px',
     display: 'flex',
     flexDirection: 'column',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.02)',
   },
-  itemHeaderRow: {
+  cardHeader: {
     display: 'flex',
-    alignItems: 'center',
-    marginBottom: '8px',
+    alignItems: 'flex-start',
+    gap: '14px',
+    marginBottom: '12px',
   },
-  categoryText: {
-    fontSize: '0.66rem',
+  indexBadge: {
+    fontSize: '0.8rem',
     fontWeight: 700,
-    letterSpacing: '0.8px',
-    display: 'block',
+    color: '#3B4F39',
+    backgroundColor: '#EAF0E9',
+    padding: '4px 8px',
+    borderRadius: '6px',
+    fontFamily: 'monospace',
+  },
+  categoryLabel: {
+    fontSize: '0.7rem',
+    fontWeight: 600,
+    color: '#C27047',
     textTransform: 'uppercase',
+    letterSpacing: '0.5px',
+    display: 'block',
   },
   itemTitle: {
     fontFamily: "'Playfair Display', serif",
-    fontSize: '1.12rem',
+    fontSize: '1.15rem',
     fontWeight: 700,
     color: '#1C1E1D',
     margin: '2px 0 0',
   },
   itemDesc: {
-    fontSize: '0.84rem',
-    color: '#707572',
-    lineHeight: 1.55,
-    margin: '0 0 12px',
+    fontSize: '0.86rem',
+    color: '#656A67',
+    lineHeight: 1.5,
+    margin: '0 0 16px',
   },
-  divider: {
-    height: '1px',
-    backgroundColor: '#EAE6DF',
-    margin: '0 0 12px',
-  },
-  prosSection: {
-    display: 'flex',
-    flexDirection: 'column',
-    gap: '4px',
-  },
-  prosHeader: {
-    fontSize: '0.68rem',
-    fontWeight: 700,
-    color: '#3B4F39',
-    letterSpacing: '0.6px',
-    marginBottom: '4px',
-  },
-  prosList: {
+  bulletList: {
     listStyle: 'none',
     padding: 0,
     margin: 0,
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
-  },
-  proListItem: {
-    display: 'flex',
-    alignItems: 'center',
     gap: '8px',
-    fontSize: '0.78rem',
-    color: '#333735',
-    fontWeight: 500,
+    borderTop: '1px solid #F3EFEA',
+    paddingTop: '14px',
+    marginTop: 'auto',
   },
-  checkIcon: {
-    color: '#22c55e',
+  bulletItem: {
+    display: 'flex',
+    alignItems: 'flex-start',
+    gap: '8px',
+    fontSize: '0.82rem',
+    color: '#333735',
+    lineHeight: 1.4,
+  },
+  bulletDot: {
+    color: '#3B4F39',
     fontWeight: 'bold',
-    fontSize: '0.85rem',
+    fontSize: '0.9rem',
+    lineHeight: 1,
   },
 };

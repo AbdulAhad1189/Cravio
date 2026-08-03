@@ -10,43 +10,43 @@ const QUESTIONS = [
       { label: "Keep it mild", emoji: "🌿" },
       { label: "A little kick", emoji: "🌶️" },
       { label: "Bring the heat", emoji: "🔥" },
-      { label: "Set my mouth on fire", emoji: "💥" },
+      { label: "Extra spicy", emoji: "💥" },
     ],
   },
   {
-    question: "Pick your ideal texture",
+    question: "What type of food are you in the mood for?",
     options: [
-      { label: "Crispy & crunchy", emoji: "🍟" },
-      { label: "Creamy & smooth", emoji: "🍦" },
-      { label: "Saucy & dripping", emoji: "🍝" },
-      { label: "Chewy & hearty", emoji: "🥖" },
+      { label: "Crispy & fried", emoji: "🍟" },
+      { label: "Smooth & creamy", emoji: "🍦" },
+      { label: "Rich & saucy", emoji: "🍝" },
+      { label: "Hearty & filling", emoji: "🥖" },
     ],
   },
   {
-    question: "What's your dining vibe?",
+    question: "What's your dining style?",
     options: [
-      { label: "Elegant fine-dining", emoji: "🥂" },
+      { label: "Fine dining", emoji: "🥂" },
       { label: "Casual & relaxed", emoji: "😎" },
-      { label: "Grab-and-go fast", emoji: "⚡" },
-      { label: "Cozy & intimate", emoji: "🕯️" },
+      { label: "Quick bite", emoji: "⚡" },
+      { label: "Cozy & quiet", emoji: "🕯️" },
     ],
   },
   {
-    question: "Sweet or savory?",
+    question: "Flavor preference?",
     options: [
-      { label: "Sweet tooth all the way", emoji: "🍰" },
-      { label: "Savory fanatic", emoji: "🥩" },
-      { label: "Bitter & bold", emoji: "☕" },
-      { label: "Sour & tangy", emoji: "🍋" },
+      { label: "Sweet", emoji: "🍰" },
+      { label: "Savory & rich", emoji: "🥩" },
+      { label: "Bold & roasted", emoji: "☕" },
+      { label: "Tangy & sour", emoji: "🍋" },
     ],
   },
   {
-    question: "Pick your go-to drink",
+    question: "Favorite drink to go along?",
     options: [
-      { label: "Black coffee", emoji: "☕" },
-      { label: "Masala chai", emoji: "🍵" },
-      { label: "Cocktail or wine", emoji: "🍷" },
-      { label: "Fresh juice or soda", emoji: "🧃" },
+      { label: "Coffee", emoji: "☕" },
+      { label: "Chai", emoji: "🍵" },
+      { label: "Cold drink or soda", emoji: "🧃" },
+      { label: "Specialty beverage", emoji: "🍷" },
     ],
   },
 ];
@@ -95,7 +95,7 @@ export default function CraveMatch() {
       <div style={styles.page}>
         <div style={styles.loadingWrap}>
           <div style={styles.spinner} />
-          <p style={{ color: '#707572', marginTop: 16 }}>Analyzing your cravings...</p>
+          <p style={{ color: '#707572', marginTop: 16 }}>Finding restaurant matches for you...</p>
         </div>
       </div>
     );
@@ -108,7 +108,7 @@ export default function CraveMatch() {
         <div style={styles.resultContainer}>
           <div style={{ ...styles.personalityCard, borderColor: personality.color }}>
             <div style={{ ...styles.personalityBadge, backgroundColor: personality.color }}>
-              YOUR FOODIE PERSONALITY
+              YOUR TASTE PROFILE
             </div>
             <h1 style={styles.personalityTitle}>{personality.title}</h1>
             <p style={styles.personalityDesc}>{personality.description}</p>
@@ -123,7 +123,7 @@ export default function CraveMatch() {
 
           {restaurants.length > 0 && (
             <div style={styles.matchedSection}>
-              <h3 style={styles.matchedTitle}>Restaurants We Think You'll Love</h3>
+              <h3 style={styles.matchedTitle}>Recommended Restaurants for You</h3>
               <div style={styles.matchedGrid}>
                 {restaurants.map(r => (
                   <div
@@ -151,7 +151,7 @@ export default function CraveMatch() {
           )}
 
           <button onClick={restart} style={styles.retakeBtn}>
-            Retake Quiz
+            Take Quiz Again
           </button>
         </div>
       </div>
@@ -165,9 +165,9 @@ export default function CraveMatch() {
     <div style={styles.page}>
       <div style={styles.quizContainer}>
         <div style={styles.hero}>
-          <div style={styles.heroBadge}>PERSONALITY QUIZ</div>
+          <div style={styles.heroBadge}>TASTE FINDER</div>
           <h1 style={styles.heroTitle}>CraveMatch</h1>
-          <p style={styles.heroSub}>Answer 5 quick questions and we'll match you with your foodie personality & restaurants you'll love.</p>
+          <p style={styles.heroSub}>Answer 5 simple questions to get restaurant recommendations based on your preferences.</p>
         </div>
 
         <div style={styles.progressBar}>

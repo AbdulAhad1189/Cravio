@@ -63,8 +63,6 @@ export default function SpinWheel() {
     const winningIndex = Math.floor(Math.random() * NUM_SEGMENTS);
     const landed = CUISINES[winningIndex];
 
-    // Angle of winning segment center before rotation: (winningIndex * 45° + 22.5°)
-    // Rotation required to align segment center under top pointer (12 o'clock / -90°):
     const segmentCenterAngle = winningIndex * SLICE_ANGLE + SLICE_ANGLE / 2;
     const targetModuloAngle = (360 - segmentCenterAngle) % 360;
 
@@ -101,13 +99,13 @@ export default function SpinWheel() {
   return (
     <div style={styles.wrapper}>
       <div style={styles.header}>
-        <span style={styles.badge}>WEEKLY SPECIAL</span>
+        <span style={styles.badge}>DECISION HELPER</span>
         <h2 style={styles.title}>Crave Roulette</h2>
-        <p style={styles.sub}>Unsure where to dine next? Give the roulette a spin and let fate decide your menu.</p>
+        <p style={styles.sub}>Can't decide where to eat? Spin the wheel to get a restaurant recommendation in your area.</p>
         {locationLabel && (
           <div style={styles.locationPill}>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-            Spinning for {locationLabel}
+            Finding places in {locationLabel}
           </div>
         )}
       </div>
@@ -170,7 +168,7 @@ export default function SpinWheel() {
             opacity: (spinning || loading || locDetecting) ? 0.75 : 1,
           }}
         >
-          {locDetecting ? 'Detecting location...' : spinning ? 'Spinning Roulette...' : loading ? 'Finding table...' : 'Spin the Roulette'}
+          {locDetecting ? 'Detecting location...' : spinning ? 'Spinning wheel...' : loading ? 'Finding restaurant...' : 'Spin the Wheel'}
         </button>
 
         {error && <p style={styles.error}>{error}</p>}
@@ -180,7 +178,7 @@ export default function SpinWheel() {
         <div style={styles.resultOverlay} onClick={() => setShowResult(false)}>
           <div style={styles.resultCard} onClick={(e) => e.stopPropagation()}>
             <div style={{ ...styles.resultBadge, background: result.cuisine.color, color: result.cuisine.color === '#EED9C4' ? '#3A3D3B' : '#FFFFFF' }}>
-              {result.cuisine.emoji} Recommended: {result.cuisine.label}
+              {result.cuisine.emoji} Result: {result.cuisine.label}
             </div>
             <button style={styles.closeBtn} onClick={() => setShowResult(false)}>✕</button>
             {result.restaurant.image && (
@@ -206,7 +204,7 @@ export default function SpinWheel() {
                   style={styles.viewBtn}
                   onClick={() => navigate(`/restaurants/${result.restaurant.id}`)}
                 >
-                  View Restaurant
+                  View Menu
                 </button>
                 <button style={styles.reSpinBtn} onClick={() => { setShowResult(false); setTimeout(() => doSpin(), 100); }}>
                   Spin Again

@@ -808,7 +808,7 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── What you can do on Cravio (Interactive Sliding Carousel) ── */}
+      {/* ── What you can do on Cravio (Feature List) ── */}
       <FeaturesCarousel />
     </div>
   );

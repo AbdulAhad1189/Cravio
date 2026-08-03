@@ -53,7 +53,7 @@ export default function FlavorDuel() {
     if (animating || !left || !right) return;
     setPickedSide(side);
     setAnimating(true);
-
+  
     const winner = side === 0 ? left : right;
 
     if (round >= TOTAL_ROUNDS) {
@@ -66,7 +66,6 @@ export default function FlavorDuel() {
 
     try {
       const loc = getLocation();
-      // Fetch 1 new restaurant to replace the loser, excluding already seen ones
       const nextExclude = [...exclude];
       const { data } = await api.get('/restaurants/duel/', {
         params: {
@@ -84,10 +83,8 @@ export default function FlavorDuel() {
 
       setTimeout(() => {
         if (side === 0) {
-          // Left won. Replace right.
           setRight(newContender);
         } else {
-          // Right won. Replace left.
           setLeft(newContender);
         }
         setExclude([...nextExclude, newContender.id]);
@@ -97,7 +94,6 @@ export default function FlavorDuel() {
       }, 800);
 
     } catch {
-      // In case of error (e.g. network failure), reset animation so user can try again
       setAnimating(false);
       setPickedSide(null);
       setError('Something went wrong. Please click again.');
@@ -116,8 +112,7 @@ export default function FlavorDuel() {
     return (
       <div style={styles.page}>
         <div style={styles.championContainer}>
-          <div style={styles.confettiText}>🏆</div>
-          <div style={styles.championBadge}>YOUR CHAMPION RESTAURANT</div>
+          <div style={styles.championBadge}>YOUR TOP PICK</div>
           <div style={styles.championCard}>
             <img
               src={getRestaurantImage(champion)}
@@ -140,10 +135,10 @@ export default function FlavorDuel() {
                   style={styles.orderBtn}
                   onClick={() => navigate(`/restaurants/${champion.id}`)}
                 >
-                  View Menu & Order
+                  View Restaurant
                 </button>
                 <button style={styles.replayBtn} onClick={startDuel}>
-                  Play Again
+                  Start Over
                 </button>
               </div>
             </div>
@@ -157,10 +152,10 @@ export default function FlavorDuel() {
     <div style={styles.page}>
       {/* Hero */}
       <div style={styles.hero}>
-        <div style={styles.heroBadge}>INTERACTIVE DUEL</div>
+        <div style={styles.heroBadge}>RESTAURANT MATCHUP</div>
         <h1 style={styles.heroTitle}>Flavor Duel</h1>
         <p style={styles.heroSub}>
-          Find your ultimate dining destination. Compare restaurants side-by-side. The winner stays to face the next contender.
+          Compare restaurants two at a time. Pick your favorite in each round to narrow down your top pick.
         </p>
       </div>
 
@@ -170,7 +165,7 @@ export default function FlavorDuel() {
           <div style={{ ...styles.progressFill, width: `${((round - 1) / TOTAL_ROUNDS) * 100}%` }} />
         </div>
         <div style={styles.roundLabel}>
-          Battle {round} of {TOTAL_ROUNDS}
+          Round {round} of {TOTAL_ROUNDS}
         </div>
       </div>
 
@@ -179,7 +174,7 @@ export default function FlavorDuel() {
         {loading ? (
           <div style={styles.loadingState}>
             <div style={styles.spinner} />
-            <p style={{ color: '#707572', marginTop: 12 }}>Loading contenders...</p>
+            <p style={{ color: '#707572', marginTop: 12 }}>Loading options...</p>
           </div>
         ) : error ? (
           <div style={styles.errorState}>
@@ -219,7 +214,7 @@ export default function FlavorDuel() {
                 </div>
               </div>
               {pickedSide === 0 && (
-                <div style={styles.winnerStamp}>WINNER</div>
+                <div style={styles.winnerStamp}>SELECTED</div>
               )}
             </button>
 
@@ -259,7 +254,7 @@ export default function FlavorDuel() {
                 </div>
               </div>
               {pickedSide === 1 && (
-                <div style={styles.winnerStamp}>WINNER</div>
+                <div style={styles.winnerStamp}>SELECTED</div>
               )}
             </button>
           </div>
@@ -268,7 +263,7 @@ export default function FlavorDuel() {
 
       {/* Tip */}
       <p style={styles.tip}>
-        Click on the restaurant you prefer. The selected restaurant stays to face the next challenger until round 5.
+        Click on the restaurant you prefer. Your choice advances to face the next contender.
       </p>
     </div>
   );
@@ -452,26 +447,26 @@ const styles = {
     color: '#FFFFFF',
     padding: '8px 24px',
     borderRadius: 8,
-    fontSize: '0.9rem',
+    fontSize: '0.85rem',
     fontWeight: 700,
-    letterSpacing: '2px',
+    letterSpacing: '1.5px',
     zIndex: 10,
   },
   vsCircle: {
-    width: 48,
-    height: 48,
+    width: 44,
+    height: 44,
     borderRadius: '50%',
     backgroundColor: '#C27047',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
     flexShrink: 0,
-    boxShadow: '0 4px 16px rgba(194,112,71,0.3)',
+    boxShadow: '0 4px 16px rgba(194,112,71,0.25)',
   },
   vsText: {
     color: '#FFFFFF',
-    fontWeight: 800,
-    fontSize: '0.85rem',
+    fontWeight: 700,
+    fontSize: '0.8rem',
     letterSpacing: '1px',
   },
   tip: {
@@ -482,16 +477,11 @@ const styles = {
     margin: '12px auto 0',
     lineHeight: 1.5,
   },
-  // Champion screen
   championContainer: {
     maxWidth: 520,
     margin: '0 auto',
     padding: '50px 20px',
     textAlign: 'center',
-  },
-  confettiText: {
-    fontSize: '3.5rem',
-    marginBottom: 8,
   },
   championBadge: {
     display: 'inline-block',

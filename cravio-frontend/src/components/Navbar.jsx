@@ -256,7 +256,7 @@ export default function Navbar() {
                         onMouseEnter={e => { e.currentTarget.style.color = 'var(--olive)'; }}
                         onMouseLeave={e => { if (!playOpen) e.currentTarget.style.color = 'var(--dark-soft)'; }}
                       >
-                        🎮 Crave Zone <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>▼</span>
+                        Crave Zone <span style={{ fontSize: '0.65rem', opacity: 0.7 }}>▼</span>
                       </button>
                       {playOpen && (
                         <div style={{
@@ -264,7 +264,7 @@ export default function Navbar() {
                           left: '50%',
                           transform: 'translateX(-50%)',
                           top: 30,
-                          width: 190,
+                          width: 220,
                           background: 'white',
                           border: '1px solid var(--border)',
                           borderRadius: 12,
@@ -279,36 +279,34 @@ export default function Navbar() {
                             onClick={() => setPlayOpen(false)}
                             style={{
                               display: 'flex',
-                              alignItems: 'center',
-                              gap: 10,
+                              flexDirection: 'column',
                               padding: '10px 16px',
                               textDecoration: 'none',
                               color: 'var(--dark)',
-                              fontSize: '0.85rem',
                               transition: 'background 0.15s'
                             }}
                             onMouseEnter={e => e.currentTarget.style.background = 'var(--cream)'}
                             onMouseLeave={e => e.currentTarget.style.background = 'white'}
                           >
-                            <span>🎯</span> CraveMatch Quiz
+                            <span style={{ fontSize: '0.86rem', fontWeight: 600 }}>CraveMatch Quiz</span>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>5-question taste profile finder</span>
                           </Link>
                           <Link
                             to="/flavor-duel"
                             onClick={() => setPlayOpen(false)}
                             style={{
                               display: 'flex',
-                              alignItems: 'center',
-                              gap: 10,
+                              flexDirection: 'column',
                               padding: '10px 16px',
                               textDecoration: 'none',
                               color: 'var(--dark)',
-                              fontSize: '0.85rem',
                               transition: 'background 0.15s'
                             }}
                             onMouseEnter={e => e.currentTarget.style.background = 'var(--cream)'}
                             onMouseLeave={e => e.currentTarget.style.background = 'white'}
                           >
-                            <span>⚔️</span> Flavor Duel
+                            <span style={{ fontSize: '0.86rem', fontWeight: 600 }}>Flavor Duel</span>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>Head-to-head restaurant matchup</span>
                           </Link>
                           <a
                             href="/#roulette"
@@ -321,18 +319,17 @@ export default function Navbar() {
                             }}
                             style={{
                               display: 'flex',
-                              alignItems: 'center',
-                              gap: 10,
+                              flexDirection: 'column',
                               padding: '10px 16px',
                               textDecoration: 'none',
                               color: 'var(--dark)',
-                              fontSize: '0.85rem',
                               transition: 'background 0.15s'
                             }}
                             onMouseEnter={e => e.currentTarget.style.background = 'var(--cream)'}
                             onMouseLeave={e => e.currentTarget.style.background = 'white'}
                           >
-                            <span>🎲</span> Cravio Roulette
+                            <span style={{ fontSize: '0.86rem', fontWeight: 600 }}>Crave Roulette</span>
+                            <span style={{ fontSize: '0.72rem', color: 'var(--text-muted)', marginTop: 2 }}>Spin wheel for random picks</span>
                           </a>
                         </div>
                       )}
@@ -525,16 +522,16 @@ export default function Navbar() {
                 {showPlaySection && (
                   <div style={{ margin: '8px 0', borderTop: '1px solid #EAE6DF', borderBottom: '1px solid #EAE6DF', padding: '6px 0', backgroundColor: '#FDFBF7' }}>
                     <div style={{ padding: '8px 20px', fontSize: '0.75rem', fontWeight: 700, color: 'var(--terracotta)', letterSpacing: '1px', textTransform: 'uppercase' }}>
-                      🎮 Crave Zone
+                      Crave Zone
                     </div>
                     <Link to="/cravematch" onClick={() => setSidebarOpen(false)} style={{ display: 'block', padding: '10px 30px', textDecoration: 'none', fontSize: '0.88rem', color: 'var(--dark-soft)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--olive)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--dark-soft)'}>
-                      🎯 CraveMatch Quiz
+                      CraveMatch Quiz
                     </Link>
                     <Link to="/flavor-duel" onClick={() => setSidebarOpen(false)} style={{ display: 'block', padding: '10px 30px', textDecoration: 'none', fontSize: '0.88rem', color: 'var(--dark-soft)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--olive)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--dark-soft)'}>
-                      ⚔️ Flavor Duel
+                      Flavor Duel
                     </Link>
                     <a href="/#roulette" onClick={() => { setSidebarOpen(false); setTimeout(() => { const el = document.getElementById('roulette'); if (el) el.scrollIntoView({ behavior: 'smooth' }); }, 100); }} style={{ display: 'block', padding: '10px 30px', textDecoration: 'none', fontSize: '0.88rem', color: 'var(--dark-soft)' }} onMouseEnter={e => e.currentTarget.style.color = 'var(--olive)'} onMouseLeave={e => e.currentTarget.style.color = 'var(--dark-soft)'}>
-                      🎲 Cravio Roulette
+                      Crave Roulette
                     </a>
                   </div>
                 )}
