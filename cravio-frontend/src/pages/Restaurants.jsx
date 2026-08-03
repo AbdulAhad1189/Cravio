@@ -85,10 +85,21 @@ export default function Restaurants() {
             <p>Loading restaurants...</p>
           </div>
         ) : restaurants.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '60px', color: 'var(--text-muted)' }}>
-            <div style={{ fontSize: '2.5rem', marginBottom: '12px' }}>😔</div>
-            <h3 style={{ marginBottom: '8px' }}>No restaurants found</h3>
-            <p>Try adjusting your search or filters</p>
+          <div style={{ textAlign: 'center', padding: '60px 20px', background: 'white', borderRadius: '16px', border: '1px solid var(--border)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '12px' }}>📍</div>
+            <h3 style={{ marginBottom: '8px', color: 'var(--dark)' }}>
+              {(search || city) ? `No restaurants found for "${search || city}"` : 'No restaurants found'}
+            </h3>
+            <p style={{ color: 'var(--text-muted)', fontSize: '0.9rem', maxWidth: '400px', margin: '0 auto 16px' }}>
+              We couldn't find any matching restaurants in this location or category. Please check the spelling or try searching for major cities like Bengaluru, Mumbai, Delhi, Hyderabad, or Jaipur.
+            </p>
+            <button
+              onClick={() => { setSearch(''); setCity(''); setCuisine(''); fetchRestaurants(); }}
+              className="btn-olive"
+              style={{ padding: '8px 20px', fontSize: '0.85rem', borderRadius: '8px' }}
+            >
+              Clear All Filters
+            </button>
           </div>
         ) : (
           <>

@@ -194,6 +194,17 @@ def sync_swiggy_restaurants(lat='12.9715987', lng='77.5945627', city_name=None):
     from users.models import User
     from restaurants.models import Restaurant
 
+    if city_name:
+        city_key = city_name.lower().strip()
+        coords = CITY_COORDINATES.get(city_key)
+        if coords:
+            lat, lng = coords
+        else:
+            # Check if city_name matches an existing restaurant city in DB before syncing
+            if not Restaurant.objects.filter(city__iexact=city_name).exists():
+                print(f"Skipping Swiggy sync: '{city_name}' is not a recognized city.")
+                return []
+
     # Get a default owner user to assign to Swiggy restaurants
     owner = User.objects.filter(role='owner').first()
     if not owner:
@@ -245,6 +256,8 @@ def sync_swiggy_restaurants(lat='12.9715987', lng='77.5945627', city_name=None):
                     'total_reviews': int(info.get('totalRatingsCount', 100) or 100),
                     'opening_time': time(9, 0),
                     'closing_time': time(22, 0),
+                    'latitude': float(lat) if lat else 12.9715987,
+                    'longitude': float(lng) if lng else 77.5945627,
                 })
         except Exception as parse_err:
             print(f"Error parsing live Swiggy JSON: {parse_err}")
@@ -257,6 +270,8 @@ def sync_swiggy_restaurants(lat='12.9715987', lng='77.5945627', city_name=None):
             r_copy = r.copy()
             if city_name:
                 r_copy['city'] = city_name.capitalize()
+            r_copy['latitude'] = float(lat) if lat else 12.9715987
+            r_copy['longitude'] = float(lng) if lng else 77.5945627
             restaurants_data.append(r_copy)
         
     synced_restaurants = []
@@ -278,6 +293,8 @@ def sync_swiggy_restaurants(lat='12.9715987', lng='77.5945627', city_name=None):
                     'closing_time': rdata['closing_time'],
                     'average_rating': rdata['average_rating'],
                     'total_reviews': rdata['total_reviews'],
+                    'latitude': rdata.get('latitude'),
+                    'longitude': rdata.get('longitude'),
                 }
             )
             synced_restaurants.append(restaurant)

@@ -97,34 +97,20 @@ async function geocode(query) {
 const GMAP_KEY = process.env.REACT_APP_GOOGLE_MAPS_API_KEY;
 
 function MapEmbed({ lat, lon, name, address, google_maps_link }) {
-  // Build the best available embed src
   let src;
 
-  if (google_maps_link) {
-    if (
-      google_maps_link.includes('google.com/maps/embed') ||
-      google_maps_link.includes('google.com/maps/embed/v1')
-    ) {
-      // Already a proper embed URL — use as-is (append key if missing)
-      src = google_maps_link.includes('key=')
-        ? google_maps_link
-        : `${google_maps_link}&key=${GMAP_KEY}`;
-    } else {
-      // It's a share URL — use Maps Embed API place mode with the full link as query
-      const q = encodeURIComponent(`${name}, ${address}`);
-      src = `https://www.google.com/maps/embed/v1/place?key=${GMAP_KEY}&q=${q}&zoom=16`;
-    }
-  } else if (lat && lon) {
-    // Have coordinates — use precise place mode
-    const q = encodeURIComponent(`${name}, ${address}`);
-    src = `https://www.google.com/maps/embed/v1/place?key=${GMAP_KEY}&q=${q}&center=${lat},${lon}&zoom=16`;
+  if (lat && lon) {
+    src = `https://maps.google.com/maps?q=${lat},${lon}&z=15&output=embed`;
+  } else if (google_maps_link && (google_maps_link.includes('google.com/maps/embed') || google_maps_link.includes('google.com/maps/embed/v1'))) {
+    src = google_maps_link;
   } else {
-    // Fallback — search by name + address
     const q = encodeURIComponent(`${name}, ${address}`);
-    src = `https://www.google.com/maps/embed/v1/place?key=${GMAP_KEY}&q=${q}&zoom=15`;
+    src = `https://maps.google.com/maps?q=${q}&z=15&output=embed`;
   }
 
-  const mapsRedirectUrl = google_maps_link || `https://www.google.com/maps/search/${encodeURIComponent(`${name}, ${address}`)}`;
+  const mapsRedirectUrl = (lat && lon)
+    ? `https://www.google.com/maps/search/?api=1&query=${lat},${lon}`
+    : google_maps_link || `https://www.google.com/maps/search/${encodeURIComponent(`${name}, ${address}`)}`;
 
   return (
     <div style={{ borderRadius: 14, overflow: 'hidden', border: '1px solid var(--border)', height: 340, position: 'relative', background: '#e8e8e8' }}>
@@ -148,7 +134,7 @@ function MapEmbed({ lat, lon, name, address, google_maps_link }) {
           borderRadius: 8, padding: '5px 12px',
           fontSize: '0.75rem', fontWeight: 600, color: 'var(--olive)',
           textDecoration: 'none', boxShadow: '0 2px 8px rgba(0,0,0,0.15)',
-          display: 'flex', alignItems: 'center', gap: 4,
+          display: 'flex', alignItems: 'center', gap: 4, zIndex: 10
         }}
       >
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
@@ -634,6 +620,8 @@ export default function RestaurantDetail() {
             <div>
               <h3 style={{ fontWeight: 700, fontSize: '1rem', marginBottom: 14 }}>Location on Map</h3>
               <MapEmbed
+                lat={restaurant.latitude}
+                lon={restaurant.longitude}
                 name={restaurant.name}
                 address={[restaurant.address, restaurant.city, restaurant.state, 'India'].filter(Boolean).join(', ')}
                 google_maps_link={restaurant.google_maps_link}

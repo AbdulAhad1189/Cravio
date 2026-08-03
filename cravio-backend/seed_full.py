@@ -80,39 +80,39 @@ print(f"  ✓ {len(cats)} categories ready")
 # ─────────────────────────────────────────────
 RESTAURANT_DATA = [
     # Karnataka
-    dict(name='The Spice Room',      cuisine='North Indian, Mughlai', city='Bengaluru',   state='Karnataka',       pincode='560001', address='45 Koramangala, Bengaluru',     owner=owner1, average_rating=4.7, total_reviews=312),
-    dict(name='Café Willow',         cuisine='Cafe, Continental',     city='Bengaluru',   state='Karnataka',       pincode='560038', address='7 Indiranagar, Bengaluru',      owner=owner2, average_rating=4.5, total_reviews=198),
+    dict(name='The Spice Room',      cuisine='North Indian, Mughlai', city='Bengaluru',   state='Karnataka',       pincode='560001', address='45 Koramangala, Bengaluru',     owner=owner1, average_rating=4.7, total_reviews=312, latitude=12.9352, longitude=77.6245),
+    dict(name='Café Willow',         cuisine='Cafe, Continental',     city='Bengaluru',   state='Karnataka',       pincode='560038', address='7 Indiranagar, Bengaluru',      owner=owner2, average_rating=4.5, total_reviews=198, latitude=12.9784, longitude=77.6408),
     # Maharashtra
-    dict(name='Mumbai Darbar',       cuisine='North Indian, Mughlai', city='Mumbai',      state='Maharashtra',     pincode='400001', address='12 Marine Drive, Mumbai',       owner=owner3, average_rating=4.8, total_reviews=540),
-    dict(name='Pav Bhaji Palace',    cuisine='Street Food',           city='Pune',        state='Maharashtra',     pincode='411001', address='22 FC Road, Pune',              owner=owner1, average_rating=4.4, total_reviews=220),
+    dict(name='Mumbai Darbar',       cuisine='North Indian, Mughlai', city='Mumbai',      state='Maharashtra',     pincode='400001', address='12 Marine Drive, Mumbai',       owner=owner3, average_rating=4.8, total_reviews=540, latitude=18.9438, longitude=72.8234),
+    dict(name='Pav Bhaji Palace',    cuisine='Street Food',           city='Pune',        state='Maharashtra',     pincode='411001', address='22 FC Road, Pune',              owner=owner1, average_rating=4.4, total_reviews=220, latitude=18.5275, longitude=73.8418),
     # Delhi
-    dict(name='Dilli Haat Kitchen',  cuisine='North Indian, Mughlai', city='Delhi',       state='Delhi',           pincode='110001', address='Connaught Place, New Delhi',     owner=owner4, average_rating=4.9, total_reviews=720),
-    dict(name='Old Delhi Biryani',   cuisine='Biryani, Mughlai',      city='Delhi',       state='Delhi',           pincode='110006', address='Chandni Chowk, Old Delhi',      owner=owner5, average_rating=4.7, total_reviews=485),
+    dict(name='Dilli Haat Kitchen',  cuisine='North Indian, Mughlai', city='Delhi',       state='Delhi',           pincode='110001', address='Connaught Place, New Delhi',     owner=owner4, average_rating=4.9, total_reviews=720, latitude=28.6315, longitude=77.2167),
+    dict(name='Old Delhi Biryani',   cuisine='Biryani, Mughlai',      city='Delhi',       state='Delhi',           pincode='110006', address='Chandni Chowk, Old Delhi',      owner=owner5, average_rating=4.7, total_reviews=485, latitude=28.6507, longitude=77.2334),
     # Tamil Nadu
-    dict(name='Murugan Idli Shop',   cuisine='South Indian',          city='Chennai',     state='Tamil Nadu',      pincode='600001', address='14 Anna Salai, Chennai',        owner=owner2, average_rating=4.6, total_reviews=390),
-    dict(name='The Marina Seafood',  cuisine='Seafood, Continental',  city='Chennai',     state='Tamil Nadu',      pincode='600004', address='Marina Beach Road, Chennai',    owner=owner3, average_rating=4.5, total_reviews=275),
+    dict(name='Murugan Idli Shop',   cuisine='South Indian',          city='Chennai',     state='Tamil Nadu',      pincode='600001', address='14 Anna Salai, Chennai',        owner=owner2, average_rating=4.6, total_reviews=390, latitude=13.0604, longitude=80.2496),
+    dict(name='The Marina Seafood',  cuisine='Seafood, Continental',  city='Chennai',     state='Tamil Nadu',      pincode='600004', address='Marina Beach Road, Chennai',    owner=owner3, average_rating=4.5, total_reviews=275, latitude=13.0500, longitude=80.2824),
     # Telangana
-    dict(name='Paradise Biryani',    cuisine='Biryani, Mughlai',      city='Hyderabad',   state='Telangana',       pincode='500001', address='MG Road, Hyderabad',            owner=owner4, average_rating=4.9, total_reviews=890),
-    dict(name='Chutneys Hyderabad',  cuisine='South Indian',          city='Hyderabad',   state='Telangana',       pincode='500082', address='Banjara Hills, Hyderabad',      owner=owner1, average_rating=4.6, total_reviews=340),
+    dict(name='Paradise Biryani',    cuisine='Biryani, Mughlai',      city='Hyderabad',   state='Telangana',       pincode='500001', address='MG Road, Hyderabad',            owner=owner4, average_rating=4.9, total_reviews=890, latitude=17.3950, longitude=78.4867),
+    dict(name='Chutneys Hyderabad',  cuisine='South Indian',          city='Hyderabad',   state='Telangana',       pincode='500082', address='Banjara Hills, Hyderabad',      owner=owner1, average_rating=4.6, total_reviews=340, latitude=17.4156, longitude=78.4347),
     # West Bengal
-    dict(name='Arsalan Kolkata',     cuisine='Biryani, Mughlai',      city='Kolkata',     state='West Bengal',     pincode='700017', address='Park Street, Kolkata',          owner=owner5, average_rating=4.8, total_reviews=610),
-    dict(name='Oh! Calcutta',        cuisine='Continental, Seafood',  city='Kolkata',     state='West Bengal',     pincode='700071', address='Forum Mall, Kolkata',           owner=owner2, average_rating=4.5, total_reviews=295),
+    dict(name='Arsalan Kolkata',     cuisine='Biryani, Mughlai',      city='Kolkata',     state='West Bengal',     pincode='700017', address='Park Street, Kolkata',          owner=owner5, average_rating=4.8, total_reviews=610, latitude=22.5511, longitude=88.3517),
+    dict(name='Oh! Calcutta',        cuisine='Continental, Seafood',  city='Kolkata',     state='West Bengal',     pincode='700071', address='Forum Mall, Kolkata',           owner=owner2, average_rating=4.5, total_reviews=295, latitude=22.5085, longitude=88.3632),
     # Rajasthan
-    dict(name='Lal Mahal Dawat',     cuisine='Rajasthani, North Indian', city='Jaipur',   state='Rajasthan',       pincode='302001', address='Civil Lines, Jaipur',           owner=owner3, average_rating=4.7, total_reviews=430),
+    dict(name='Lal Mahal Dawat',     cuisine='Rajasthani, North Indian', city='Jaipur',   state='Rajasthan',       pincode='302001', address='Civil Lines, Jaipur',           owner=owner3, average_rating=4.7, total_reviews=430, latitude=26.9124, longitude=75.7873),
     # Gujarat
-    dict(name='Agashiye',            cuisine='Gujarati, Street Food', city='Ahmedabad',   state='Gujarat',         pincode='380001', address='House of MG, Ahmedabad',        owner=owner4, average_rating=4.8, total_reviews=510),
+    dict(name='Agashiye',            cuisine='Gujarati, Street Food', city='Ahmedabad',   state='Gujarat',         pincode='380001', address='House of MG, Ahmedabad',        owner=owner4, average_rating=4.8, total_reviews=510, latitude=23.0258, longitude=72.5873),
     # Punjab
-    dict(name='Dhaba on the Street', cuisine='North Indian, Mughlai', city='Chandigarh',  state='Punjab',          pincode='160001', address='Sector 17, Chandigarh',         owner=owner5, average_rating=4.6, total_reviews=380),
+    dict(name='Dhaba on the Street', cuisine='North Indian, Mughlai', city='Chandigarh',  state='Punjab',          pincode='160001', address='Sector 17, Chandigarh',         owner=owner5, average_rating=4.6, total_reviews=380, latitude=30.7412, longitude=76.7687),
     # Kerala
-    dict(name='Paragon Restaurant',  cuisine='Seafood, South Indian', city='Kozhikode',   state='Kerala',          pincode='673001', address='SM Street, Kozhikode',          owner=owner1, average_rating=4.7, total_reviews=460),
+    dict(name='Paragon Restaurant',  cuisine='Seafood, South Indian', city='Kozhikode',   state='Kerala',          pincode='673001', address='SM Street, Kozhikode',          owner=owner1, average_rating=4.7, total_reviews=460, latitude=11.2500, longitude=75.7804),
     # Goa
-    dict(name='Fisherman\'s Wharf',  cuisine='Seafood, Continental',  city='Panaji',      state='Goa',             pincode='403001', address='Calapor, Panaji, Goa',          owner=owner2, average_rating=4.8, total_reviews=550),
+    dict(name='Fisherman\'s Wharf',  cuisine='Seafood, Continental',  city='Panaji',      state='Goa',             pincode='403001', address='Calapor, Panaji, Goa',          owner=owner2, average_rating=4.8, total_reviews=550, latitude=15.4990, longitude=73.8278),
     # Uttar Pradesh
-    dict(name='Tunday Kababi',        cuisine='Mughlai, Street Food', city='Lucknow',     state='Uttar Pradesh',   pincode='226001', address='Aminabad, Lucknow',             owner=owner3, average_rating=4.9, total_reviews=780),
+    dict(name='Tunday Kababi',        cuisine='Mughlai, Street Food', city='Lucknow',     state='Uttar Pradesh',   pincode='226001', address='Aminabad, Lucknow',             owner=owner3, average_rating=4.9, total_reviews=780, latitude=26.8467, longitude=80.9462),
     # Madhya Pradesh
-    dict(name='Indian Cafe Bhopal',  cuisine='North Indian, Cafe',   city='Bhopal',      state='Madhya Pradesh',  pincode='462001', address='New Market, Bhopal',            owner=owner4, average_rating=4.3, total_reviews=180),
+    dict(name='Indian Cafe Bhopal',  cuisine='North Indian, Cafe',   city='Bhopal',      state='Madhya Pradesh',  pincode='462001', address='New Market, Bhopal',            owner=owner4, average_rating=4.3, total_reviews=180, latitude=23.2599, longitude=77.4126),
     # Assam
-    dict(name='Khorika',             cuisine='North Indian, Seafood', city='Guwahati',    state='Assam',           pincode='781001', address='GS Road, Guwahati',             owner=owner5, average_rating=4.4, total_reviews=150),
+    dict(name='Khorika',             cuisine='North Indian, Seafood', city='Guwahati',    state='Assam',           pincode='781001', address='GS Road, Guwahati',             owner=owner5, average_rating=4.4, total_reviews=150, latitude=26.1445, longitude=91.7362),
 ]
 
 RESTAURANT_DESCRIPTIONS = {

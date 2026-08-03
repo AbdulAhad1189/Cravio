@@ -25,13 +25,14 @@ class RestaurantListView(generics.ListCreateAPIView):
         return [permissions.AllowAny()]
 
     def get_queryset(self):
-        city    = self.request.query_params.get('city')
+        city    = self.request.query_params.get('city', '').strip()
 
-        # Trigger Swiggy restaurants sync if querying a specific city
+        # Trigger Swiggy restaurants sync if querying a recognized city
         if city:
-            if not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
+            from .swiggy_helper import CITY_COORDINATES, sync_swiggy_restaurants
+            city_key = city.lower()
+            if city_key in CITY_COORDINATES and not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
                 try:
-                    from .swiggy_helper import sync_swiggy_restaurants
                     sync_swiggy_restaurants(city_name=city)
                 except Exception as e:
                     print(f"Error syncing Swiggy restaurants for city {city}: {e}")
@@ -46,8 +47,8 @@ class RestaurantListView(generics.ListCreateAPIView):
 
         qs = Restaurant.objects.all()
         status_param = self.request.query_params.get('status')
-        search  = self.request.query_params.get('search')
-        cuisine = self.request.query_params.get('cuisine')
+        search  = self.request.query_params.get('search', '').strip()
+        cuisine = self.request.query_params.get('cuisine', '').strip()
 
         user = self.request.user
         if not user.is_authenticated or user.role not in ('admin', 'owner'):
@@ -59,13 +60,15 @@ class RestaurantListView(generics.ListCreateAPIView):
             qs = qs.filter(
                 Q(name__icontains=search) |
                 Q(cuisine__icontains=search) |
-                Q(city__icontains=search)
+                Q(city__icontains=search) |
+                Q(address__icontains=search)
             )
         if cuisine and cuisine != 'all':
             qs = qs.filter(cuisine__icontains=cuisine)
         if city:
             qs = qs.filter(
-                Q(city__icontains=city) |
+                Q(city__iexact=city) |
+                Q(state__iexact=city) |
                 Q(address__icontains=city)
             )
         return qs
