@@ -5,14 +5,14 @@ const DINER_FEATURES = [
     id: 'd1',
     icon: '🔍',
     category: 'DISCOVERY & SEARCH',
-    title: 'Cuisine & Location Search',
-    description: 'Explore restaurants filtered strictly by your selected city, pincode, or cuisine type with complete dish pricing and menus.',
+    title: 'Search by Cuisine & Location',
+    description: 'Filter verified restaurants strictly by your selected city, pincode, or cuisine type with complete dish pricing and menus.',
     pros: [
       'Strict city & area location filtering',
-      'Full menu transparency before visiting',
-      'Real-time location & Google Maps pin'
+      'Full menu transparency & dish pricing',
+      'Real-time location & Google Maps integration'
     ],
-    accentColor: '#D5865C',
+    accentColor: '#C27047',
   },
   {
     id: 'd2',
@@ -21,9 +21,9 @@ const DINER_FEATURES = [
     title: 'Instant Table Booking',
     description: 'Reserve a table in under 30 seconds for any party size with instant restaurant notification.',
     pros: [
-      '100% free table bookings (zero fee)',
-      'Instant SMS & booking confirmation',
-      'Custom guest count & special notes'
+      '100% free table bookings with zero fee',
+      'Instant SMS & email booking confirmation',
+      'Flexible party sizes & guest notes'
     ],
     accentColor: '#3B4F39',
   },
@@ -32,13 +32,13 @@ const DINER_FEATURES = [
     icon: '🛵',
     category: 'DELIVERY & TRACKING',
     title: 'Food Ordering & Live Status',
-    description: 'Place food delivery or takeaway orders with live tracking and real-time kitchen status updates.',
+    description: 'Place food delivery or takeaway orders with live status tracking and real-time kitchen load indicators.',
     pros: [
-      'Live kitchen crowd & wait status',
-      'Complete order history log',
-      'Seamless digital cart & checkout'
+      'Live kitchen crowd & wait status indicator',
+      'Complete order history log & re-ordering',
+      'Seamless digital cart & instant checkout'
     ],
-    accentColor: '#C27047',
+    accentColor: '#D5865C',
   },
   {
     id: 'd4',
@@ -48,10 +48,10 @@ const DINER_FEATURES = [
     description: 'Can\'t decide what to eat? Spin the Roulette wheel or battle dishes in 5-round Flavor Duel.',
     pros: [
       'City-restricted spin wheel recommendations',
-      'Interactive 5-round Flavor Duel',
+      'Interactive 5-round Flavor Duel battle',
       'Personalized CraveMatch taste profile'
     ],
-    accentColor: '#A6B98F',
+    accentColor: '#60705E',
   },
 ];
 
@@ -65,7 +65,7 @@ const OWNER_FEATURES = [
     pros: [
       'Zero-commission restaurant listing',
       'Instant open / closed status toggle',
-      'Custom business hours & profile'
+      'Custom business hours & profile info'
     ],
     accentColor: '#3B4F39',
   },
@@ -78,7 +78,7 @@ const OWNER_FEATURES = [
     pros: [
       'Single-click .txt menu bulk import',
       'Automated Swiggy catalog sync',
-      'Instant price & item edits'
+      'Instant price & category editing'
     ],
     accentColor: '#C27047',
   },
@@ -103,22 +103,21 @@ const OWNER_FEATURES = [
     description: 'Store precise latitude & longitude coordinates so customers navigate directly to your front doors.',
     pros: [
       'Exact GPS coordinate pin',
-      'Embedded Google Maps location',
-      'Direct navigation for foot traffic'
+      'Embedded Google Maps location preview',
+      'Direct route navigation for foot traffic'
     ],
-    accentColor: '#A6B98F',
+    accentColor: '#60705E',
   },
 ];
 
 export default function FeaturesCarousel() {
-  const [roleTab, setRoleTab] = useState('diners'); // 'diners' | 'owners'
+  const [roleTab, setRoleTab] = useState('diners');
   const [activeIndex, setActiveIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
   const sliderRef = useRef(null);
 
   const featureList = roleTab === 'diners' ? DINER_FEATURES : OWNER_FEATURES;
 
-  // Auto-sliding effect every 4 seconds
   useEffect(() => {
     if (isHovered) return;
     const timer = setInterval(() => {
@@ -129,38 +128,38 @@ export default function FeaturesCarousel() {
 
   const slideNext = () => {
     if (sliderRef.current) {
-      const cardWidth = 330;
+      const itemWidth = 360;
       const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
-      let targetScroll = sliderRef.current.scrollLeft + cardWidth;
+      let targetScroll = sliderRef.current.scrollLeft + itemWidth;
       
       if (targetScroll > maxScroll + 40) {
         targetScroll = 0;
       }
 
       sliderRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
-      setActiveIndex(Math.round(targetScroll / cardWidth) % featureList.length);
+      setActiveIndex(Math.round(targetScroll / itemWidth) % featureList.length);
     }
   };
 
   const slidePrev = () => {
     if (sliderRef.current) {
-      const cardWidth = 330;
+      const itemWidth = 360;
       const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
-      let targetScroll = sliderRef.current.scrollLeft - cardWidth;
+      let targetScroll = sliderRef.current.scrollLeft - itemWidth;
       
       if (targetScroll < 0) {
         targetScroll = maxScroll;
       }
 
       sliderRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
-      setActiveIndex(Math.round(targetScroll / cardWidth) % featureList.length);
+      setActiveIndex(Math.round(targetScroll / itemWidth) % featureList.length);
     }
   };
 
   const jumpToSlide = (idx) => {
     if (sliderRef.current) {
-      const cardWidth = 330;
-      sliderRef.current.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
+      const itemWidth = 360;
+      sliderRef.current.scrollTo({ left: idx * itemWidth, behavior: 'smooth' });
       setActiveIndex(idx);
     }
   };
@@ -169,13 +168,13 @@ export default function FeaturesCarousel() {
     <section id="features" style={styles.section}>
       <div className="container-cravio">
         
-        {/* Section Title & Role Switcher */}
+        {/* Header & Role Switcher */}
         <div style={styles.topHeader}>
           <div>
-            <span style={styles.badgeLabel}>PLATFORM CAPABILITIES</span>
-            <h2 style={styles.mainTitle}>What You Can Do On Cravio</h2>
+            <span style={styles.badgeLabel}>WHAT YOU CAN DO ON CRAVIO</span>
+            <h2 style={styles.mainTitle}>Platform Feature List</h2>
             <p style={styles.subTitle}>
-              A complete list of features and advantages built for food lovers and restaurant owners.
+              A comprehensive list of features and key advantages for diners and restaurant owners.
             </p>
           </div>
 
@@ -190,7 +189,7 @@ export default function FeaturesCarousel() {
                 boxShadow: roleTab === 'diners' ? '0 2px 8px rgba(59,79,57,0.2)' : 'none',
               }}
             >
-              🍽️ Diners & Foodies
+              🍽️ For Diners / Users
             </button>
             <button
               onClick={() => { setRoleTab('owners'); setActiveIndex(0); if (sliderRef.current) sliderRef.current.scrollLeft = 0; }}
@@ -201,24 +200,24 @@ export default function FeaturesCarousel() {
                 boxShadow: roleTab === 'owners' ? '0 2px 8px rgba(59,79,57,0.2)' : 'none',
               }}
             >
-              🏢 Restaurant Owners
+              🏢 For Restaurant Owners
             </button>
           </div>
         </div>
 
-        {/* Carousel Status Bar & Navigation Arrows */}
+        {/* Carousel Control Bar */}
         <div style={styles.controlRow}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <span style={styles.featureCounter}>
-              Listing {featureList.length} Features ({roleTab === 'diners' ? 'Diner Features' : 'Owner Features'})
+              Showing {featureList.length} Features ({roleTab === 'diners' ? 'User Features' : 'Owner Features'})
             </span>
             <span style={styles.autoStatusPill}>
-              {isHovered ? '⏸️ Paused' : '▶ Auto-Sliding'}
+              {isHovered ? '⏸️ Paused' : '▶ Auto-Sliding List'}
             </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            {/* Pagination Dots */}
+            {/* Dots */}
             <div style={{ display: 'flex', gap: '6px', marginRight: '6px' }}>
               {featureList.map((_, idx) => (
                 <button
@@ -233,12 +232,12 @@ export default function FeaturesCarousel() {
                     cursor: 'pointer',
                     transition: 'all 0.25s ease',
                   }}
-                  title={`Slide ${idx + 1}`}
+                  title={`Feature ${idx + 1}`}
                 />
               ))}
             </div>
 
-            {/* Scroll Control Arrows */}
+            {/* Arrows */}
             <button onClick={slidePrev} style={styles.navArrow} title="Previous Feature">
               ‹
             </button>
@@ -248,7 +247,7 @@ export default function FeaturesCarousel() {
           </div>
         </div>
 
-        {/* Sliding Feature Cards List (No Redirection Links) */}
+        {/* Sliding List View (Clean List items, No Card Boxes, No Redirection Links) */}
         <div
           ref={sliderRef}
           style={styles.sliderTrack}
@@ -257,29 +256,33 @@ export default function FeaturesCarousel() {
           onMouseLeave={() => setIsHovered(false)}
         >
           {featureList.map((item) => (
-            <div key={item.id} style={styles.featureCard}>
+            <div key={item.id} style={styles.listItem}>
               
-              {/* Top Row: Category & Icon */}
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
-                <span style={{ ...styles.categoryBadge, color: item.accentColor, backgroundColor: `${item.accentColor}15` }}>
-                  {item.category}
-                </span>
-                <span style={{ fontSize: '1.75rem' }}>{item.icon}</span>
+              {/* Feature Header */}
+              <div style={styles.itemHeaderRow}>
+                <span style={{ fontSize: '1.6rem', marginRight: '10px' }}>{item.icon}</span>
+                <div>
+                  <span style={{ ...styles.categoryText, color: item.accentColor }}>{item.category}</span>
+                  <h3 style={styles.itemTitle}>{item.title}</h3>
+                </div>
               </div>
 
-              {/* Feature Title & Description */}
-              <h3 style={styles.featureTitle}>{item.title}</h3>
-              <p style={styles.featureDesc}>{item.description}</p>
+              {/* Description */}
+              <p style={styles.itemDesc}>{item.description}</p>
 
-              {/* Key Advantages / Pros List */}
-              <div style={styles.prosListContainer}>
-                <div style={styles.prosListHeader}>KEY PROS & ADVANTAGES:</div>
-                {item.pros.map((proText, pIdx) => (
-                  <div key={pIdx} style={styles.proRow}>
-                    <span style={{ color: '#22c55e', fontWeight: 'bold', fontSize: '0.85rem' }}>✓</span>
-                    <span style={styles.proText}>{proText}</span>
-                  </div>
-                ))}
+              <div style={styles.divider} />
+
+              {/* Pros List */}
+              <div style={styles.prosSection}>
+                <span style={styles.prosHeader}>KEY ADVANTAGES:</span>
+                <ul style={styles.prosList}>
+                  {item.pros.map((proText, pIdx) => (
+                    <li key={pIdx} style={styles.proListItem}>
+                      <span style={styles.checkIcon}>✓</span>
+                      <span>{proText}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
             </div>
@@ -304,7 +307,7 @@ export default function FeaturesCarousel() {
 const styles = {
   section: {
     backgroundColor: '#FAF7F2',
-    padding: '68px 0 60px',
+    padding: '64px 0 56px',
     borderTop: '1px solid #EAE6DF',
     borderBottom: '1px solid #EAE6DF',
   },
@@ -314,7 +317,7 @@ const styles = {
     alignItems: 'flex-end',
     flexWrap: 'wrap',
     gap: '20px',
-    marginBottom: '28px',
+    marginBottom: '26px',
   },
   badgeLabel: {
     fontSize: '0.74rem',
@@ -359,7 +362,7 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: '16px',
+    marginBottom: '18px',
   },
   featureCounter: {
     fontSize: '0.82rem',
@@ -392,67 +395,81 @@ const styles = {
   },
   sliderTrack: {
     display: 'flex',
-    gap: '20px',
+    gap: '24px',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
     paddingBottom: '12px',
   },
-  featureCard: {
-    flex: '0 0 310px',
+  listItem: {
+    flex: '0 0 340px',
     scrollSnapAlign: 'start',
-    backgroundColor: '#FFFFFF',
-    borderRadius: '14px',
-    border: '1px solid #EAE6DF',
-    padding: '24px 20px',
+    backgroundColor: '#FAF7F2',
+    borderLeft: '3px solid #3B4F39',
+    padding: '16px 20px',
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 3px 12px rgba(0,0,0,0.03)',
   },
-  categoryBadge: {
+  itemHeaderRow: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: '8px',
+  },
+  categoryText: {
     fontSize: '0.66rem',
     fontWeight: 700,
     letterSpacing: '0.8px',
-    padding: '4px 8px',
-    borderRadius: '5px',
+    display: 'block',
+    textTransform: 'uppercase',
   },
-  featureTitle: {
+  itemTitle: {
     fontFamily: "'Playfair Display', serif",
-    fontSize: '1.15rem',
+    fontSize: '1.12rem',
     fontWeight: 700,
     color: '#1C1E1D',
-    margin: '0 0 8px',
+    margin: '2px 0 0',
   },
-  featureDesc: {
+  itemDesc: {
     fontSize: '0.84rem',
     color: '#707572',
     lineHeight: 1.55,
-    marginBottom: '16px',
+    margin: '0 0 12px',
   },
-  prosListContainer: {
+  divider: {
+    height: '1px',
+    backgroundColor: '#EAE6DF',
+    margin: '0 0 12px',
+  },
+  prosSection: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
-    marginTop: 'auto',
-    padding: '10px 12px',
-    backgroundColor: '#FAF9F6',
-    borderRadius: '8px',
-    border: '1px solid #EAE6DF',
+    gap: '4px',
   },
-  prosListHeader: {
+  prosHeader: {
     fontSize: '0.68rem',
     fontWeight: 700,
     color: '#3B4F39',
+    letterSpacing: '0.6px',
     marginBottom: '4px',
-    letterSpacing: '0.5px',
   },
-  proRow: {
+  prosList: {
+    listStyle: 'none',
+    padding: 0,
+    margin: 0,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '6px',
+  },
+  proListItem: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-  },
-  proText: {
     fontSize: '0.78rem',
     color: '#333735',
     fontWeight: 500,
+  },
+  checkIcon: {
+    color: '#22c55e',
+    fontWeight: 'bold',
+    fontSize: '0.85rem',
   },
 };
