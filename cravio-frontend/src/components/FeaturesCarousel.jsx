@@ -1,168 +1,167 @@
 import React, { useState, useRef, useEffect } from 'react';
 
-const USER_FEATURES = [
+const DINER_FEATURES = [
   {
-    id: 'u1',
-    badge: 'DISCOVERY',
-    title: 'Search by Cuisine & Location',
-    desc: 'Filter verified restaurants by city, pincode, or cuisine. View complete menus, real prices, and dish photos before visiting.',
-    proTitle: '⚡ Real-Time Accuracy',
-    proDesc: 'Live menus, ratings, and exact Google Maps coordinates for 20+ major Indian cities.',
-    prosList: [
-      'Instant city & pincode filtering',
-      'Transparent menu prices & dish photos',
+    id: 'd1',
+    icon: '🔍',
+    category: 'DISCOVERY & SEARCH',
+    title: 'Cuisine & Location Search',
+    description: 'Explore restaurants filtered strictly by your selected city, pincode, or cuisine type with complete dish pricing and menus.',
+    pros: [
+      'Strict city & area location filtering',
+      'Full menu transparency before visiting',
       'Real-time location & Google Maps pin'
     ],
-    icon: '🔍',
-    color: '#D5865C',
+    accentColor: '#D5865C',
   },
   {
-    id: 'u2',
-    badge: 'RESERVATIONS',
-    title: 'Book a Table in 30 Seconds',
-    desc: 'Select your preferred date, time, and guest count. Get instant table confirmation sent directly to the restaurant.',
-    proTitle: '💵 100% Free Bookings',
-    proDesc: 'Zero reservation fees, no phone calls, and no hidden platform charges.',
-    prosList: [
-      'Instant restaurant confirmation',
-      'Zero booking & reservation fees',
-      'Flexible party sizes & special notes'
-    ],
+    id: 'd2',
     icon: '📅',
-    color: '#3B4F39',
-  },
-  {
-    id: 'u3',
-    badge: 'DELIVERY & TRACKING',
-    title: 'Order Food & Live Track',
-    desc: 'Order your favorite dishes for home delivery or takeaway. Track order status and check kitchen crowd levels live.',
-    proTitle: '⏱️ Live Kitchen Crowd Indicator',
-    proDesc: 'Real-time kitchen load level and prep wait time estimation before ordering.',
-    prosList: ['Live kitchen crowd & wait status', 'Complete order history & re-ordering', 'Seamless digital cart & checkout'],
-    icon: '🛵',
-    color: '#C27047',
-  },
-  {
-    id: 'u4',
-    badge: 'INTERACTIVE GAMES',
-    title: 'Flavor Duel & Crave Roulette',
-    desc: 'Can\'t decide what to eat? Spin the Crave Roulette wheel or play 5-round head-to-head Flavor Duel to find your meal.',
-    proTitle: '🎲 CraveMatch Quiz',
-    proDesc: 'Personalized food recommendations matched strictly to your city and taste preferences.',
-    prosList: [
-      '5-Round Flavor Duel food battle',
-      'Roulette matched to your exact city',
-      'Personalized taste personality profile'
+    category: 'TABLE RESERVATIONS',
+    title: 'Instant Table Booking',
+    description: 'Reserve a table in under 30 seconds for any party size with instant restaurant notification.',
+    pros: [
+      '100% free table bookings (zero fee)',
+      'Instant SMS & booking confirmation',
+      'Custom guest count & special notes'
     ],
+    accentColor: '#3B4F39',
+  },
+  {
+    id: 'd3',
+    icon: '🛵',
+    category: 'DELIVERY & TRACKING',
+    title: 'Food Ordering & Live Status',
+    description: 'Place food delivery or takeaway orders with live tracking and real-time kitchen status updates.',
+    pros: [
+      'Live kitchen crowd & wait status',
+      'Complete order history log',
+      'Seamless digital cart & checkout'
+    ],
+    accentColor: '#C27047',
+  },
+  {
+    id: 'd4',
     icon: '⚔️',
-    color: '#A6B98F',
+    category: 'FOOD GAMES',
+    title: 'Flavor Duel & Crave Roulette',
+    description: 'Can\'t decide what to eat? Spin the Roulette wheel or battle dishes in 5-round Flavor Duel.',
+    pros: [
+      'City-restricted spin wheel recommendations',
+      'Interactive 5-round Flavor Duel',
+      'Personalized CraveMatch taste profile'
+    ],
+    accentColor: '#A6B98F',
   },
 ];
 
 const OWNER_FEATURES = [
   {
     id: 'o1',
-    badge: 'ONBOARDING',
-    title: 'Instant Online Setup & Approval',
-    desc: 'Register as a restaurant owner, set operating hours, upload brand logos, and go live after quick admin verification.',
-    proTitle: '📈 Zero Commission Listing',
-    proDesc: 'Reach thousands of food lovers across major Indian cities without paying heavy commissions.',
-    prosList: [
-      '100% free business registration',
-      'Instant live/offline status toggle',
-      'Custom operating hours & contact info'
-    ],
     icon: '🚀',
-    color: '#3B4F39',
+    category: 'RESTAURANT ONBOARDING',
+    title: 'Fast Online Registration',
+    description: 'Register your restaurant, set operating hours, upload brand logos, and go live after quick verification.',
+    pros: [
+      'Zero-commission restaurant listing',
+      'Instant open / closed status toggle',
+      'Custom business hours & profile'
+    ],
+    accentColor: '#3B4F39',
   },
   {
     id: 'o2',
-    badge: 'MENU MANAGEMENT',
-    title: 'Bulk Menu Import & Swiggy Sync',
-    desc: 'Add dishes individually or upload a .txt file to import 100+ menu items in bulk with categories, prices, and food tags.',
-    proTitle: '⚡ Single-Click Bulk Import',
-    proDesc: 'Import entire menus and automatically sync live Swiggy catalogs in seconds.',
-    prosList: [
-      'Bulk .txt menu file upload',
-      'Automated Swiggy catalog sync',
-      'Instant price & category editing'
-    ],
     icon: '📋',
-    color: '#C27047',
+    category: 'CATALOG MANAGEMENT',
+    title: 'Bulk Menu Import & Swiggy Sync',
+    description: 'Add items manually or upload a plain .txt file to import 100+ dishes in bulk with categories and prices.',
+    pros: [
+      'Single-click .txt menu bulk import',
+      'Automated Swiggy catalog sync',
+      'Instant price & item edits'
+    ],
+    accentColor: '#C27047',
   },
   {
     id: 'o3',
-    badge: 'ANALYTICS & ORDERS',
-    title: 'Real-Time Revenue Dashboard',
-    desc: 'Track incoming delivery orders, accept or reject reservation requests, and monitor monthly sales revenue with built-in analytics.',
-    proTitle: '🔔 Live Order Notifications',
-    proDesc: 'Manage kitchen workflow and table seatings seamlessly from one clean dashboard.',
-    prosList: [
-      'Real-time revenue & sales stats',
-      'One-click order status updates',
-      'Zero spreadsheet management needed'
-    ],
     icon: '📊',
-    color: '#D5865C',
+    category: 'BUSINESS ANALYTICS',
+    title: 'Revenue & Order Dashboard',
+    description: 'Track incoming delivery orders, accept or reject reservation requests, and view monthly revenue stats.',
+    pros: [
+      'Real-time revenue & sales analytics',
+      'Instant order status management',
+      'Zero spreadsheet hassle'
+    ],
+    accentColor: '#D5865C',
   },
   {
     id: 'o4',
-    badge: 'GPS VISIBILITY',
-    title: 'Real-Time Map & GPS Location',
-    desc: 'Store exact latitude and longitude coordinates so customers can navigate directly to your restaurant front door via Google Maps.',
-    proTitle: '📍 Direct Map Navigation',
-    proDesc: 'Integrated Google Maps Embed & direct navigation bringing foot traffic to your doorstep.',
-    prosList: [
-      'Exact GPS latitude/longitude pin',
-      'Embedded interactive map preview',
-      'Direct Google Maps route navigation'
-    ],
     icon: '🗺️',
-    color: '#A6B98F',
+    category: 'GPS & NAVIGATION',
+    title: 'Exact GPS & Google Maps',
+    description: 'Store precise latitude & longitude coordinates so customers navigate directly to your front doors.',
+    pros: [
+      'Exact GPS coordinate pin',
+      'Embedded Google Maps location',
+      'Direct navigation for foot traffic'
+    ],
+    accentColor: '#A6B98F',
   },
 ];
 
 export default function FeaturesCarousel() {
-  const [activeTab, setActiveTab] = useState('diners');
-  const [activeCardIndex, setActiveCardIndex] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const scrollRef = useRef(null);
+  const [roleTab, setRoleTab] = useState('diners'); // 'diners' | 'owners'
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isHovered, setIsHovered] = useState(false);
+  const sliderRef = useRef(null);
 
-  const currentFeatures = activeTab === 'diners' ? USER_FEATURES : OWNER_FEATURES;
+  const featureList = roleTab === 'diners' ? DINER_FEATURES : OWNER_FEATURES;
 
+  // Auto-sliding effect every 4 seconds
   useEffect(() => {
-    if (isPaused) return;
-    const interval = setInterval(() => {
-      handleScroll('right');
+    if (isHovered) return;
+    const timer = setInterval(() => {
+      slideNext();
     }, 4000);
-    return () => clearInterval(interval);
-  }, [isPaused, activeTab, activeCardIndex]);
+    return () => clearInterval(timer);
+  }, [isHovered, roleTab, activeIndex]);
 
-  const handleScroll = (direction) => {
-    if (scrollRef.current) {
-      const cardWidth = 340;
-      const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.clientWidth;
+  const slideNext = () => {
+    if (sliderRef.current) {
+      const cardWidth = 330;
+      const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+      let targetScroll = sliderRef.current.scrollLeft + cardWidth;
       
-      let newScrollLeft = scrollRef.current.scrollLeft + (direction === 'left' ? -cardWidth : cardWidth);
-      
-      if (newScrollLeft > maxScroll + 50) {
-        newScrollLeft = 0;
-      } else if (newScrollLeft < 0) {
-        newScrollLeft = maxScroll;
+      if (targetScroll > maxScroll + 40) {
+        targetScroll = 0;
       }
 
-      scrollRef.current.scrollTo({ left: newScrollLeft, behavior: 'smooth' });
-
-      const newIndex = Math.round(newScrollLeft / cardWidth) % currentFeatures.length;
-      setActiveCardIndex(newIndex);
+      sliderRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      setActiveIndex(Math.round(targetScroll / cardWidth) % featureList.length);
     }
   };
 
-  const scrollToCard = (index) => {
-    if (scrollRef.current) {
-      const cardWidth = 340;
-      scrollRef.current.scrollTo({ left: index * cardWidth, behavior: 'smooth' });
-      setActiveCardIndex(index);
+  const slidePrev = () => {
+    if (sliderRef.current) {
+      const cardWidth = 330;
+      const maxScroll = sliderRef.current.scrollWidth - sliderRef.current.clientWidth;
+      let targetScroll = sliderRef.current.scrollLeft - cardWidth;
+      
+      if (targetScroll < 0) {
+        targetScroll = maxScroll;
+      }
+
+      sliderRef.current.scrollTo({ left: targetScroll, behavior: 'smooth' });
+      setActiveIndex(Math.round(targetScroll / cardWidth) % featureList.length);
+    }
+  };
+
+  const jumpToSlide = (idx) => {
+    if (sliderRef.current) {
+      const cardWidth = 330;
+      sliderRef.current.scrollTo({ left: idx * cardWidth, behavior: 'smooth' });
+      setActiveIndex(idx);
     }
   };
 
@@ -170,128 +169,115 @@ export default function FeaturesCarousel() {
     <section id="features" style={styles.section}>
       <div className="container-cravio">
         
-        {/* Section Header & Tab Selector */}
-        <div style={styles.headerWrap}>
+        {/* Section Title & Role Switcher */}
+        <div style={styles.topHeader}>
           <div>
-            <span style={styles.sectionTag}>CRAVIO PLATFORM FEATURES</span>
-            <h2 style={styles.sectionTitle}>What You Can Do On Cravio</h2>
-            <p style={styles.sectionSub}>
-              Explore the key features and exclusive benefits designed for both food lovers and restaurant owners.
+            <span style={styles.badgeLabel}>PLATFORM CAPABILITIES</span>
+            <h2 style={styles.mainTitle}>What You Can Do On Cravio</h2>
+            <p style={styles.subTitle}>
+              A complete list of features and advantages built for food lovers and restaurant owners.
             </p>
           </div>
 
-          {/* Toggle Switch between Diners and Owners */}
-          <div style={styles.tabToggleWrap}>
+          {/* Diners / Owners Switcher */}
+          <div style={styles.tabContainer}>
             <button
-              onClick={() => { setActiveTab('diners'); setActiveCardIndex(0); if (scrollRef.current) scrollRef.current.scrollLeft = 0; }}
+              onClick={() => { setRoleTab('diners'); setActiveIndex(0); if (sliderRef.current) sliderRef.current.scrollLeft = 0; }}
               style={{
-                ...styles.tabBtn,
-                backgroundColor: activeTab === 'diners' ? '#3B4F39' : 'transparent',
-                color: activeTab === 'diners' ? '#FFFFFF' : '#707572',
-                boxShadow: activeTab === 'diners' ? '0 2px 8px rgba(59,79,57,0.2)' : 'none',
+                ...styles.tabButton,
+                backgroundColor: roleTab === 'diners' ? '#3B4F39' : 'transparent',
+                color: roleTab === 'diners' ? '#FFFFFF' : '#686D6A',
+                boxShadow: roleTab === 'diners' ? '0 2px 8px rgba(59,79,57,0.2)' : 'none',
               }}
             >
-              🍽️ For Diners / Users
+              🍽️ Diners & Foodies
             </button>
             <button
-              onClick={() => { setActiveTab('owners'); setActiveCardIndex(0); if (scrollRef.current) scrollRef.current.scrollLeft = 0; }}
+              onClick={() => { setRoleTab('owners'); setActiveIndex(0); if (sliderRef.current) sliderRef.current.scrollLeft = 0; }}
               style={{
-                ...styles.tabBtn,
-                backgroundColor: activeTab === 'owners' ? '#3B4F39' : 'transparent',
-                color: activeTab === 'owners' ? '#FFFFFF' : '#707572',
-                boxShadow: activeTab === 'owners' ? '0 2px 8px rgba(59,79,57,0.2)' : 'none',
+                ...styles.tabButton,
+                backgroundColor: roleTab === 'owners' ? '#3B4F39' : 'transparent',
+                color: roleTab === 'owners' ? '#FFFFFF' : '#686D6A',
+                boxShadow: roleTab === 'owners' ? '0 2px 8px rgba(59,79,57,0.2)' : 'none',
               }}
             >
-              🏢 For Restaurant Owners
+              🏢 Restaurant Owners
             </button>
           </div>
         </div>
 
-        {/* Carousel Controls Header */}
-        <div style={styles.carouselHeaderRow}>
+        {/* Carousel Status Bar & Navigation Arrows */}
+        <div style={styles.controlRow}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={styles.counterText}>
-              Feature List ({activeTab === 'diners' ? 'For Diners' : 'For Restaurant Owners'}) — {currentFeatures.length} Key Highlights
+            <span style={styles.featureCounter}>
+              Listing {featureList.length} Features ({roleTab === 'diners' ? 'Diner Features' : 'Owner Features'})
             </span>
-            <span style={styles.autoBadge}>
-              {isPaused ? '⏸️ Paused' : '▶ Auto-Sliding'}
+            <span style={styles.autoStatusPill}>
+              {isHovered ? '⏸️ Paused' : '▶ Auto-Sliding'}
             </span>
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             {/* Pagination Dots */}
-            <div style={{ display: 'flex', gap: '6px', marginRight: '8px' }}>
-              {currentFeatures.map((_, idx) => (
+            <div style={{ display: 'flex', gap: '6px', marginRight: '6px' }}>
+              {featureList.map((_, idx) => (
                 <button
                   key={idx}
-                  onClick={() => scrollToCard(idx)}
+                  onClick={() => jumpToSlide(idx)}
                   style={{
-                    width: activeCardIndex === idx ? '20px' : '8px',
+                    width: activeIndex === idx ? '18px' : '8px',
                     height: '8px',
                     borderRadius: '4px',
-                    backgroundColor: activeCardIndex === idx ? '#3B4F39' : '#D0C9BE',
+                    backgroundColor: activeIndex === idx ? '#3B4F39' : '#D2CBBF',
                     border: 'none',
                     cursor: 'pointer',
-                    transition: 'all 0.3s ease',
+                    transition: 'all 0.25s ease',
                   }}
-                  title={`Go to slide ${idx + 1}`}
+                  title={`Slide ${idx + 1}`}
                 />
               ))}
             </div>
 
-            {/* Scroll Arrows */}
-            <div style={{ display: 'flex', gap: '6px' }}>
-              <button onClick={() => handleScroll('left')} style={styles.arrowBtn} title="Scroll Left">
-                ‹
-              </button>
-              <button onClick={() => handleScroll('right')} style={styles.arrowBtn} title="Scroll Right">
-                ›
-              </button>
-            </div>
+            {/* Scroll Control Arrows */}
+            <button onClick={slidePrev} style={styles.navArrow} title="Previous Feature">
+              ‹
+            </button>
+            <button onClick={slideNext} style={styles.navArrow} title="Next Feature">
+              ›
+            </button>
           </div>
         </div>
 
-        {/* Horizontal Sliding Container */}
+        {/* Sliding Feature Cards List (No Redirection Links) */}
         <div
-          ref={scrollRef}
-          style={styles.scrollContainer}
-          className="cravio-features-scroll"
-          onMouseEnter={() => setIsPaused(true)}
-          onMouseLeave={() => setIsPaused(false)}
+          ref={sliderRef}
+          style={styles.sliderTrack}
+          className="cravio-features-slider"
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          {currentFeatures.map((item) => (
-            <div key={item.id} style={styles.card}>
+          {featureList.map((item) => (
+            <div key={item.id} style={styles.featureCard}>
               
-              {/* Badge & Icon */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-                <span style={{ ...styles.cardBadge, color: item.color, backgroundColor: `${item.color}15` }}>
-                  {item.badge}
+              {/* Top Row: Category & Icon */}
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '14px' }}>
+                <span style={{ ...styles.categoryBadge, color: item.accentColor, backgroundColor: `${item.accentColor}15` }}>
+                  {item.category}
                 </span>
-                <span style={{ fontSize: '1.8rem' }}>{item.icon}</span>
+                <span style={{ fontSize: '1.75rem' }}>{item.icon}</span>
               </div>
 
-              {/* Title & Description */}
-              <h3 style={styles.cardTitle}>{item.title}</h3>
-              <p style={styles.cardDesc}>{item.desc}</p>
+              {/* Feature Title & Description */}
+              <h3 style={styles.featureTitle}>{item.title}</h3>
+              <p style={styles.featureDesc}>{item.description}</p>
 
-              {/* PRO Highlight Box */}
-              <div style={styles.proBox}>
-                <div style={styles.proHeader}>
-                  <span style={styles.proTag}>PRO BENEFIT</span>
-                  <span style={styles.proTitle}>{item.proTitle}</span>
-                </div>
-                <p style={styles.proDesc}>{item.proDesc}</p>
-              </div>
-
-              {/* Key Pros Checklist */}
-              <div style={styles.prosListWrap}>
-                <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#3B4F39', marginBottom: '6px', letterSpacing: '0.5px' }}>
-                  KEY ADVANTAGES:
-                </div>
-                {item.prosList.map((proItem, idx) => (
-                  <div key={idx} style={styles.proItemRow}>
+              {/* Key Advantages / Pros List */}
+              <div style={styles.prosListContainer}>
+                <div style={styles.prosListHeader}>KEY PROS & ADVANTAGES:</div>
+                {item.pros.map((proText, pIdx) => (
+                  <div key={pIdx} style={styles.proRow}>
                     <span style={{ color: '#22c55e', fontWeight: 'bold', fontSize: '0.85rem' }}>✓</span>
-                    <span style={styles.proItemText}>{proItem}</span>
+                    <span style={styles.proText}>{proText}</span>
                   </div>
                 ))}
               </div>
@@ -303,10 +289,10 @@ export default function FeaturesCarousel() {
       </div>
 
       <style>{`
-        .cravio-features-scroll::-webkit-scrollbar {
+        .cravio-features-slider::-webkit-scrollbar {
           display: none;
         }
-        .cravio-features-scroll {
+        .cravio-features-slider {
           -ms-overflow-style: none;
           scrollbar-width: none;
         }
@@ -318,165 +304,131 @@ export default function FeaturesCarousel() {
 const styles = {
   section: {
     backgroundColor: '#FAF7F2',
-    padding: '72px 0 64px',
+    padding: '68px 0 60px',
     borderTop: '1px solid #EAE6DF',
     borderBottom: '1px solid #EAE6DF',
   },
-  headerWrap: {
+  topHeader: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'flex-end',
     flexWrap: 'wrap',
-    gap: '24px',
-    marginBottom: '32px',
+    gap: '20px',
+    marginBottom: '28px',
   },
-  sectionTag: {
-    fontSize: '0.75rem',
+  badgeLabel: {
+    fontSize: '0.74rem',
     fontWeight: 700,
-    letterSpacing: '1.4px',
+    letterSpacing: '1.2px',
     color: '#C27047',
     display: 'inline-block',
-    marginBottom: '8px',
+    marginBottom: '6px',
   },
-  sectionTitle: {
+  mainTitle: {
     fontFamily: "'Playfair Display', 'Cormorant Garamond', serif",
-    fontSize: '2.2rem',
+    fontSize: '2.1rem',
     fontWeight: 700,
     color: '#1C1E1D',
-    margin: '0 0 8px',
+    margin: '0 0 6px',
   },
-  sectionSub: {
+  subTitle: {
     color: '#707572',
-    fontSize: '0.95rem',
-    maxWidth: '540px',
-    lineHeight: 1.55,
+    fontSize: '0.92rem',
+    maxWidth: '520px',
+    lineHeight: 1.5,
     margin: 0,
   },
-  tabToggleWrap: {
+  tabContainer: {
     display: 'inline-flex',
     padding: '4px',
     backgroundColor: '#EAE5DB',
-    borderRadius: '30px',
+    borderRadius: '28px',
     gap: '4px',
   },
-  tabBtn: {
+  tabButton: {
     border: 'none',
-    borderRadius: '24px',
-    padding: '10px 20px',
-    fontSize: '0.85rem',
+    borderRadius: '22px',
+    padding: '9px 18px',
+    fontSize: '0.84rem',
     fontWeight: 600,
     cursor: 'pointer',
     transition: 'all 0.2s ease',
     fontFamily: "'Inter', sans-serif",
   },
-  carouselHeaderRow: {
+  controlRow: {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: '16px',
   },
-  counterText: {
+  featureCounter: {
     fontSize: '0.82rem',
     color: '#707572',
     fontWeight: 600,
   },
-  autoBadge: {
-    fontSize: '0.7rem',
+  autoStatusPill: {
+    fontSize: '0.68rem',
     fontWeight: 600,
     color: '#3B4F39',
     backgroundColor: '#EAF0E9',
     padding: '2px 8px',
     borderRadius: '12px',
   },
-  arrowBtn: {
-    width: '36px',
-    height: '36px',
+  navArrow: {
+    width: '34px',
+    height: '34px',
     borderRadius: '50%',
     border: '1px solid #EAE6DF',
     backgroundColor: '#FFFFFF',
     color: '#1C1E1D',
-    fontSize: '1.2rem',
+    fontSize: '1.1rem',
     fontWeight: 'bold',
     cursor: 'pointer',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
+    boxShadow: '0 2px 5px rgba(0,0,0,0.04)',
     transition: 'all 0.15s ease',
   },
-  scrollContainer: {
+  sliderTrack: {
     display: 'flex',
     gap: '20px',
     overflowX: 'auto',
     scrollSnapType: 'x mandatory',
-    paddingBottom: '16px',
+    paddingBottom: '12px',
   },
-  card: {
-    flex: '0 0 320px',
+  featureCard: {
+    flex: '0 0 310px',
     scrollSnapAlign: 'start',
     backgroundColor: '#FFFFFF',
-    borderRadius: '16px',
+    borderRadius: '14px',
     border: '1px solid #EAE6DF',
-    padding: '26px 22px',
+    padding: '24px 20px',
     display: 'flex',
     flexDirection: 'column',
-    boxShadow: '0 4px 16px rgba(0,0,0,0.03)',
-    transition: 'transform 0.2s ease, box-shadow 0.2s ease',
+    boxShadow: '0 3px 12px rgba(0,0,0,0.03)',
   },
-  cardBadge: {
-    fontSize: '0.68rem',
+  categoryBadge: {
+    fontSize: '0.66rem',
     fontWeight: 700,
-    letterSpacing: '1px',
-    padding: '4px 10px',
-    borderRadius: '6px',
+    letterSpacing: '0.8px',
+    padding: '4px 8px',
+    borderRadius: '5px',
   },
-  cardTitle: {
+  featureTitle: {
     fontFamily: "'Playfair Display', serif",
-    fontSize: '1.2rem',
+    fontSize: '1.15rem',
     fontWeight: 700,
     color: '#1C1E1D',
-    margin: '0 0 10px',
+    margin: '0 0 8px',
   },
-  cardDesc: {
-    fontSize: '0.85rem',
+  featureDesc: {
+    fontSize: '0.84rem',
     color: '#707572',
-    lineHeight: 1.6,
+    lineHeight: 1.55,
     marginBottom: '16px',
   },
-  proBox: {
-    backgroundColor: '#F8F6F0',
-    borderLeft: '3px solid #3B4F39',
-    borderRadius: '0 10px 10px 0',
-    padding: '12px 14px',
-    marginBottom: '14px',
-  },
-  proHeader: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    marginBottom: '4px',
-  },
-  proTag: {
-    fontSize: '0.62rem',
-    fontWeight: 800,
-    letterSpacing: '0.8px',
-    color: '#3B4F39',
-    backgroundColor: '#EAF0E9',
-    padding: '2px 6px',
-    borderRadius: '4px',
-  },
-  proTitle: {
-    fontSize: '0.8rem',
-    fontWeight: 700,
-    color: '#1C1E1D',
-  },
-  proDesc: {
-    fontSize: '0.78rem',
-    color: '#555A57',
-    margin: 0,
-    lineHeight: 1.45,
-  },
-  prosListWrap: {
+  prosListContainer: {
     display: 'flex',
     flexDirection: 'column',
     gap: '6px',
@@ -486,12 +438,19 @@ const styles = {
     borderRadius: '8px',
     border: '1px solid #EAE6DF',
   },
-  proItemRow: {
+  prosListHeader: {
+    fontSize: '0.68rem',
+    fontWeight: 700,
+    color: '#3B4F39',
+    marginBottom: '4px',
+    letterSpacing: '0.5px',
+  },
+  proRow: {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
   },
-  proItemText: {
+  proText: {
     fontSize: '0.78rem',
     color: '#333735',
     fontWeight: 500,
