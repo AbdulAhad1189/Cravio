@@ -37,10 +37,11 @@ export default function FlavorDuel() {
         setRight(data[1]);
         setExclude([data[0].id, data[1].id]);
       } else {
-        setError('Not enough restaurants found in your area. Add some first!');
+        setError('Not enough restaurants found in your city for a duel.');
       }
-    } catch {
-      setError('Could not load contenders. Please try again.');
+    } catch (err) {
+      const msg = err.response?.data?.detail || 'Not enough restaurants found in your city for a duel.';
+      setError(msg);
     } finally {
       setLoading(false);
     }

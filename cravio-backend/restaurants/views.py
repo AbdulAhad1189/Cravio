@@ -427,9 +427,9 @@ class CraveMatchView(APIView):
 class RestaurantDuelView(APIView):
     """
     GET /api/restaurants/duel/
-    Returns 1 or 2 random approved restaurants.
+    Returns 1 or 2 random approved restaurants in the user's city.
     Optional query params:
-      - city: filter to nearby restaurants (triggers Swiggy sync if needed)
+      - city: filter to user's city
       - count: number of restaurants to return (1 or 2)
       - exclude: comma-separated list of restaurant IDs to exclude
     """
@@ -450,9 +450,10 @@ class RestaurantDuelView(APIView):
 
         # Trigger Swiggy sync if querying a specific city
         if city:
-            if not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
+            from .swiggy_helper import CITY_COORDINATES, sync_swiggy_restaurants
+            city_key = city.lower()
+            if city_key in CITY_COORDINATES and not Restaurant.objects.filter(city__iexact=city, swiggy_id__isnull=False).exists():
                 try:
-                    from .swiggy_helper import sync_swiggy_restaurants
                     sync_swiggy_restaurants(city_name=city)
                 except Exception as e:
                     print(f"Error syncing Swiggy restaurants for city {city}: {e}")
@@ -461,34 +462,34 @@ class RestaurantDuelView(APIView):
         
         # Primary filter by city
         if city:
-            qs = base_qs.filter(Q(city__icontains=city) | Q(address__icontains=city))
+            city_qs = base_qs.filter(Q(city__iexact=city) | Q(address__icontains=city))
+            
+            # Exclude IDs
+            avail_qs = city_qs.exclude(id__in=exclude_ids) if exclude_ids else city_qs
+            ids = list(avail_qs.values_list('id', flat=True))
+            
+            # If not enough un-excluded restaurants in the city, recycle older excluded ones in this city (except current contender)
+            if len(ids) < count:
+                if exclude_ids:
+                    avail_qs = city_qs.exclude(id=exclude_ids[-1])
+                    ids = list(avail_qs.values_list('id', flat=True))
+                if len(ids) < count:
+                    ids = list(city_qs.values_list('id', flat=True))
+
+            if len(ids) < count:
+                return Response({'detail': f'Not enough restaurants found in {city} for a duel.'}, status=404)
         else:
-            qs = base_qs
+            city_qs = base_qs
+            avail_qs = city_qs.exclude(id__in=exclude_ids) if exclude_ids else city_qs
+            ids = list(avail_qs.values_list('id', flat=True))
+            if len(ids) < count:
+                ids = list(city_qs.values_list('id', flat=True))
 
-        # Exclude IDs
-        if exclude_ids:
-            qs = qs.exclude(id__in=exclude_ids)
-
-        ids = list(qs.values_list('id', flat=True))
-        
-        # Fallback to base_qs (dropping city filter) if not enough restaurants
-        if len(ids) < count:
-            qs = base_qs
-            if exclude_ids:
-                qs = qs.exclude(id__in=exclude_ids)
-            ids = list(qs.values_list('id', flat=True))
-
-        # Fallback: if STILL not enough, allow choosing from excluded ones too to avoid empty results
-        if len(ids) < count:
-            qs = base_qs
-            ids = list(qs.values_list('id', flat=True))
-
-        if len(ids) < count:
-            return Response({'detail': 'Not enough restaurants for a duel.'}, status=404)
+            if len(ids) < count:
+                return Response({'detail': 'Not enough restaurants for a duel.'}, status=404)
 
         picked_ids = rnd.sample(ids, min(len(ids), count))
         restaurants = Restaurant.objects.filter(id__in=picked_ids)
-        # Preserve random ordering
         restaurants = sorted(restaurants, key=lambda r: picked_ids.index(r.id))
         
         serializer = RestaurantSerializer(restaurants, many=True, context={'request': request})
