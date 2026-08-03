@@ -5,12 +5,12 @@ import { useLocationStore, detectCurrentLocation } from '../lib/locationStore';
 
 const CUISINES = [
   { label: 'North Indian', color: '#D5865C', emoji: '🍛' },
-  { label: 'Italian',      color: '#A6B98F', emoji: '🍕' },
-  { label: 'Chinese',      color: '#E6C687', emoji: '🥢' },
-  { label: 'Cafe',         color: '#C27047', emoji: '☕' },
-  { label: 'Biryani',      color: '#60705E', emoji: '🍚' },
-  { label: 'Pizza',        color: '#EED9C4', emoji: '🍕' },
-  { label: 'Desserts',     color: '#8A9A86', emoji: '🍰' },
+  { label: 'Italian', color: '#A6B98F', emoji: '🍕' },
+  { label: 'Chinese', color: '#E6C687', emoji: '🥢' },
+  { label: 'Cafe', color: '#C27047', emoji: '☕' },
+  { label: 'Biryani', color: '#60705E', emoji: '🍚' },
+  { label: 'Pizza', color: '#EED9C4', emoji: '🍕' },
+  { label: 'Desserts', color: '#8A9A86', emoji: '🍰' },
   { label: 'Surprise Me!', color: '#3B4F39', emoji: '🎲' },
 ];
 
@@ -50,7 +50,7 @@ export default function SpinWheel() {
       detectCurrentLocation(
         () => { setLocDetecting(false); doSpin(); },
         () => { setLocDetecting(false); doSpin(); }, // spin anyway even if detection fails
-        () => {},
+        () => { },
       );
       return;
     }
@@ -104,7 +104,7 @@ export default function SpinWheel() {
         <p style={styles.sub}>Can't decide where to eat? Spin the wheel to get a restaurant recommendation in your area.</p>
         {locationLabel && (
           <div style={styles.locationPill}>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z" /><circle cx="12" cy="10" r="3" /></svg>
             Finding places in {locationLabel}
           </div>
         )}
@@ -122,7 +122,7 @@ export default function SpinWheel() {
             <svg viewBox="0 0 200 200" width="280" height="280">
               {CUISINES.map((cuisine, i) => {
                 const startAngle = i * SLICE_ANGLE - 90;
-                const endAngle   = startAngle + SLICE_ANGLE;
+                const endAngle = startAngle + SLICE_ANGLE;
                 const s = (a) => Math.sin((a * Math.PI) / 180);
                 const c = (a) => Math.cos((a * Math.PI) / 180);
                 const r = 98;

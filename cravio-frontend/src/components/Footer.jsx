@@ -61,9 +61,8 @@ export default function Footer() {
           {/* Contact */}
           <div>
             <h4 style={{ color: 'white', marginBottom: '16px', fontSize: '0.95rem', fontWeight: 600, letterSpacing: '0.3px' }}>Get in Touch</h4>
-            <p style={{ fontSize: '0.85rem', marginBottom: '10px', color: '#8a8e8a' }}><MailIcon />hello@cravio.app</p>
-            <p style={{ fontSize: '0.85rem', marginBottom: '10px', color: '#8a8e8a' }}><PhoneIcon />+91 98765 43210</p>
-            <p style={{ fontSize: '0.85rem', color: '#8a8e8a' }}><PinIcon />Bengaluru, India</p>
+            <p style={{ fontSize: '0.85rem', marginBottom: '10px', color: '#8a8e8a' }}><MailIcon />cravio.email@gmail.com</p>
+            <p style={{ fontSize: '0.85rem', color: '#8a8e8a' }}><PinIcon />Ahmedabad, India</p>
           </div>
         </div>
 

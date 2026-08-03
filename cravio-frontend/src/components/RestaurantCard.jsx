@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import LiveStatusBadge from './LiveStatusBadge';
+
 
 const MOCK_DATA = {
   'Olive Bistro':   { discount: '20% OFF', rating: 4.8, reviews: 212, time: '30-40 min', price: '₹400 for two', image: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80' },
@@ -148,10 +148,7 @@ export default function RestaurantCard({ restaurant }) {
             </svg>
           </button>
 
-          {/* Live Busyness Badge */}
-          <div style={{ position: 'absolute', bottom: 8, left: 8 }}>
-            <LiveStatusBadge restaurantId={id} />
-          </div>
+
         </div>
 
         {/* Content */}

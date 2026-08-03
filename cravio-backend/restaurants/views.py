@@ -418,29 +418,29 @@ class CraveMatchView(APIView):
 
         if sweet_count == 0 or sweet_count == 3:
             personality = {
-                'title': 'Sweet & Dessert Lover',
-                'description': 'You enjoy sweet flavors, baked treats, artisan coffees, and cozy cafe spots.',
+                'title': 'The Sweettooth Sophisticate',
+                'description': 'You live for the sweeter things in life. Dessert is never an after-thought for you; it is the main event! You appreciate delicate pastries, decadent chocolates, artisan bakes, and curated coffees in cozy settings.',
                 'cuisines': ['Desserts', 'Cafe', 'Bakery'],
                 'color': '#C27047'
             }
         elif spicy_count >= 2:
             personality = {
-                'title': 'Bold & Spicy Food Lover',
-                'description': 'You enjoy spicy dishes, rich aromatics, and hearty meals like Biryani, Chinese, and North Indian cuisine.',
+                'title': 'The Bold Adventurer',
+                'description': 'You crave intense heat, rich aromatics, and robust textures. Fiery spices, layered slow-cooked dishes like biryani, and zesty street food define your ultimate dining style.',
                 'cuisines': ['Biryani', 'North Indian', 'Street Food', 'Chinese'],
                 'color': '#D5865C'
             }
         elif cozy_count >= 2 or creamy_count >= 2:
             personality = {
-                'title': 'Comfort Food Enthusiast',
-                'description': 'You love classic comfort foods like pizzas, pastas, and warm meals shared with friends.',
+                'title': 'The Cozy Comfort Seeker',
+                'description': 'For you, food is a warm hug. You lean towards rich gravies, melted cheese, satisfying carbs, and comforting spaces where you can share pizzas, pastas, or buttery curries with friends.',
                 'cuisines': ['Pizza', 'Italian', 'North Indian', 'Cafe'],
                 'color': '#E6C687'
             }
         else:
             personality = {
-                'title': 'Fresh & Classic Diner',
-                'description': 'You prefer fresh, light meals, authentic recipes, and clean flavors.',
+                'title': 'The Herbaceous Connoisseur',
+                'description': 'You appreciate fresh, clean, and artisanal food. Fresh herbs, light dressings, sourdough flatbreads, and aromatic teas. You prefer high-quality, authentic flavors that are both nourishing and sophisticated.',
                 'cuisines': ['Italian', 'South Indian', 'Cafe'],
                 'color': '#A6B98F'
             }

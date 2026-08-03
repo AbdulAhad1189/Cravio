@@ -324,15 +324,9 @@ def sync_swiggy_menu(restaurant):
         json_data = fetch_menu_from_swiggy(swiggy_id)
         menu_items = parse_swiggy_menu(json_data)
         if not menu_items:
-            print(f"Swiggy menu API blocked for restaurant {swiggy_id}. Using fallback mock menu...")
-            if 'biryani' in restaurant.cuisine.lower():
-                menu_items = MOCK_SWIGGY_MENUS['swiggy_103']
-            elif 'burger' in restaurant.cuisine.lower() or 'fast' in restaurant.cuisine.lower():
-                menu_items = MOCK_SWIGGY_MENUS['swiggy_101']
-            elif 'cafe' in restaurant.cuisine.lower() or 'dessert' in restaurant.cuisine.lower() or 'american' in restaurant.cuisine.lower():
-                menu_items = MOCK_SWIGGY_MENUS['swiggy_102']
-            else:
-                menu_items = MOCK_SWIGGY_MENUS['swiggy_104']
+            print(f"Swiggy menu API blocked for restaurant {swiggy_id}. Using cuisine-aware menu generator...")
+            from restaurants.menu_generator import get_menu_for_restaurant
+            menu_items = get_menu_for_restaurant(restaurant)
                 
     synced_foods = []
     with transaction.atomic():
