@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import api from '../api/axios';
 import { useLocationStore, detectCurrentLocation, lookupPincode, setLocation as saveLocation } from '../lib/locationStore';
 import SpinWheel from '../components/SpinWheel';
+import FeaturesCarousel from '../components/FeaturesCarousel';
 
 /* ── SVG Icon Components ── */
 const I = ({ children, size = 20, ...p }) => <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>{children}</svg>;
@@ -807,81 +808,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── What you can do on Cravio ── */}
-      <section id="features" style={{ backgroundColor: 'white', padding: '72px 0 64px', borderTop: '1px solid var(--border)' }}>
-        <div className="container-cravio">
-          <div style={{ marginBottom: '48px' }}>
-            <h2 style={{ fontFamily: "'Cormorant Garamond', serif", fontSize: '2rem', fontWeight: 700, color: 'var(--dark)', marginBottom: '6px' }}>What you can do on Cravio</h2>
-            <p style={{ color: 'var(--text-muted)', fontSize: '0.92rem', maxWidth: 520 }}>Whether you're looking for dinner tonight or managing a restaurant, here's how the platform works.</p>
-          </div>
-
-          {/* Staggered feature items — deliberately NOT a uniform grid */}
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px 28px' }}>
-
-            {/* --- For diners --- */}
-            <div style={{ gridColumn: 'span 1', padding: '28px 24px', background: 'var(--cream)', borderRadius: '14px', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--olive)', marginBottom: '14px', textTransform: 'uppercase' }}>For diners</div>
-              <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>Search by cuisine or location</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>Filter through North Indian, Italian, Chinese, and more. Every restaurant shows its full menu with prices before you go.</p>
-            </div>
-
-            <div style={{ gridColumn: 'span 1', padding: '28px 24px', background: 'var(--cream)', borderRadius: '14px', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--olive)', marginBottom: '14px', textTransform: 'uppercase' }}>For diners</div>
-              <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>Book a table in under a minute</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>Pick your date, time, and party size. No fees, no phone calls — the restaurant gets notified right away.</p>
-            </div>
-
-            <div style={{ gridColumn: 'span 1', padding: '28px 24px', background: 'var(--cream)', borderRadius: '14px', border: '1px solid var(--border)' }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--olive)', marginBottom: '14px', textTransform: 'uppercase' }}>For diners</div>
-              <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>Order food and track it</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>Add dishes to your cart, place the order, and check your order history anytime from your account.</p>
-            </div>
-
-            <div style={{ gridColumn: 'span 1', padding: '28px 24px', background: 'linear-gradient(135deg, #F8EDE7 0%, #EAF0E9 100%)', borderRadius: '14px', border: '1px solid #E0D8CE', cursor: 'pointer', transition: 'transform 0.2s ease' }}
-              onClick={() => navigate('/flavor-duel')}
-              onMouseEnter={e => e.currentTarget.style.transform = 'translateY(-2px)'}
-              onMouseLeave={e => e.currentTarget.style.transform = 'translateY(0)'}
-            >
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--terracotta)', marginBottom: '14px', textTransform: 'uppercase' }}>New Feature</div>
-              <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>⚔️ Flavor Duel</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>Two dishes go head-to-head in a this-or-that battle. Pick your favorites across 5 rounds and discover your champion meal.</p>
-            </div>
-
-            {/* --- For owners --- */}
-            <div style={{ gridColumn: 'span 1', padding: '28px 24px', background: '#faf6f1', borderRadius: '14px', border: '1px solid #ece4d9' }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--terracotta)', marginBottom: '14px', textTransform: 'uppercase' }}>For owners</div>
-              <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>Register and go live</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>Sign up as an owner, fill in your restaurant details, and submit for admin approval. Once approved, your listing goes live.</p>
-            </div>
-
-            <div style={{ gridColumn: 'span 1', padding: '28px 24px', background: '#faf6f1', borderRadius: '14px', border: '1px solid #ece4d9' }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--terracotta)', marginBottom: '14px', textTransform: 'uppercase' }}>For owners</div>
-              <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>Manage your menu</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>Add dishes one by one or upload a .txt file to import them in bulk. Edit names, prices, and categories anytime.</p>
-            </div>
-
-            <div style={{ gridColumn: 'span 1', padding: '28px 24px', background: '#faf6f1', borderRadius: '14px', border: '1px solid #ece4d9' }}>
-              <div style={{ fontSize: '0.7rem', fontWeight: 700, letterSpacing: '1px', color: 'var(--terracotta)', marginBottom: '14px', textTransform: 'uppercase' }}>For owners</div>
-              <h4 style={{ fontWeight: 700, fontSize: '1.05rem', color: 'var(--dark)', marginBottom: '8px' }}>Dashboard with real numbers</h4>
-              <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', lineHeight: 1.6, margin: 0 }}>See incoming orders, reservation requests, and revenue stats. Everything's in one place — no spreadsheets needed.</p>
-            </div>
-
-          </div>
-
-          {/* CTA row */}
-          <div style={{ marginTop: '40px', display: 'flex', gap: '14px', flexWrap: 'wrap' }}>
-            <Link to="/restaurants" className="btn-olive" style={{ padding: '12px 28px', fontSize: '0.92rem' }}>
-              Browse restaurants
-            </Link>
-            <Link to="/register" style={{ padding: '12px 28px', fontSize: '0.92rem', border: '1.5px solid var(--border)', borderRadius: '8px', color: 'var(--dark)', fontWeight: 600, textDecoration: 'none', transition: 'border-color 0.2s' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor = 'var(--olive)'; e.currentTarget.style.color = 'var(--olive)'; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor = 'var(--border)'; e.currentTarget.style.color = 'var(--dark)'; }}
-            >
-              List your restaurant
-            </Link>
-          </div>
-        </div>
-      </section>
+      {/* ── What you can do on Cravio (Interactive Sliding Carousel) ── */}
+      <FeaturesCarousel />
     </div>
   );
 }
