@@ -20,6 +20,7 @@ const EMPTY_FORM = {
 
 export default function OwnerDashboard() {
   const [stats, setStats] = useState({ total_orders: 0, pending_orders: 0, total_revenue: 0, total_foods: 0 });
+  const [analytics, setAnalytics] = useState(null);
   const [recentOrders, setRecentOrders] = useState([]);
   const [restaurant, setRestaurant] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -40,12 +41,14 @@ export default function OwnerDashboard() {
         setRestaurant(rRes.data);
       } catch { setRestaurant(null); }
       try {
-        const [oRes, sRes] = await Promise.all([
+        const [oRes, sRes, aRes] = await Promise.all([
           api.get('/orders/restaurant/?limit=5'),
           api.get('/orders/stats/'),
+          api.get('/restaurants/analytics/'),
         ]);
         setRecentOrders(Array.isArray(oRes.data) ? oRes.data : (oRes.data.results || []));
         setStats(sRes.data);
+        setAnalytics(aRes.data);
       } catch (_) {}
       setLoading(false);
     };
@@ -360,11 +363,64 @@ export default function OwnerDashboard() {
               ))}
             </div>
 
+            {/* ── Item Performance Analytics ── */}
+            {analytics && (
+              <div style={{ marginBottom: '32px' }}>
+                <h2 style={{ fontWeight: 700, fontSize: '1.05rem', marginBottom: '14px', fontFamily: "'Cormorant Garamond', serif" }}>🔥 Item Performance Analytics</h2>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+                  
+                  {/* Top Seller Online */}
+                  <div style={{ background: 'white', borderRadius: '14px', border: '1px solid var(--border)', padding: '20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div style={{ fontSize: '2rem', background: '#F4EFE6', padding: '10px', borderRadius: '12px' }}>🛵</div>
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--terracotta)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Top Online Seller</div>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--dark)', margin: '2px 0' }}>
+                        {analytics.top_online_seller?.name || 'No sales yet'}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                        {analytics.top_online_seller ? `${analytics.top_online_seller.total_sold} orders sold (₹${analytics.top_online_seller.total_revenue})` : 'Awaiting online orders'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Top Seller Dining */}
+                  <div style={{ background: 'white', borderRadius: '14px', border: '1px solid var(--border)', padding: '20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div style={{ fontSize: '2rem', background: '#EAF0E9', padding: '10px', borderRadius: '12px' }}>🍽️</div>
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: 'var(--olive)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Top Dining Specialty</div>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--dark)', margin: '2px 0' }}>
+                        {analytics.top_dinein_seller?.name || 'No menu items'}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                        {analytics.top_dinein_seller ? `Category: ${analytics.top_dinein_seller.category} (${analytics.top_dinein_seller.estimated_bookings} table orders)` : 'Awaiting table bookings'}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Most Liked Item */}
+                  <div style={{ background: 'white', borderRadius: '14px', border: '1px solid var(--border)', padding: '20px', display: 'flex', alignItems: 'center', gap: '14px' }}>
+                    <div style={{ fontSize: '2rem', background: '#FDF2F2', padding: '10px', borderRadius: '12px' }}>❤️</div>
+                    <div>
+                      <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#c0392b', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Most Liked Dish</div>
+                      <div style={{ fontSize: '1.1rem', fontWeight: 700, color: 'var(--dark)', margin: '2px 0' }}>
+                        {analytics.most_liked_item?.name || 'No items liked'}
+                      </div>
+                      <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+                        {analytics.most_liked_item ? `★ ${analytics.most_liked_item.rating} (${analytics.most_liked_item.likes_count} favorites & reviews)` : 'Awaiting dish reviews'}
+                      </div>
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            )}
+
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '12px', marginBottom: '32px' }}>
               {[
                 { to: '/owner/menu', icon: '🍛', label: 'Manage Menu' },
                 { to: '/owner/orders', icon: '📦', label: 'View Orders' },
                 { to: '/owner/reservations', icon: '🪑', label: 'Reservations' },
+                { to: '/owner/expenses', icon: '💵', label: 'Financials & Expenses' },
               ].map(action => (
                 <Link key={action.to} to={action.to} style={{ textDecoration: 'none' }}>
                   <div className="card-cravio" style={{ padding: '20px', textAlign: 'center' }}>

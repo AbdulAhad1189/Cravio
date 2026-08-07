@@ -1,6 +1,15 @@
 from rest_framework import serializers
-from .models import Restaurant
+from .models import Restaurant, Expense
 import os
+
+
+class ExpenseSerializer(serializers.ModelSerializer):
+    restaurant_name = serializers.CharField(source='restaurant.name', read_only=True)
+
+    class Meta:
+        model = Expense
+        fields = ['id', 'restaurant', 'restaurant_name', 'category', 'amount', 'date', 'description', 'created_at']
+        read_only_fields = ['id', 'created_at']
 
 
 class RestaurantSerializer(serializers.ModelSerializer):

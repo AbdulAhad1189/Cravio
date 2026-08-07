@@ -1,9 +1,14 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from .views import (
     RestaurantListView, RestaurantDetailView, MyRestaurantView,
     RestaurantApprovalView, TrendingRestaurantsView, TrendingByStateView,
     RandomRestaurantView, LiveStatusView, CraveMatchView, RestaurantDuelView,
+    ExpenseViewSet, ProfitLossReportView, OwnerAnalyticsView,
 )
+
+router = DefaultRouter()
+router.register('expenses', ExpenseViewSet, basename='expense')
 
 urlpatterns = [
     path('', RestaurantListView.as_view(), name='restaurant-list'),
@@ -16,4 +21,8 @@ urlpatterns = [
     path('<int:pk>/live-status/', LiveStatusView.as_view(), name='restaurant-live-status'),
     path('cravematch/', CraveMatchView.as_view(), name='restaurant-cravematch'),
     path('duel/', RestaurantDuelView.as_view(), name='restaurant-duel'),
+    path('profit-loss-report/', ProfitLossReportView.as_view(), name='profit-loss-report'),
+    path('analytics/', OwnerAnalyticsView.as_view(), name='owner-analytics'),
+    path('', include(router.urls)),
 ]
+

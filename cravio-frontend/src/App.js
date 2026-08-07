@@ -37,6 +37,7 @@ import OwnerDashboard from './pages/owner/Dashboard';
 import ManageMenu from './pages/owner/ManageMenu';
 import ManageOrders from './pages/owner/ManageOrders';
 import ManageReservations from './pages/owner/ManageReservations';
+import ManageExpenses from './pages/owner/ManageExpenses';
 
 // Admin pages — have their own sidebar layout
 import AdminDashboard from './pages/admin/Dashboard';
@@ -46,7 +47,7 @@ import ManagePromos from './pages/admin/ManagePromos';
 
 // Routes that use their own full-page layout (no shared Navbar/Footer)
 const DASHBOARD_ROUTES = [
-  '/owner/dashboard', '/owner/menu', '/owner/orders', '/owner/reservations',
+  '/owner/dashboard', '/owner/menu', '/owner/orders', '/owner/reservations', '/owner/expenses',
   '/admin/dashboard', '/admin/restaurants', '/admin/users', '/admin/promos',
 ];
 
@@ -103,6 +104,7 @@ function App() {
         <Route path="/owner/menu" element={<ProtectedRoute roles={['owner']}><ManageMenu /></ProtectedRoute>} />
         <Route path="/owner/orders" element={<ProtectedRoute roles={['owner']}><ManageOrders /></ProtectedRoute>} />
         <Route path="/owner/reservations" element={<ProtectedRoute roles={['owner']}><ManageReservations /></ProtectedRoute>} />
+        <Route path="/owner/expenses" element={<ProtectedRoute roles={['owner']}><ManageExpenses /></ProtectedRoute>} />
 
         {/* Admin — full-page layout with sidebar */}
         <Route path="/admin" element={<ProtectedRoute roles={['admin']}><Navigate to="/admin/restaurants" replace /></ProtectedRoute>} />
