@@ -624,17 +624,21 @@ class ProfitLossReportView(APIView):
         rest_ids = [r.id for r in restaurants]
 
         # 1. Online Order Revenue (Delivered / Active Orders)
-        online_orders = Order.objects.filter(restaurant_id__in=rest_ids).exclude(status='cancelled')
+        online_orders = Order.objects.filter(restaurant_id__in=rest_ids, order_type='online').exclude(status='cancelled')
         total_online_revenue = float(online_orders.aggregate(total=Sum('total_amount'))['total'] or 0.0)
 
-        # 2. Dine-In Estimated Revenue (Confirmed reservations x avg guest spend ₹500)
+        # 2. Offline / Walk-In POS Orders Revenue
+        offline_orders = Order.objects.filter(restaurant_id__in=rest_ids, order_type='offline').exclude(status='cancelled')
+        total_offline_revenue = float(offline_orders.aggregate(total=Sum('total_amount'))['total'] or 0.0)
+
+        # 3. Dine-In Estimated Revenue (Confirmed reservations x avg guest spend ₹500)
         confirmed_reservations = Reservation.objects.filter(restaurant_id__in=rest_ids, status='confirmed', otp_verified=True)
         total_guests = confirmed_reservations.aggregate(total=Sum('guests'))['total'] or 0
         total_dinein_revenue = float(total_guests * 500.0)
 
-        total_gross_revenue = total_online_revenue + total_dinein_revenue
+        total_gross_revenue = total_online_revenue + total_offline_revenue + total_dinein_revenue
 
-        # 3. Expenses
+        # 4. Expenses (Loss)
         expenses_qs = Expense.objects.filter(restaurant_id__in=rest_ids)
         total_expenses = float(expenses_qs.aggregate(total=Sum('amount'))['total'] or 0.0)
 
@@ -649,6 +653,7 @@ class ProfitLossReportView(APIView):
         report_data = {
             'restaurants': [r.name for r in restaurants],
             'total_online_revenue': total_online_revenue,
+            'total_offline_revenue': total_offline_revenue,
             'total_dinein_revenue': total_dinein_revenue,
             'total_gross_revenue': total_gross_revenue,
             'total_expenses': total_expenses,
@@ -664,13 +669,18 @@ class ProfitLossReportView(APIView):
             writer.writerow(['CRAVIO RESTAURANT FINANCIAL & PROFIT/LOSS STATEMENT'])
             writer.writerow(['Restaurant(s)', ', '.join([r.name for r in restaurants])])
             writer.writerow([])
-            writer.writerow(['METRIC', 'AMOUNT (INR)'])
-            writer.writerow(['Online Orders Revenue', f'{total_online_revenue:.2f}'])
-            writer.writerow(['Estimated Dine-In Revenue', f'{total_dinein_revenue:.2f}'])
-            writer.writerow(['Total Gross Revenue', f'{total_gross_revenue:.2f}'])
-            writer.writerow(['Total Expenses', f'{total_expenses:.2f}'])
-            writer.writerow(['Net Profit / (Loss)', f'{net_profit:.2f}'])
-            writer.writerow(['Profit Margin (%)', f'{profit_margin}%'])
+            writer.writerow(['REVENUE (PROFIT SOURCE)', 'AMOUNT (INR)'])
+            writer.writerow(['Online App Delivery Revenue', f'{total_online_revenue:.2f}'])
+            writer.writerow(['Offline / Walk-In POS Orders', f'{total_offline_revenue:.2f}'])
+            writer.writerow(['Estimated Dine-In Reservation Spend', f'{total_dinein_revenue:.2f}'])
+            writer.writerow(['TOTAL GROSS REVENUE (PROFIT)', f'{total_gross_revenue:.2f}'])
+            writer.writerow([])
+            writer.writerow(['EXPENSES (LOSS SOURCE)', 'AMOUNT (INR)'])
+            writer.writerow(['TOTAL OPERATING EXPENSES', f'{total_expenses:.2f}'])
+            writer.writerow([])
+            writer.writerow(['FINANCIAL SUMMARY', 'VALUE'])
+            writer.writerow(['NET PROFIT / (LOSS)', f'{net_profit:.2f}'])
+            writer.writerow(['PROFIT MARGIN (%)', f'{profit_margin}%'])
             writer.writerow([])
             writer.writerow(['EXPENSE BREAKDOWN BY CATEGORY'])
             for cat, amt in category_breakdown.items():

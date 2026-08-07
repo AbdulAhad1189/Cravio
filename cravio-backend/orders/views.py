@@ -284,3 +284,60 @@ class OrderTrackView(APIView):
         response['Cache-Control'] = 'no-cache'
         response['X-Accel-Buffering'] = 'no'
         return response
+
+
+class OfflineOrderCreateView(APIView):
+    """
+    POST /api/orders/offline/
+    Allows restaurant owners to record offline / walk-in POS orders.
+    """
+    permission_classes = [permissions.IsAuthenticated]
+
+    def post(self, request):
+        if request.user.role not in ('owner', 'admin'):
+            return Response({'detail': 'Only restaurant owners can record offline orders.'}, status=status.HTTP_403_FORBIDDEN)
+
+        restaurant_id = request.data.get('restaurant')
+        from restaurants.models import Restaurant
+        restaurant = Restaurant.objects.filter(id=restaurant_id).first()
+        if not restaurant:
+            return Response({'detail': 'Restaurant not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+        if request.user.role != 'admin' and restaurant.owner != request.user:
+            return Response({'detail': 'You do not own this restaurant.'}, status=status.HTTP_403_FORBIDDEN)
+
+        customer_name = request.data.get('customer_name', '').strip() or 'Walk-In Diner'
+        notes = request.data.get('notes', '').strip() or 'POS Offline Order'
+        items_data = request.data.get('items', [])
+        total_amount = request.data.get('total_amount', 0.0)
+
+        if not items_data:
+            return Response({'detail': 'Please add at least one item to the order.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        order = Order.objects.create(
+            user=None,
+            restaurant=restaurant,
+            order_type='offline',
+            customer_name=customer_name,
+            delivery_address='Dine-In / Counter Pick',
+            notes=notes,
+            total_amount=total_amount,
+            status='delivered'  # Offline orders are completed immediately
+        )
+
+        from foods.models import Food
+        for item in items_data:
+            food_id = item.get('food')
+            quantity = int(item.get('quantity', 1))
+            price = float(item.get('price', 0.0))
+            food = Food.objects.filter(id=food_id).first()
+            if food:
+                OrderItem.objects.create(
+                    order=order,
+                    food=food,
+                    quantity=quantity,
+                    price=price
+                )
+
+        return Response(OrderSerializer(order).data, status=status.HTTP_201_CREATED)
+

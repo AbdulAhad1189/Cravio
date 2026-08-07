@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../../api/axios';
 
 export default function ManageExpenses() {
@@ -127,6 +128,13 @@ export default function ManageExpenses() {
 
   return (
     <div style={styles.page}>
+      {/* ── Top Navigation / Back Button ── */}
+      <div style={{ marginBottom: 16 }}>
+        <Link to="/owner/dashboard" style={styles.backBtn}>
+          ← Back to Dashboard
+        </Link>
+      </div>
+
       <div style={styles.header}>
         <div>
           <h1 style={styles.title}>Financials & Expense Tracker</h1>
@@ -155,9 +163,9 @@ export default function ManageExpenses() {
           <div style={styles.card}>
             <div style={styles.cardIcon}>💰</div>
             <div>
-              <div style={styles.cardLabel}>Total Gross Revenue</div>
+              <div style={styles.cardLabel}>Total Gross Revenue (Profit)</div>
               <div style={{ ...styles.cardValue, color: '#3B4F39' }}>₹{report.total_gross_revenue?.toLocaleString('en-IN')}</div>
-              <div style={styles.cardSub}>Online: ₹{report.total_online_revenue} | Dine-In: ₹{report.total_dinein_revenue}</div>
+              <div style={styles.cardSub}>Online: ₹{report.total_online_revenue} | Offline: ₹{report.total_offline_revenue} | Dine-In: ₹{report.total_dinein_revenue}</div>
             </div>
           </div>
 
@@ -305,6 +313,7 @@ export default function ManageExpenses() {
 
 const styles = {
   page: { padding: '30px', maxWidth: 1100, margin: '0 auto', fontFamily: "'Inter', sans-serif" },
+  backBtn: { textDecoration: 'none', color: '#3B4F39', fontWeight: 600, fontSize: '0.88rem', display: 'inline-flex', alignItems: 'center', gap: 6, backgroundColor: '#EAF0E9', padding: '6px 14px', borderRadius: 6 },
   header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 24, flexWrap: 'wrap', gap: 16 },
   title: { fontSize: '1.8rem', fontWeight: 700, color: '#1C1E1D', margin: '0 0 6px', fontFamily: "'Playfair Display', serif" },
   subtitle: { color: '#707572', fontSize: '0.9rem', margin: 0 },

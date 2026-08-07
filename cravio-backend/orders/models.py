@@ -35,13 +35,19 @@ class Order(models.Model):
         ('delivered', 'Delivered'),
         ('cancelled', 'Cancelled'),
     ]
-    user = models.ForeignKey('users.User', on_delete=models.CASCADE, related_name='orders')
+    ORDER_TYPES = [
+        ('online', 'Online Order'),
+        ('offline', 'Offline / Walk-In Order'),
+    ]
+    user = models.ForeignKey('users.User', on_delete=models.CASCADE, null=True, blank=True, related_name='orders')
     restaurant = models.ForeignKey('restaurants.Restaurant', on_delete=models.CASCADE, related_name='orders')
+    order_type = models.CharField(max_length=20, choices=ORDER_TYPES, default='online')
+    customer_name = models.CharField(max_length=150, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     total_amount = models.DecimalField(max_digits=10, decimal_places=2)
     promo_code = models.CharField(max_length=50, blank=True, null=True)
     discount_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
-    delivery_address = models.TextField()
+    delivery_address = models.TextField(blank=True)
     notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

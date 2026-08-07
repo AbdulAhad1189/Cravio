@@ -40,14 +40,18 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ['id', 'user', 'restaurant', 'restaurant_name', 'customer_name',
+        fields = ['id', 'user', 'restaurant', 'restaurant_name', 'customer_name', 'order_type',
                   'status', 'total_amount', 'promo_code', 'discount_amount',
                   'delivery_address', 'notes', 'items',
                   'created_at', 'updated_at']
         read_only_fields = ['id', 'user', 'created_at', 'updated_at']
 
     def get_customer_name(self, obj):
-        return f'{obj.user.first_name} {obj.user.last_name}'.strip() or obj.user.email
+        if obj.customer_name:
+            return obj.customer_name
+        if obj.user:
+            return f'{obj.user.first_name} {obj.user.last_name}'.strip() or obj.user.email
+        return 'Walk-In Customer'
 
     def get_restaurant_name(self, obj):
         return obj.restaurant.name
